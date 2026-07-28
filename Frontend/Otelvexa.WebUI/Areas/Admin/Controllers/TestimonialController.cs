@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Otelvexa.Dto.TestimonialDtos;
+using Otelvexa.WebUI.Services.Abstract;
 
 namespace Otelvexa.WebUI.Areas.Admin.Controllers;
 
@@ -8,29 +8,21 @@ namespace Otelvexa.WebUI.Areas.Admin.Controllers;
 
 public class TestimonialController : Controller
 {
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly ITestimonialService _service;
 
-    public TestimonialController(IHttpClientFactory httpClientFactory)
+    public TestimonialController(ITestimonialService service)
     {
-        _httpClientFactory = httpClientFactory;
+        _service = service;
     }
 
-    // GET
     public async Task<IActionResult> Index()
     {
-        var client = _httpClientFactory.CreateClient();
-        var response = await client.GetAsync("http://localhost:5214/api/Testimonials");
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonData = await response.Content.ReadAsStringAsync();
-            var values = JsonConvert.DeserializeObject<List<ResultTestimonialDto>>(jsonData);
-            return View(values);
-        }
-        return View();
+        var values = await _service.GetAllAsync();
+        return View(values);
     }
 
     [HttpGet]
-    public async Task<IActionResult> Create()
+    public IActionResult Create()
     {
         return View();
     }
@@ -38,45 +30,27 @@ public class TestimonialController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateTestimonialDto dto)
     {
-        var client = _httpClientFactory.CreateClient();
-        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Testimonials", dto);
-        if (response.IsSuccessStatusCode)
-        {
-            return RedirectToAction("Index");
-        }
-        return View(dto);
+        await _service.TInsertAsync(dto);
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var client = _httpClientFactory.CreateClient();
-        var response = await client.GetAsync($"http://localhost:5214/api/Testimonials/{id}");
-        if (response.IsSuccessStatusCode)
-        {
-            var jsonData = await response.Content.ReadAsStringAsync();
-            var values = JsonConvert.DeserializeObject<UpdateTestimonialDto>(jsonData);
-            return  View(values);
-        }
-        return View();
+        var value = await _service.TGetByIdAsync(id);
+        return View(value);
     }
 
     [HttpPost]
     public async Task<IActionResult> Update(UpdateTestimonialDto dto)
     {
-        var client = _httpClientFactory.CreateClient();
-        var response = await client.PutAsJsonAsync("http://localhost:5214/api/Testimonials", dto);
-        if (response.IsSuccessStatusCode)
-        {
-            return RedirectToAction("Index");
-        }
-        return View(dto);
+        await _service.TUpdateAsync(dto);
+        return RedirectToAction(nameof(Index));
     }
-    
+
     public async Task<IActionResult> Delete(int id)
     {
-        var client = _httpClientFactory.CreateClient();
-        await client.DeleteAsync($"http://localhost:5214/api/Testimonials/{id}");
-        return RedirectToAction("Index");
+        await _service.TDeleteAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }

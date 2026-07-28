@@ -1,53 +1,53 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Otelvexa.Business.Abstract;
-using Otelvexa.Dto.RoomDtos;
+using Otelvexa.Dto.ServiceDtos;
 
 namespace Otelvexa.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoomController : ControllerBase
+    public class ServicesController : ControllerBase
     {
-        private readonly IRoomService _roomService;
+        private readonly IServiceService _serviceService;
 
-        public RoomController(IRoomService ıroomService)
+        public ServicesController(IServiceService serviceService)
         {
-            _roomService = ıroomService;
+            _serviceService = serviceService;
         }
-
+        
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var value = await _roomService.TGetListAsync();
+            var value = await _serviceService.TGetListAsync();
             return Ok(value);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var value = await _roomService.TGetByIdAsync(id);
+            var value = await _serviceService.TGetByIdAsync(id);
             return Ok(value);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateRoomDto createRoomDto)
+        public async Task<IActionResult> Create(CreateServiceDto dto)
         {
-            await _roomService.TInsertAsync(createRoomDto);
+            await _serviceService.TInsertAsync(dto);
             return Ok();
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(UpdateRoomDto updateRoomDto)
+        public async Task<IActionResult> Update(UpdateServiceDto dto)
         {
-            await _roomService.TUpdateAsync(updateRoomDto);
+            await _serviceService.TUpdateAsync(dto);
             return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _roomService.TDeleteAsync(id);
+            await _serviceService.TDeleteAsync(id);
             return Ok();
         }
     }

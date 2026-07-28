@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
-using Otelvexa.Dto.StaffDtos;
+using Otelvexa.Dto.ServiceDtos;
 using Otelvexa.WebUI.Services.Abstract;
 
 namespace Otelvexa.WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
-
-public class StaffController : Controller
+public class ServiceController : Controller
 {
-    private readonly IStaffService _service;
+    private readonly IServiceService _service;
 
-    public StaffController(IStaffService service)
+    public ServiceController(IServiceService service)
     {
         _service = service;
     }
@@ -28,7 +27,7 @@ public class StaffController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateStaffDto dto)
+    public async Task<IActionResult> Create(CreateServiceDto dto)
     {
         await _service.TInsertAsync(dto);
         return RedirectToAction(nameof(Index));
@@ -42,7 +41,7 @@ public class StaffController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(UpdateStaffDto dto)
+    public async Task<IActionResult> Update(UpdateServiceDto dto)
     {
         await _service.TUpdateAsync(dto);
         return RedirectToAction(nameof(Index));

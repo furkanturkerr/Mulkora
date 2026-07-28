@@ -7,11 +7,11 @@ namespace Otelvexa.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SubscribeController : ControllerBase
+    public class SubscribesController : ControllerBase
     {
         private readonly ISubscribeService _subscribeService;
 
-        public SubscribeController(ISubscribeService subscribeService)
+        public SubscribesController(ISubscribeService subscribeService)
         {
             _subscribeService = subscribeService;
         }
