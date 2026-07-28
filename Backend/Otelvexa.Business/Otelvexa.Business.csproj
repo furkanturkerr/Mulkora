@@ -8,6 +8,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Otelvexa.DataAccess\Otelvexa.DataAccess.csproj" />
+      <ProjectReference Include="..\Otelvexa.Dto\Otelvexa.Dto.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="13.0.1" />
     </ItemGroup>
 
 </Project>
