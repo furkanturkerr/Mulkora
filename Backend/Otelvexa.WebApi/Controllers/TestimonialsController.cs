@@ -7,11 +7,11 @@ namespace Otelvexa.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestimonialController : ControllerBase
+    public class TestimonialsController : ControllerBase
     {
         private readonly ITestimonialService _testimonialService;
 
-        public TestimonialController(ITestimonialService testimonialService)
+        public TestimonialsController(ITestimonialService testimonialService)
         {
             _testimonialService = testimonialService;
         }
@@ -44,7 +44,7 @@ namespace Otelvexa.WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _testimonialService.TDeleteAsync(id);

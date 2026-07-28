@@ -44,7 +44,7 @@ namespace Otelvexa.WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _roomService.TDeleteAsync(id);

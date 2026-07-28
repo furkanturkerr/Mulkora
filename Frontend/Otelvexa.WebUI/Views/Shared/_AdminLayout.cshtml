@@ -4,30 +4,37 @@
 @await Component.InvokeAsync("_AdminHeadComponentPartial")
 
 <body>
-    <div id="preloader">
-        <div class="loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
-            </svg>
+<div id="preloader">
+    <div class="loader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
+        </svg>
+    </div>
+</div>
+
+<div id="main-wrapper">
+    @await Component.InvokeAsync("_AdminHeaderComponentPartial")
+
+    @await Component.InvokeAsync("_AdminSidebarComponentPartial")
+    <div class="content-body">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            @RenderBody()
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-   
-    <div id="main-wrapper">
-        
-        @await Component.InvokeAsync("_AdminHeaderComponentPartial")
-        
-       @await Component.InvokeAsync("_AdminSidebarComponentPartial")
-        <div class="content-body">
+    @await Component.InvokeAsync("_AdminFooterComponentPartial")
+</div>
 
-            <div class="container-fluid mt-3">
-                @RenderBody()
-            </div>  
-        </div>
-        @await Component.InvokeAsync("_AdminFooterComponentPartial")
-    </div>
-   
-    @await Component.InvokeAsync("_AdminScriptsComponentPartial")
+@await Component.InvokeAsync("_AdminScriptsComponentPartial")
 
-    </body>
+</body>
 
 </html>

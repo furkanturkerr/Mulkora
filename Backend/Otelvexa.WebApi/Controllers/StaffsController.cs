@@ -7,11 +7,11 @@ namespace Otelvexa.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StaffController : ControllerBase
+    public class StaffsController : ControllerBase
     {
         private readonly IStaffService _staffService;
 
-        public StaffController(IStaffService staffService)
+        public StaffsController(IStaffService staffService)
         {
             _staffService = staffService;
         }
@@ -44,7 +44,7 @@ namespace Otelvexa.WebApi.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _staffService.TDeleteAsync(id);
