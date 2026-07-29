@@ -4,6 +4,7 @@ using Otelvexa.Business.Manager;
 using Otelvexa.DataAccess.Abstract;
 using Otelvexa.DataAccess.Concrete;
 using Otelvexa.DataAccess.EntityFramework;
+using Otelvexa.WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,7 @@ builder.Services.AddScoped<ITestimonialDal, EfTestimonialDal>();
 builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors("CorsPolicy");
 
@@ -52,6 +54,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
