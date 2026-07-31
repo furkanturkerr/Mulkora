@@ -1,6 +1,0 @@
-@Otelvexa.JwtApi_HostAddress = http://localhost:5160
-
-GET {{Otelvexa.JwtApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -1,9 +1,10 @@
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Otelvexa.Entity.Concrete;
 
 namespace Otelvexa.DataAccess.Concrete;
 
-public class Context : DbContext
+public class Context : IdentityDbContext<AppUser, AppRole, string>
 {
     public Context(DbContextOptions<Context> options)
         : base(options)

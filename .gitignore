@@ -6,3 +6,6 @@ riderModule.iml
 
 # Development settings containing local secrets
 **/appsettings.Development.json
+# WebApi local settings
+Backend/Otelvexa.WebApi/appsettings.json
+Backend/Otelvexa.WebApi/appsettings.Development.json
