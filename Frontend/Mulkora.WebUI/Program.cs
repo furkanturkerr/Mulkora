@@ -14,11 +14,6 @@ builder.Services.AddHttpClient("MulkoraApi", client =>
     client.Timeout = TimeSpan.FromSeconds(10);
 });
 
-builder.Services.AddScoped<IStaffService, StaffService>();
-builder.Services.AddScoped<ITestimonialService , TestimonialService>();
-builder.Services.AddScoped<IServiceService, ServiceService>();
-builder.Services.AddScoped<IRoomService, RoomService>();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

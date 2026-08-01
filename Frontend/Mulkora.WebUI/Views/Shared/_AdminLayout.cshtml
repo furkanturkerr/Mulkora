@@ -1,40 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="tr">
 
 @await Component.InvokeAsync("_AdminHeadComponentPartial")
 
-<body>
-<div id="preloader">
-    <div class="loader">
-        <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10"/>
-        </svg>
-    </div>
-</div>
-
-<div id="main-wrapper">
-    @await Component.InvokeAsync("_AdminHeaderComponentPartial")
-
+<body class="workspace-body">
+<div class="workspace-shell">
     @await Component.InvokeAsync("_AdminSidebarComponentPartial")
-    <div class="content-body">
-
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            @RenderBody()
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="sidebar-overlay"></div>
+    <div class="workspace-main">
+        
+        @await Component.InvokeAsync("_AdminHeaderComponentPartial")
+        <main class="workspace-content">
+           @RenderBody()
+        </main>
     </div>
-    @await Component.InvokeAsync("_AdminFooterComponentPartial")
 </div>
-
-@await Component.InvokeAsync("_AdminScriptsComponentPartial")
+<div class="panel-toast" role="status">
+    <span>
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+            <path d="m5 12 4 4L19 6"/>
+        </svg>
+    </span>
+    <span data-toast-text>İşlem tamamlandı.</span>
+</div>
 
 </body>
-
 </html>

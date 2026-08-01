@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760">
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#163a31"/><stop offset="1" stop-color="#2f6656"/></linearGradient>
+<linearGradient id="sand" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#d7a269"/><stop offset="1" stop-color="#f0ceb0"/></linearGradient>
+<filter id="grain"><feTurbulence baseFrequency=".75" numOctaves="2" seed="7" type="fractalNoise"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .08 0"/></filter>
+</defs>
+<rect width="1200" height="760" rx="42" fill="url(#bg)"/>
+<circle cx="1000" cy="100" r="260" fill="#fff" opacity=".035"/><circle cx="1000" cy="100" r="170" fill="#fff" opacity=".04"/>
+<path d="M0 610C210 520 360 690 590 585s383-10 610-72v247H0Z" fill="#102b25"/>
+<path d="M320 470 590 245l294 225v190H320Z" fill="#f6f2e9"/>
+<path d="m285 480 305-255 330 255" fill="none" stroke="url(#sand)" stroke-width="24" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="430" y="450" width="145" height="210" rx="6" fill="#173a31"/><rect x="620" y="440" width="170" height="115" rx="7" fill="#b9d9ce"/><path d="M705 440v115M620 498h170" stroke="#fff" stroke-width="8" opacity=".75"/>
+<circle cx="190" cy="560" r="65" fill="#d6a15f"/><rect x="183" y="590" width="14" height="95" rx="7" fill="#846044"/>
+<rect width="1200" height="760" rx="42" filter="url(#grain)" opacity=".55"/>
+</svg>

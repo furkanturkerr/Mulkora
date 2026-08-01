@@ -10,11 +10,13 @@ namespace Mulkora.WebApi.Controllers
     {
         private readonly IRegisterService _registerService;
         private readonly ILoginService _loginService;
+        private readonly IPasswordResetService _passwordResetService;
 
-        public AuthController(IRegisterService registerService, ILoginService loginService)
+        public AuthController(IRegisterService registerService, ILoginService loginService, IPasswordResetService passwordResetService)
         {
             _registerService = registerService;
             _loginService = loginService;
+            _passwordResetService = passwordResetService;
         }
 
         [HttpPost("register")]
@@ -36,6 +38,29 @@ namespace Mulkora.WebApi.Controllers
         {
             var token = await _loginService.Login(loginDto);
             return Ok(token);
+        }
+        
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+        {
+            await _passwordResetService.ForgotPasswordAsync(dto.Email);
+
+            return Ok(new
+            {
+                message =
+                    "E-posta kayıtlıysa şifre sıfırlama bağlantısı gönderildi."
+            });
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+        {
+            await _passwordResetService.ResetPasswordAsync(dto);
+
+            return Ok(new
+            {
+                message = "Şifreniz başarıyla yenilendi."
+            });
         }
     }
 }

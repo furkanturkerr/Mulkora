@@ -9,3 +9,8 @@ riderModule.iml
 # WebApi local settings
 Backend/Otelvexa.WebApi/appsettings.json
 Backend/Otelvexa.WebApi/appsettings.Development.json
+
+# RapidApiConsume local settings
+Integrations/Mulkora.RapidApiConsume/appsettings.json
+Integrations/Mulkora.RapidApiConsume/appsettings.Development.json
+Backend/Mulkora.WebApi/appsettings.json

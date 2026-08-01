@@ -1,0 +1,82 @@
+@model dynamic
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Tekrar hoş geldiniz · Mülkora</title>
+    <link rel="icon" href="~/Mulkora_Full_Theme_With_Panels/assets/images/favicon.svg">
+    <link rel="stylesheet" href="~/Mulkora_Full_Theme_With_Panels/assets/css/theme.css">
+</head>
+<body>
+<main class="auth-page">
+    <div class="auth-shell">
+        
+        <aside class="auth-visual">
+            <a class="logo auth-brand" asp-controller="Default" asp-action="Index">
+                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg" alt="Mülkora">
+                <span>Mülk<strong>ora</strong></span>
+            </a>
+            <div class="auth-quote">
+                <h2>Yeni yaşamınıza giden yol burada başlar.</h2>
+                <p>Doğrulanmış ilanları keşfedin ve ev gösterim randevunuzu kolayca oluşturun.</p>
+            </div>
+        </aside>
+
+        <section class="auth-form-wrap">
+            <div class="auth-form">
+                <a class="text-link" asp-controller="Default" asp-action="Index">
+                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Ana sayfaya dön
+                </a>
+
+                <h1>Tekrar hoş geldiniz</h1>
+                <p>Hesabınıza giriş yaparak favorilerinizi ve randevularınızı yönetin.</p>
+
+                <form method="post">
+                    @Html.AntiForgeryToken()
+                    
+                    <div class="form-group"><label>E-posta</label>
+                        <input class="input" type="email" required
+                               placeholder="ornek@mail.com">
+                        <span class="validation">Geçerli bir e-posta girin.</span>
+                    </div>
+
+                    <div class="form-group"><label>Şifre</label>
+                        <div class="password-wrap"><input class="input" type="password" required placeholder="••••••••">
+                            <button class="password-toggle" type="button" aria-label="Şifreyi göster">
+                                <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Zm9.5 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <span class="validation">Şifrenizi girin.</span>
+                    </div>
+
+                    <div class="auth-row"><label class="check"><input type="checkbox"> Beni hatırla</label>
+                        <a asp-controller="Account" asp-action="ForgotPassword">Şifremi unuttum</a>
+                    </div>
+
+                    <button class="btn btn-primary btn-block">Giriş Yap</button>
+                </form>
+
+                <div class="divider">veya</div>
+
+                <div class="auth-bottom">Hesabınız yok mu? <a asp-controller="Account" asp-action="Register">Kayıt olun</a></div>
+            </div>
+        </section>
+    </div>
+</main>
+<div class="toast" role="status"><span data-toast-text>İşlem tamamlandı.</span></div>
+
+<script src="~/Mulkora_Full_Theme_With_Panels/assets/js/theme.js"></script>
+</body>
+</html>

@@ -2,16 +2,16 @@ using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mulkora.Business.Abstract;
 using Mulkora.Business.Manager;
 using Mulkora.Business.Validators.AuthValidators;
-using Mulkora.DataAccess.Abstract;
 using Mulkora.DataAccess.Concrete;
-using Mulkora.DataAccess.EntityFramework;
 using Mulkora.Entity.Concrete;
 using Mulkora.WebApi.Middlewares;
+using Mulkora.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +22,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddDataProtection();
 
 builder.Services
     .AddIdentityCore<AppUser>(options =>
@@ -35,7 +37,14 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
     })
     .AddRoles<AppRole>()
-    .AddEntityFrameworkStores<Context>();
+    .AddEntityFrameworkStores<Context>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
+{
+    options.TokenLifespan = TimeSpan.FromHours(1);
+});
+
 builder.Services.AddFluentValidationAutoValidation();
 
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
@@ -55,19 +64,10 @@ builder.Services.AddCors(options =>
 });
 
 builder.Services.AddScoped<IRegisterService, RegisterService>();
-
+builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
+builder.Services.AddScoped<IEmailService, MailService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
-builder.Services.AddScoped<IRoomDal, EfRoomDal>();
-builder.Services.AddScoped<IRoomService, RoomManager>();
-builder.Services.AddScoped<IServiceService, ServiceManager>();
-builder.Services.AddScoped<IServicesDal, EfServiceDal>();
-builder.Services.AddScoped<IStaffService, StaffManager>();
-builder.Services.AddScoped<IStaffDal, EfStaffDal>();
-builder.Services.AddScoped<ISubscribeDal, EfSubscribeDal>();
-builder.Services.AddScoped<ISubscribeService, SubscribeManager>();
-builder.Services.AddScoped<ITestimonialDal, EfTestimonialDal>();
-builder.Services.AddScoped<ITestimonialService, TestimonialManager>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");
