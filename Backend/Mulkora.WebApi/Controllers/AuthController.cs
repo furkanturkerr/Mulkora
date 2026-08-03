@@ -41,11 +41,26 @@ namespace Mulkora.WebApi.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
         
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var result = await _registerService.ConfirmEmailAsync(userId, token);
+
+            if (!result.Succeeded) return BadRequest("Doğrulama bağlantısı geçersiz veya süresi dolmuş.");
+
+            return Ok();
+        }
+        
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var token = await _loginService.Login(loginDto);
-            return Ok(token);
+            return Ok(new AuthResponseDto
+            {
+                Succeeded = true,
+                Token = token,
+                Message = "Giriş başarılı."
+            });
         }
         
         [HttpPost("ForgotPassword")]

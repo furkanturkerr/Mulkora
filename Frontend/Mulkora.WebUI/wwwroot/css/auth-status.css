@@ -1,0 +1,168 @@
+.auth-status-page {
+    min-height: 100vh;
+    padding: 12px;
+    background: #f2f1eb;
+}
+
+.auth-status-page .auth-shell {
+    width: 100%;
+    min-height: calc(100vh - 24px);
+    display: grid;
+    grid-template-columns: minmax(460px, 1fr) minmax(520px, 1fr);
+    overflow: hidden;
+    border-radius: 28px;
+    background: #fff;
+}
+
+.auth-status-page .auth-visual {
+    min-height: calc(100vh - 24px);
+}
+
+.auth-status-page .auth-form-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 64px;
+}
+
+.auth-status-card {
+    width: min(100%, 520px);
+}
+
+.auth-status-card .text-link {
+    width: fit-content;
+    margin-bottom: 30px;
+}
+
+.status-icon {
+    width: 68px;
+    height: 68px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 28px;
+    border-radius: 22px;
+    background: #e8f2ee;
+    color: #178268;
+}
+
+.status-icon svg {
+    width: 30px;
+    height: 30px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.9;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.status-icon.success {
+    background: #e5f3ed;
+    color: #138265;
+}
+
+.auth-status-card h1 {
+    max-width: 480px;
+    margin: 0 0 18px;
+    color: #14201c;
+    font-size: clamp(38px, 4vw, 54px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+}
+
+.status-description {
+    max-width: 500px;
+    margin: 0 0 28px;
+    color: #6d7874;
+    font-size: 17px;
+    line-height: 1.75;
+}
+
+.status-note {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    padding: 16px 18px;
+    border: 1px solid #e2e9e6;
+    border-radius: 14px;
+    background: #f7faf8;
+    color: #53615c;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.status-note svg {
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    fill: none;
+    stroke: #178268;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.status-actions {
+    display: grid;
+    gap: 14px;
+}
+
+.auth-secondary-link {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    color: #285047;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.auth-secondary-link:hover {
+    text-decoration: underline;
+}
+
+.auth-status-card .auth-bottom {
+    margin-top: 30px;
+    text-align: center;
+}
+
+@media (max-width: 1050px) {
+    .auth-status-page .auth-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .auth-status-page .auth-visual {
+        display: none;
+    }
+
+    .auth-status-page .auth-form-wrap {
+        min-height: calc(100vh - 24px);
+        padding: 48px 28px;
+    }
+}
+
+@media (max-width: 600px) {
+    .auth-status-page {
+        padding: 0;
+    }
+
+    .auth-status-page .auth-shell {
+        min-height: 100vh;
+        border-radius: 0;
+    }
+
+    .auth-status-page .auth-form-wrap {
+        min-height: 100vh;
+        padding: 36px 22px;
+    }
+
+    .auth-status-card h1 {
+        font-size: 38px;
+        letter-spacing: -1.4px;
+    }
+
+    .status-description {
+        font-size: 16px;
+    }
+}

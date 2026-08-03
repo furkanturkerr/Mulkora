@@ -1,3 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.AuthDtos;
 using Mulkora.WebApi.Models;
@@ -15,20 +20,81 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login()
     {
-        return View();
-    }
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Default");
+        }
 
-    [HttpGet]
-    public IActionResult Register()
-    {
         return View();
     }
 
     [HttpPost]
+    [AllowAnonymous]
+    public async Task<IActionResult> Login(LoginDto dto)
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Default");
+        }
+        
+        if (!ModelState.IsValid)
+            return View(dto);
+        
+        var client = _httpClientFactory.CreateClient("MulkoraApi");
+        
+        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Auth/login", dto);
+        var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+        if (!response.IsSuccessStatusCode || result == null || !result.Succeeded || string.IsNullOrWhiteSpace(result.Token))
+        {
+            ModelState.AddModelError("", result.Message ?? "E-posta veya şifre hatalı.");
+            return View(dto);
+        }
+        
+        var jwtToken = new JwtSecurityTokenHandler().ReadJwtToken(result.Token);
+        
+        var claims = jwtToken.Claims.ToList();
+        
+        claims.Add(new Claim("access_token", result.Token));
+
+        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
+            "unique_name", "role");
+
+        var principal = new ClaimsPrincipal(identity);
+        
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal,
+            new AuthenticationProperties
+            {
+                IsPersistent = dto.RememberMe,
+                ExpiresUtc = new DateTimeOffset(jwtToken.ValidTo)
+            });
+        
+        return RedirectToAction("Index", "Default");
+    }
+
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Register()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Default");
+        }
+
+        return View();
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Default");
+        }
+        
         if (!ModelState.IsValid)
             return View(dto);
 
@@ -51,16 +117,54 @@ public class AccountController : Controller
             return View(dto);
         }
 
-        return RedirectToAction(nameof(Login));
+        return RedirectToAction(nameof(RegisterConfirmation));
     }
-
+    
+    [AllowAnonymous]
     [HttpGet]
-    public IActionResult ForgotPassword()
+    public async Task<IActionResult> ConfirmEmail(string userId, string token)
+    {
+        if (string.IsNullOrWhiteSpace(userId) ||
+            string.IsNullOrWhiteSpace(token))
+        {
+            return View("ConfirmEmailFailed");
+        }
+
+        var client = _httpClientFactory.CreateClient("MulkoraApi");
+
+        var url =
+            "api/Auth/confirm-email" +
+            $"?userId={Uri.EscapeDataString(userId)}" +
+            $"&token={Uri.EscapeDataString(token)}";
+
+        var response = await client.GetAsync(url);
+
+        if (!response.IsSuccessStatusCode) return View("ConfirmEmailFailed");
+
+        return View("ConfirmEmailSuccess");
+    }
+    
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult RegisterConfirmation()
     {
         return View();
     }
 
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult ForgotPassword()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+        {
+            return RedirectToAction("Index", "Default");
+        }
+
+        return View();
+    }
+
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -84,12 +188,14 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult ForgotPasswordConfirmation()
     {
         return View();
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult ResetPassword(string email, string token)
     {
         if (string.IsNullOrWhiteSpace(email) ||
@@ -108,6 +214,7 @@ public class AccountController : Controller
     }
 
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -133,8 +240,19 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult ResetPasswordConfirmation()
     {
         return View();
+    }
+    
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme);
+
+        return RedirectToAction(nameof(Login));
     }
 }

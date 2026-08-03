@@ -6,4 +6,6 @@ namespace Mulkora.Business.Abstract;
 public interface IRegisterService
 {
     Task<IdentityResult> Register(RegisterDto registerDto);
+    
+    Task<IdentityResult> ConfirmEmailAsync(string userId, string token);
 }

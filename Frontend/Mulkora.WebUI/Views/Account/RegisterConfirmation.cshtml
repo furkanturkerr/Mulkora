@@ -1,0 +1,128 @@
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>E-postanızı kontrol edin · Mülkora</title>
+
+    <link rel="icon" href="~/Mulkora_Full_Theme_With_Panels/assets/images/favicon.svg">
+
+    <link rel="stylesheet"href="~/Mulkora_Full_Theme_With_Panels/assets/css/theme.css">
+
+    <link rel="stylesheet"href="~/css/auth-status.css">
+</head>
+
+<body>
+
+<main class="auth-page auth-status-page">
+    <div class="auth-shell">
+
+        <aside class="auth-visual">
+
+            <a class="logo auth-brand"
+               asp-controller="Default"
+               asp-action="Index">
+
+                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg"
+                     alt="Mülkora">
+
+                <span>
+                    Mülk<strong>ora</strong>
+                </span>
+            </a>
+
+            <div class="auth-quote">
+                <h2>Hesabınız neredeyse hazır.</h2>
+
+                <p>
+                    Son bir adımla hesabınızı doğrulayın ve Mülkora’nın
+                    tüm özelliklerini kullanmaya başlayın.
+                </p>
+            </div>
+
+        </aside>
+
+        <section class="auth-form-wrap">
+            <div class="auth-status-card">
+
+                <a class="text-link"
+                   asp-controller="Default"
+                   asp-action="Index">
+
+                    <svg class="icon"
+                         width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+
+                    Ana sayfaya dön
+                </a>
+
+                <div class="status-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <rect x="3" y="5" width="18" height="14" rx="2"/>
+                        <path d="m3 7 9 6 9-6"/>
+                    </svg>
+                </div>
+
+                <h1>E-postanızı kontrol edin</h1>
+
+                <p class="status-description">
+                    Kayıt işleminiz başarıyla tamamlandı. Hesabınızı
+                    etkinleştirmek için e-posta adresinize gönderdiğimiz
+                    doğrulama bağlantısına tıklayın.
+                </p>
+
+                <div class="status-note">
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 11v5M12 8h.01"/>
+                    </svg>
+
+                    <span>
+                        E-posta birkaç dakika içinde gelmezse spam veya
+                        gereksiz klasörünü kontrol edin.
+                    </span>
+
+                </div>
+
+                <div class="status-actions">
+
+                    <a class="btn btn-primary btn-block"
+                       asp-controller="Account"
+                       asp-action="Login">
+
+                        Giriş sayfasına git
+                    </a>
+
+                </div>
+
+                <div class="auth-bottom">
+                    Yanlış e-posta adresiyle mi kayıt oldunuz?
+
+                    <a asp-controller="Account"
+                       asp-action="Register">
+
+                        Yeniden kayıt olun
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<script src="~/Mulkora_Full_Theme_With_Panels/assets/js/theme.js"></script>
+
+</body>
+</html>

@@ -26,12 +26,17 @@ public class LoginService : ILoginService
     {
         var user = await _userManager.FindByEmailAsync(loginDto.Email);
 
-        if (user == null ||
-            !await _userManager.CheckPasswordAsync(user, loginDto.Password))
+        if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
         {
             throw new UnauthorizedAccessException(
                 "E-posta veya şifre hatalı."
             );
+        }
+        
+        if (!await _userManager.IsEmailConfirmedAsync(user))
+        {
+            throw new UnauthorizedAccessException(
+                "Giriş yapmadan önce e-posta adresinizi doğrulayın.");
         }
 
         return await GenerateToken(user);

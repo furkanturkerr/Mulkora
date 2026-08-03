@@ -53,10 +53,10 @@ public class ExceptionMiddleware
                 statusCode = StatusCodes.Status404NotFound;
                 message = exception.Message;
                 break;
-
+            
             case UnauthorizedAccessException:
                 statusCode = StatusCodes.Status401Unauthorized;
-                message = "Bu işlem için giriş yapmanız gerekiyor.";
+                message = exception.Message;
                 break;
         }
 

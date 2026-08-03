@@ -1,0 +1,139 @@
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Doğrulama başarısız · Mülkora</title>
+
+    <link rel="icon"
+          href="~/Mulkora_Full_Theme_With_Panels/assets/images/favicon.svg">
+
+    <link rel="stylesheet"
+          href="~/Mulkora_Full_Theme_With_Panels/assets/css/theme.css">
+
+    <style>
+        .status-icon {
+            width: 72px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            border-radius: 50%;
+            background: rgba(190, 58, 58, .10);
+            color: #be3a3a;
+        }
+
+        .status-icon svg {
+            width: 36px;
+            height: 36px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .status-description {
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="auth-page">
+    <div class="auth-shell">
+
+        <aside class="auth-visual">
+
+            <a class="logo auth-brand"
+               asp-controller="Default"
+               asp-action="Index">
+
+                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg"
+                     alt="Mülkora">
+
+                <span>
+                    Mülk<strong>ora</strong>
+                </span>
+            </a>
+
+            <div class="auth-quote">
+                <h2>Doğrulama bağlantısı kullanılamadı.</h2>
+
+                <p>
+                    Bağlantının süresi dolmuş veya bağlantı adresi
+                    eksik kopyalanmış olabilir.
+                </p>
+            </div>
+
+        </aside>
+
+        <section class="auth-form-wrap">
+            <div class="auth-form">
+
+                <a class="text-link"
+                   asp-controller="Default"
+                   asp-action="Index">
+
+                    <svg class="icon"
+                         width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+
+                    Ana sayfaya dön
+                </a>
+
+                <div class="status-icon">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="m9 9 6 6M15 9l-6 6"/>
+                    </svg>
+                </div>
+
+                <h1>E-posta doğrulanamadı</h1>
+
+                <p class="status-description">
+                    Doğrulama bağlantısı geçersiz veya süresi dolmuş olabilir.
+                    Yeni bir hesap oluşturmayı deneyebilir ya da daha sonra
+                    doğrulama mailini yeniden gönderebilirsiniz.
+                </p>
+
+                <a class="btn btn-primary btn-block"
+                   asp-controller="Account"
+                   asp-action="Register">
+
+                    Kayıt sayfasına dön
+                </a>
+
+                <div class="auth-bottom">
+                    Hesabınız zaten doğrulandı mı?
+
+                    <a asp-controller="Account"
+                       asp-action="Login">
+
+                        Giriş yapın
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<script src="~/Mulkora_Full_Theme_With_Panels/assets/js/theme.js"></script>
+
+</body>
+</html>
