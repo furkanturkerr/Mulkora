@@ -20,8 +20,4 @@
       <ProjectReference Include="..\Mulkora.Entity\Mulkora.Entity.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="EntityFramework\" />
-    </ItemGroup>
-
 </Project>

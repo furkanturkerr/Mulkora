@@ -11,4 +11,5 @@ public class Context : IdentityDbContext<AppUser, AppRole, string>
     {
     }
     
+    DbSet<Contact> Contacts { get; set; }
 }

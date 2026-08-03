@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.AuthDtos;
-using Mulkora.WebApi.Models;
+using Mulkora.Dto.Common;
 
 namespace Mulkora.WebUI.Controllers;
 
@@ -45,7 +45,7 @@ public class AccountController : Controller
         
         var client = _httpClientFactory.CreateClient("MulkoraApi");
         
-        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Auth/login", dto);
+        var response = await client.PostAsJsonAsync("api/Auth/login", dto);
         var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
         if (!response.IsSuccessStatusCode || result == null || !result.Succeeded || string.IsNullOrWhiteSpace(result.Token))
         {
@@ -100,7 +100,7 @@ public class AccountController : Controller
             return View(dto);
 
         var client = _httpClientFactory.CreateClient("MulkoraApi");
-        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Auth/Register", dto);
+        var response = await client.PostAsJsonAsync("api/Auth/Register", dto);
         if (!response.IsSuccessStatusCode)
         {
             var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
@@ -171,9 +171,9 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(dto);
 
-        var client = _httpClientFactory.CreateClient();
+        var client = _httpClientFactory.CreateClient("MulkoraApi");
 
-        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Auth/ForgotPassword", dto);
+        var response = await client.PostAsJsonAsync("api/Auth/ForgotPassword", dto);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -221,9 +221,9 @@ public class AccountController : Controller
         if (!ModelState.IsValid)
             return View(dto);
 
-        var client = _httpClientFactory.CreateClient();
+        var client = _httpClientFactory.CreateClient("MulkoraApi");
 
-        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Auth/ResetPassword", dto);
+        var response = await client.PostAsJsonAsync("api/Auth/reset-password", dto);
 
         if (!response.IsSuccessStatusCode)
         {

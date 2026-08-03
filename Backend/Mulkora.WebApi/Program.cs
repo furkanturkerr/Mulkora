@@ -8,7 +8,9 @@ using Microsoft.IdentityModel.Tokens;
 using Mulkora.Business.Abstract;
 using Mulkora.Business.Manager;
 using Mulkora.Business.Validators.AuthValidators;
+using Mulkora.DataAccess.Abstract;
 using Mulkora.DataAccess.Concrete;
+using Mulkora.DataAccess.EntityFramework;
 using Mulkora.Entity.Concrete;
 using Mulkora.WebApi.Identity;
 using Mulkora.WebApi.Middlewares;
@@ -70,6 +72,8 @@ builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddScoped<IEmailService, MailService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IContactDal, EfContactDal>();
+builder.Services.AddScoped<IContactService, ContactManager>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");

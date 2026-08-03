@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Mulkora.WebUI.Services.Abstract;
+using Mulkora.WebUI.Services.Concrete;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,8 @@ builder.Services
         options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
         options.SlidingExpiration = false;
     });
+
+builder.Services.AddScoped<IContactService, ContactService>();
 
 builder.Services.AddAuthorization();
 

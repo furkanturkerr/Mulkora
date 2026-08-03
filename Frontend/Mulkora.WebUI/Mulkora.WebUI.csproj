@@ -9,11 +9,11 @@
     <ItemGroup>
       <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\Backend\Mulkora.Contracts\Mulkora.Contracts.csproj" />
-      <ProjectReference Include="..\..\Backend\Mulkora.WebApi\Mulkora.WebApi.csproj" />
     </ItemGroup>
 
     <ItemGroup>
