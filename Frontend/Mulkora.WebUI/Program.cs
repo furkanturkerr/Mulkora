@@ -17,14 +17,15 @@ builder.Services.AddHttpClient("MulkoraApi", client =>
 builder.Services.AddHttpContextAccessor();
 
 builder.Services
-    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddAuthentication(
+        CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
 
-        options.ExpireTimeSpan = TimeSpan.FromHours(2);
-        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
+        options.SlidingExpiration = false;
     });
 
 builder.Services.AddAuthorization();

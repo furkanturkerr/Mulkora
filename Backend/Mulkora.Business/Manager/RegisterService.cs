@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -35,130 +36,8 @@ public class RegisterService : IRegisterService
 
         if (!result.Succeeded)
             return result;
-        
-        var token = await _userManager.GenerateEmailConfirmationTokenAsync(appUser);
-        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
-        var frontendUrl = _configuration["FrontendUrl"] ?? throw new InvalidOperationException("FrontendUrl bulunamadı.");
-
-        var confirmationLink =
-            $"{frontendUrl.TrimEnd('/')}/Account/ConfirmEmail" +
-            $"?userId={Uri.EscapeDataString(appUser.Id)}" +
-            $"&token={Uri.EscapeDataString(encodedToken)}";
-        
-        var htmlBody = $"""
-<!doctype html>
-<html lang="tr">
-<body style="margin:0;padding:0;background:#f2f1eb;font-family:Arial,sans-serif;">
-
-<table width="100%"
-       cellpadding="0"
-       cellspacing="0"
-       role="presentation"
-       style="background:#f2f1eb;padding:40px 16px;">
-
-    <tr>
-        <td align="center">
-
-            <table width="100%"
-                   cellpadding="0"
-                   cellspacing="0"
-                   role="presentation"
-                   style="max-width:600px;background:#ffffff;border-radius:22px;overflow:hidden;border:1px solid #e1e7e4;">
-
-                <tr>
-                    <td style="padding:26px 34px;background:#123f35;color:#ffffff;">
-
-                        <div style="font-size:24px;font-weight:800;">
-                            Mülk<span style="color:#d5ae78;">ora</span>
-                        </div>
-
-                        <div style="margin-top:5px;font-size:13px;color:#c5d5d0;">
-                            Doğru evi bulun, randevunuzu oluşturun.
-                        </div>
-
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="padding:42px 34px;">
-
-                        <div style="width:54px;height:54px;line-height:54px;text-align:center;border-radius:16px;background:#e8f2ee;color:#178268;font-size:24px;">
-                            ✉
-                        </div>
-
-                        <h1 style="margin:25px 0 15px;color:#14201c;font-size:29px;line-height:1.25;">
-                            E-posta adresinizi doğrulayın
-                        </h1>
-
-                        <p style="margin:0 0 12px;color:#5f6e69;font-size:16px;line-height:1.7;">
-                            Merhaba {appUser.Name},
-                        </p>
-
-                        <p style="margin:0 0 28px;color:#5f6e69;font-size:16px;line-height:1.7;">
-                            Mülkora hesabınız başarıyla oluşturuldu.
-                            Hesabınızı etkinleştirmek için aşağıdaki
-                            butona tıklayın.
-                        </p>
-
-                        <table cellpadding="0"
-                               cellspacing="0"
-                               role="presentation">
-
-                            <tr>
-                                <td style="border-radius:12px;background:#174c40;">
-
-                                    <a href="{confirmationLink}"
-                                       style="display:inline-block;padding:15px 26px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;">
-
-                                        E-posta adresimi doğrula
-                                    </a>
-
-                                </td>
-                            </tr>
-
-                        </table>
-
-                        <div style="margin-top:30px;padding:16px 18px;border-radius:12px;background:#f7faf8;color:#66736f;font-size:13px;line-height:1.65;">
-                            Bu hesabı siz oluşturmadıysanız bu e-postayı
-                            dikkate almanıza gerek yoktur.
-                        </div>
-
-                        <p style="margin:26px 0 8px;color:#89938f;font-size:12px;">
-                            Buton çalışmazsa aşağıdaki bağlantıyı tarayıcınıza yapıştırın:
-                        </p>
-
-                        <p style="margin:0;word-break:break-all;">
-
-                            <a href="{confirmationLink}"
-                               style="color:#178268;font-size:12px;line-height:1.6;">
-
-                                {confirmationLink}
-                            </a>
-
-                        </p>
-
-                    </td>
-                </tr>
-
-                <tr>
-                    <td style="padding:20px 34px;background:#f7faf8;color:#8a9692;font-size:12px;">
-                        © {DateTime.UtcNow.Year} Mülkora
-                    </td>
-                </tr>
-
-            </table>
-
-        </td>
-    </tr>
-
-</table>
-
-</body>
-</html>
-""";
-
-        await _emailService.SendEmailAsync(appUser.Email!, "Mülkora | E-posta doğrulama", htmlBody);
+        await SendConfirmationEmailAsync(appUser);
 
         return result;
     }
@@ -186,5 +65,190 @@ public class RegisterService : IRegisterService
                 Description = "Doğrulama bağlantısı geçersiz."
             });
         }
+    }
+
+    public async Task ResendConfirmationEmailAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if (user == null)
+            return;
+
+        if (await _userManager.IsEmailConfirmedAsync(user))
+            return;
+
+        await SendConfirmationEmailAsync(user);
+    }
+
+    private async Task SendConfirmationEmailAsync(AppUser user)
+    {
+        var token =
+            await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        var encodedToken = WebEncoders.Base64UrlEncode(
+            Encoding.UTF8.GetBytes(token));
+
+        var frontendUrl = _configuration["FrontendUrl"]
+                          ?? throw new InvalidOperationException(
+                              "FrontendUrl bulunamadı.");
+
+        var confirmationLink =
+            $"{frontendUrl.TrimEnd('/')}/Account/ConfirmEmail" +
+            $"?userId={Uri.EscapeDataString(user.Id)}" +
+            $"&token={Uri.EscapeDataString(encodedToken)}";
+
+        var safeName = WebUtility.HtmlEncode(user.Name);
+        var safeLink = WebUtility.HtmlEncode(confirmationLink);
+
+        var htmlBody = $$"""
+                         <!doctype html>
+                         <html lang="tr">
+                         <head>
+                             <meta charset="utf-8">
+                             <meta name="viewport" content="width=device-width">
+                             <title>E-posta doğrulama</title>
+                         </head>
+
+                         <body style="margin:0;padding:0;background:#f1f2ed;font-family:Arial,Helvetica,sans-serif;">
+
+                         <table width="100%"
+                                cellpadding="0"
+                                cellspacing="0"
+                                role="presentation"
+                                style="background:#f1f2ed;">
+
+                             <tr>
+                                 <td align="center"
+                                     style="padding:44px 16px;">
+
+                                     <table width="100%"
+                                            cellpadding="0"
+                                            cellspacing="0"
+                                            role="presentation"
+                                            style="max-width:620px;background:#ffffff;border:1px solid #dfe6e2;border-radius:24px;overflow:hidden;">
+
+                                         <tr>
+                                             <td style="padding:30px 38px;background:#123f35;">
+
+                                                 <div style="font-size:27px;font-weight:800;color:#ffffff;letter-spacing:-1px;">
+                                                     Mülk<span style="color:#d8b078;">ora</span>
+                                                 </div>
+
+                                                 <div style="margin-top:7px;font-size:13px;color:#c4d4cf;">
+                                                     Doğru evi keşfedin, randevunuzu kolayca oluşturun.
+                                                 </div>
+
+                                             </td>
+                                         </tr>
+
+                                         <tr>
+                                             <td style="padding:42px 38px 36px;">
+
+                                                 <table cellpadding="0"
+                                                        cellspacing="0"
+                                                        role="presentation">
+
+                                                     <tr>
+                                                         <td align="center"
+                                                             style="width:58px;height:58px;border-radius:18px;background:#e8f2ee;color:#178268;font-size:25px;">
+
+                                                             ✉
+                                                         </td>
+                                                     </tr>
+
+                                                 </table>
+
+                                                 <h1 style="margin:26px 0 16px;color:#14201c;font-size:30px;line-height:1.25;letter-spacing:-.7px;">
+                                                     E-posta adresinizi doğrulayın
+                                                 </h1>
+
+                                                 <p style="margin:0 0 12px;color:#5d6b66;font-size:16px;line-height:1.7;">
+                                                     Merhaba {{safeName}},
+                                                 </p>
+
+                                                 <p style="margin:0 0 28px;color:#5d6b66;font-size:16px;line-height:1.7;">
+                                                     Mülkora hesabınız başarıyla oluşturuldu.
+                                                     Hesabınızı etkinleştirmek ve ilanları favorilerinize
+                                                     eklemeye başlamak için aşağıdaki butona tıklayın.
+                                                 </p>
+
+                                                 <table cellpadding="0"
+                                                        cellspacing="0"
+                                                        role="presentation">
+
+                                                     <tr>
+                                                         <td style="border-radius:12px;background:#174c40;">
+
+                                                             <a href="{{safeLink}}"
+                                                                target="_blank"
+                                                                style="display:inline-block;padding:16px 28px;color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;">
+
+                                                                 E-posta adresimi doğrula
+                                                             </a>
+
+                                                         </td>
+                                                     </tr>
+
+                                                 </table>
+
+                                                 <table width="100%"
+                                                        cellpadding="0"
+                                                        cellspacing="0"
+                                                        role="presentation"
+                                                        style="margin-top:30px;">
+
+                                                     <tr>
+                                                         <td style="padding:17px 18px;border:1px solid #e2e9e6;border-radius:13px;background:#f7faf8;color:#65726e;font-size:13px;line-height:1.65;">
+
+                                                             Bu doğrulama isteğini siz oluşturmadıysanız
+                                                             herhangi bir işlem yapmanıza gerek yoktur.
+
+                                                         </td>
+                                                     </tr>
+
+                                                 </table>
+
+                                                 <p style="margin:28px 0 8px;color:#8a9692;font-size:12px;line-height:1.6;">
+                                                     Buton çalışmazsa aşağıdaki bağlantıyı kopyalayıp
+                                                     tarayıcınızın adres çubuğuna yapıştırabilirsiniz:
+                                                 </p>
+
+                                                 <p style="margin:0;word-break:break-all;">
+
+                                                     <a href="{{safeLink}}"
+                                                        style="color:#178268;font-size:12px;line-height:1.6;">
+
+                                                         {{safeLink}}
+                                                     </a>
+
+                                                 </p>
+
+                                             </td>
+                                         </tr>
+
+                                         <tr>
+                                             <td style="padding:22px 38px;background:#f7faf8;border-top:1px solid #e5ebe8;color:#89948f;font-size:12px;line-height:1.6;">
+
+                                                 © {{DateTime.UtcNow.Year}} Mülkora<br>
+                                                 Bu e-posta otomatik olarak gönderilmiştir.
+
+                                             </td>
+                                         </tr>
+
+                                     </table>
+
+                                 </td>
+                             </tr>
+
+                         </table>
+
+                         </body>
+                         </html>
+                         """;
+
+        await _emailService.SendEmailAsync(
+            user.Email!,
+            "Mülkora | E-posta adresinizi doğrulayın",
+            htmlBody);
     }
 }

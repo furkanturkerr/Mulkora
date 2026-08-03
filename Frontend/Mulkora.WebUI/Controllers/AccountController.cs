@@ -68,7 +68,8 @@ public class AccountController : Controller
             new AuthenticationProperties
             {
                 IsPersistent = dto.RememberMe,
-                ExpiresUtc = new DateTimeOffset(jwtToken.ValidTo)
+                ExpiresUtc = new DateTimeOffset(jwtToken.ValidTo),
+                AllowRefresh = false
             });
         
         return RedirectToAction("Index", "Default");
@@ -244,6 +245,40 @@ public class AccountController : Controller
     public IActionResult ResetPasswordConfirmation()
     {
         return View();
+    }
+    
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult ResendConfirmationEmail()
+    {
+        if (User.Identity?.IsAuthenticated == true)
+            return RedirectToAction("Index", "Default");
+
+        return View();
+    }
+    
+    [AllowAnonymous]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResendConfirmationEmail(ResendConfirmationEmailDto dto)
+    {
+        if (!ModelState.IsValid)
+            return View(dto);
+
+        var client = _httpClientFactory.CreateClient("MulkoraApi");
+
+        var response = await client.PostAsJsonAsync("api/Auth/resend-confirmation-email", dto);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            ModelState.AddModelError(
+                "",
+                "Doğrulama e-postası gönderilemedi.");
+
+            return View(dto);
+        }
+
+        return View("ResendConfirmationEmailSent");
     }
     
     [Authorize]

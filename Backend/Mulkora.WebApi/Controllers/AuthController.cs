@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.AuthDtos;
@@ -83,6 +84,19 @@ namespace Mulkora.WebApi.Controllers
             return Ok(new
             {
                 message = "Şifreniz başarıyla yenilendi."
+            });
+        }
+        
+        [AllowAnonymous]
+        [HttpPost("resend-confirmation-email")]
+        public async Task<IActionResult> ResendConfirmationEmail(ResendConfirmationEmailDto dto)
+        {
+            await _registerService.ResendConfirmationEmailAsync(dto.Email);
+
+            return Ok(new
+            {
+                message =
+                    "E-posta kayıtlı ve doğrulanmamışsa yeni bağlantı gönderildi."
             });
         }
     }

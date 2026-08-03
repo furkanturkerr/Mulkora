@@ -1,0 +1,133 @@
+@model Mulkora.Dto.AuthDtos.ResendConfirmationEmailDto
+
+@{
+    Layout = null;
+}
+
+<!doctype html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Doğrulama e-postasını yeniden gönder · Mülkora</title>
+
+    <link rel="icon"
+          href="~/Mulkora_Full_Theme_With_Panels/assets/images/favicon.svg">
+
+    <link rel="stylesheet"
+          href="~/Mulkora_Full_Theme_With_Panels/assets/css/theme.css">
+</head>
+
+<body>
+
+<main class="auth-page">
+    <div class="auth-shell">
+
+        <aside class="auth-visual">
+
+            <a class="logo auth-brand"
+               asp-controller="Default"
+               asp-action="Index">
+
+                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg"
+                     alt="Mülkora">
+
+                <span>Mülk<strong>ora</strong></span>
+            </a>
+
+            <div class="auth-quote">
+                <h2>Hesabınızı etkinleştirmeye devam edin.</h2>
+
+                <p>
+                    Doğrulama bağlantısını yeniden göndererek
+                    Mülkora hesabınızı kullanmaya başlayabilirsiniz.
+                </p>
+            </div>
+
+        </aside>
+
+        <section class="auth-form-wrap">
+            <div class="auth-form">
+
+                <a class="text-link"
+                   asp-controller="Account"
+                   asp-action="Login">
+
+                    <svg class="icon"
+                         width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+
+                    Giriş sayfasına dön
+                </a>
+
+                <h1>Doğrulama e-postasını yeniden gönderin</h1>
+
+                <p>
+                    Kayıt olurken kullandığınız e-posta adresini yazın.
+                    Hesabınız henüz doğrulanmadıysa yeni bir bağlantı göndereceğiz.
+                </p>
+
+                <form asp-controller="Account"
+                      asp-action="ResendConfirmationEmail"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="validation-summary">
+                    </div>
+
+                    <div class="form-group">
+
+                        <label asp-for="Email">
+                            E-posta adresi
+                        </label>
+
+                        <input asp-for="Email"
+                               class="input"
+                               type="email"
+                               placeholder="ornek@mail.com"
+                               autocomplete="email">
+
+                        <span asp-validation-for="Email"
+                              class="validation">
+                        </span>
+
+                    </div>
+
+                    <button class="btn btn-primary btn-block"
+                            type="submit">
+
+                        Doğrulama bağlantısını gönder
+                    </button>
+
+                </form>
+
+                <div class="auth-bottom">
+                    Hesabınız zaten doğrulandı mı?
+
+                    <a asp-controller="Account"
+                       asp-action="Login">
+
+                        Giriş yapın
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<script src="~/Mulkora_Full_Theme_With_Panels/assets/js/theme.js"></script>
+
+<partial name="_ValidationScriptsPartial"/>
+
+</body>
+</html>
