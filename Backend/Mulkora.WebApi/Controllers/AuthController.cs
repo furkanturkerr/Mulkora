@@ -26,8 +26,16 @@ namespace Mulkora.WebApi.Controllers
 
             if (!result.Succeeded)
             {
-                var errors = result.Errors.Select(x => x.Description);
-                return BadRequest(errors);
+                var errors = result.Errors
+                    .Select(x => x.Description)
+                    .Distinct();
+
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError("Register", error);
+                }
+
+                return ValidationProblem(ModelState);
             }
 
             return StatusCode(StatusCodes.Status201Created);

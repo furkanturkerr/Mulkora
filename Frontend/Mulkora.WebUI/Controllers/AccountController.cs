@@ -4,6 +4,7 @@ using Mulkora.WebApi.Models;
 
 namespace Mulkora.WebUI.Controllers;
 
+[AutoValidateAntiforgeryToken]
 public class AccountController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;
@@ -24,7 +25,35 @@ public class AccountController : Controller
     {
         return View();
     }
-    
+
+    [HttpPost]
+    public async Task<IActionResult> Register(RegisterDto dto)
+    {
+        if (!ModelState.IsValid)
+            return View(dto);
+
+        var client = _httpClientFactory.CreateClient("MulkoraApi");
+        var response = await client.PostAsJsonAsync("http://localhost:5214/api/Auth/Register", dto);
+        if (!response.IsSuccessStatusCode)
+        {
+            var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+
+            if (problem != null)
+            {
+                foreach (var errorList in problem.Errors.Values)
+                {
+                    foreach (var error in errorList)
+                    {
+                        ModelState.AddModelError("", error);
+                    }
+                }
+            }
+            return View(dto);
+        }
+
+        return RedirectToAction(nameof(Login));
+    }
+
     [HttpGet]
     public IActionResult ForgotPassword()
     {
@@ -32,7 +61,6 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
     {
         if (!ModelState.IsValid)
@@ -60,7 +88,7 @@ public class AccountController : Controller
     {
         return View();
     }
-    
+
     [HttpGet]
     public IActionResult ResetPassword(string email, string token)
     {
@@ -78,9 +106,8 @@ public class AccountController : Controller
 
         return View(dto);
     }
-    
+
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
     {
         if (!ModelState.IsValid)

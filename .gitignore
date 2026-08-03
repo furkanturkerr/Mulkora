@@ -14,3 +14,7 @@ Backend/Otelvexa.WebApi/appsettings.Development.json
 Integrations/Mulkora.RapidApiConsume/appsettings.json
 Integrations/Mulkora.RapidApiConsume/appsettings.Development.json
 Backend/Mulkora.WebApi/appsettings.json
+
+# WebUI local settings
+Frontend/Mulkora.WebUI/appsettings.json
+Frontend/Mulkora.WebUI/appsettings.Development.json

@@ -10,6 +10,7 @@ using Mulkora.Business.Manager;
 using Mulkora.Business.Validators.AuthValidators;
 using Mulkora.DataAccess.Concrete;
 using Mulkora.Entity.Concrete;
+using Mulkora.WebApi.Identity;
 using Mulkora.WebApi.Middlewares;
 using Mulkora.WebApi.Services;
 
@@ -38,7 +39,8 @@ builder.Services
     })
     .AddRoles<AppRole>()
     .AddEntityFrameworkStores<Context>()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddErrorDescriber<TurkishIdentityErrorDescriber>();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 {

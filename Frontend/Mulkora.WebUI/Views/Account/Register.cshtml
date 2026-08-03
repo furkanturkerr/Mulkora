@@ -1,4 +1,4 @@
-@model dynamic
+@model Mulkora.Dto.AuthDtos.RegisterDto
 
 @{
     Layout = null;
@@ -8,86 +8,227 @@
 <html lang="tr">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Hesap oluşturun · Mülkora</title>
-    <link rel="icon" href="~/Mulkora_Full_Theme_With_Panels/assets/images/favicon.svg">
-    <link rel="stylesheet" href="~/Mulkora_Full_Theme_With_Panels/assets/css/theme.css">
+
+    <link rel="icon"
+          href="~/Mulkora_Full_Theme_With_Panels/assets/images/favicon.svg">
+
+    <link rel="stylesheet"
+          href="~/Mulkora_Full_Theme_With_Panels/assets/css/theme.css">
 </head>
+
 <body>
+
 <main class="auth-page">
     <div class="auth-shell">
+
         <aside class="auth-visual">
-            <a class="logo auth-brand" asp-controller="Default" asp-action="Index">
-                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg" alt="Mülkora"><span>Mülk<strong>ora</strong></span>
+
+            <a class="logo auth-brand"
+               asp-controller="Default"
+               asp-action="Index">
+
+                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg"
+                     alt="Mülkora">
+
+                <span>
+                    Mülk<strong>ora</strong>
+                </span>
             </a>
+
             <div class="auth-quote">
                 <h2>Aradığınız evi bulmak artık daha düzenli.</h2>
-                <p>Doğrulanmış ilanları keşfedin ve ev gösterim randevunuzu kolayca oluşturun.</p>
+
+                <p>
+                    Doğrulanmış ilanları keşfedin ve ev gösterim
+                    randevunuzu kolayca oluşturun.
+                </p>
             </div>
+
         </aside>
-        
+
         <section class="auth-form-wrap">
             <div class="auth-form">
-                <a class="text-link" asp-controller="Default" asp-action="Index">
-                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+
+                <a class="text-link"
+                   asp-controller="Default"
+                   asp-action="Index">
+
+                    <svg class="icon"
+                         width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+
                         <path d="m15 18-6-6 6-6"/>
                     </svg>
+
                     Ana sayfaya dön
                 </a>
-                
+
                 <h1>Hesap oluşturun</h1>
-                <p>Favori ilanlarınızı kaydedin ve randevularınızı kolayca takip edin.</p>
-                
-                <form method="post">
+
+                <p>
+                    Favori ilanlarınızı kaydedin ve randevularınızı
+                    kolayca takip edin.
+                </p>
+
+                <form asp-controller="Account"
+                      asp-action="Register"
+                      method="post">
+
                     @Html.AntiForgeryToken()
-                    
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="validation-summary">
+                    </div>
+
                     <div class="form-grid">
-                        <div class="form-group"><label>Ad</label>
-                            <input class="input" required placeholder="Adınız">
-                            <span class="validation">Bu alan zorunludur.</span>
+
+                        <div class="form-group">
+                            <label asp-for="Name">Ad</label>
+
+                            <input asp-for="Name"
+                                   class="input"
+                                   placeholder="Adınız"
+                                   autocomplete="given-name">
+
+                            <span asp-validation-for="Name"
+                                  class="validation">
+                            </span>
                         </div>
 
-                        <div class="form-group"><label>Soyad</label>
-                            <input class="input" required placeholder="Soyadınız">
-                            <span class="validation">Bu alan zorunludur.</span>
-                        </div>
+                        <div class="form-group">
+                            <label asp-for="Surname">Soyad</label>
 
-                        <div class="form-group full"><label>E-posta</label>
-                            <input class="input" type="email" required placeholder="ornek@mail.com">
-                            <span class="validation">Geçerli bir e-posta girin.</span>
+                            <input asp-for="Surname"
+                                   class="input"
+                                   placeholder="Soyadınız"
+                                   autocomplete="family-name">
+
+                            <span asp-validation-for="Surname"
+                                  class="validation">
+                            </span>
                         </div>
 
                         <div class="form-group full">
-                            <label>Şifre</label>
+                            <label asp-for="Email">E-posta</label>
+
+                            <input asp-for="Email"
+                                   class="input"
+                                   type="email"
+                                   placeholder="ornek@mail.com"
+                                   autocomplete="email">
+
+                            <span asp-validation-for="Email"
+                                  class="validation">
+                            </span>
+                        </div>
+
+                        <div class="form-group full">
+
+                            <label asp-for="Password">Şifre</label>
+
                             <div class="password-wrap">
-                                <input class="input" type="password" required placeholder="En az 8 karakter">
-                                <button class="password-toggle" type="button" aria-label="Şifreyi göster">
-                                    <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <input asp-for="Password"
+                                       class="input"
+                                       type="password"
+                                       placeholder="En az 8 karakter"
+                                       autocomplete="new-password">
+
+                                <button class="password-toggle"
+                                        type="button"
+                                        aria-label="Şifreyi göster">
+
+                                    <svg class="icon"
+                                         width="18"
+                                         height="18"
+                                         viewBox="0 0 24 24"
+                                         aria-hidden="true">
+
                                         <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Zm9.5 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                                     </svg>
+
                                 </button>
                             </div>
-                            
-                            <span class="help">En az 8 karakter, bir büyük harf ve bir rakam kullanın.</span>
-                            <span class="validation">Şifrenizi girin.</span>
+
+                            <span class="help">
+                                En az 8 karakter, bir büyük harf ve bir rakam kullanın.
+                            </span>
+
+                            <span asp-validation-for="Password"
+                                  class="validation">
+                            </span>
                         </div>
+
                         <div class="form-group full">
-                            <label class="check"><input type="checkbox" required>
-                                <a href="terms.html">Kullanım koşullarını</a>ve<a href="privacy.html">gizlilik politikasını</a>kabul ediyorum.
+
+                            <label class="check">
+
+                                <input type="checkbox"
+                                       name="AcceptTerms"
+                                       value="true"
+                                       required>
+
+                                <span>
+                                    <a href="/terms"
+                                       target="_blank">
+                                        Kullanım koşullarını
+                                    </a>
+
+                                    ve
+
+                                    <a href="/privacy"
+                                       target="_blank">
+                                        gizlilik politikasını
+                                    </a>
+
+                                    kabul ediyorum.
+                                </span>
+
                             </label>
-                            <span class="validation">Devam etmek için koşulları kabul edin.</span>
+
                         </div>
+
                         <div class="form-group full">
-                            <button class="btn btn-primary btn-block">Hesap Oluştur</button>
+
+                            <button class="btn btn-primary btn-block"
+                                    type="submit">
+
+                                Hesap Oluştur
+                            </button>
+
                         </div>
+
                     </div>
                 </form>
-                <div class="auth-bottom">Zaten hesabınız var mı? <a asp-controller="Account" asp-action="Login">Giriş yapın</a></div>
+
+                <div class="auth-bottom">
+                    Zaten hesabınız var mı?
+
+                    <a asp-controller="Account"
+                       asp-action="Login">
+
+                        Giriş yapın
+                    </a>
+                </div>
+
             </div>
         </section>
+
     </div>
 </main>
-<div class="toast" role="status"><span data-toast-text>İşlem tamamlandı.</span></div>
+
+<div class="toast" role="status">
+    <span data-toast-text>İşlem tamamlandı.</span>
+</div>
+
 <script src="~/Mulkora_Full_Theme_With_Panels/assets/js/theme.js"></script>
+
+<partial name="_ValidationScriptsPartial"/>
+
 </body>
 </html>

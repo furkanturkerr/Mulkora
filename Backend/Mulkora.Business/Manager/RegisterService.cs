@@ -25,6 +25,12 @@ public class RegisterService : IRegisterService
         };
 
         var result = await _userManager.CreateAsync(appUser, registerDto.Password);
+        
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(appUser, "Member");
+        }
+        
         return result;
     }
 }
