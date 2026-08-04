@@ -1,8 +1,10 @@
+using System.Net.Http.Json;
 using Mulkora.WebUI.Services.Abstract;
 
 namespace Mulkora.WebUI.Services.Concrete;
 
-public abstract class GenericService<TResultDto, TCreateDto, TUpdateDto> : IGenericService<TResultDto, TCreateDto, TUpdateDto>
+public abstract class GenericService<TResultDto, TCreateDto, TUpdateDto>
+    : IGenericService<TResultDto, TCreateDto, TUpdateDto>
 {
     private readonly HttpClient _client;
 
@@ -29,21 +31,18 @@ public abstract class GenericService<TResultDto, TCreateDto, TUpdateDto> : IGene
         return await response.Content.ReadFromJsonAsync<TUpdateDto>();
     }
 
-    public async Task TInsertAsync(TCreateDto dto)
+    public async Task<HttpResponseMessage> TInsertAsync(TCreateDto dto)
     {
-        var response = await _client.PostAsJsonAsync(ApiRoute, dto);
-        response.EnsureSuccessStatusCode();
+        return await _client.PostAsJsonAsync(ApiRoute, dto);
     }
 
-    public async Task TUpdateAsync(TUpdateDto dto)
+    public async Task<HttpResponseMessage> TUpdateAsync(TUpdateDto dto)
     {
-        var response = await _client.PutAsJsonAsync(ApiRoute, dto);
-        response.EnsureSuccessStatusCode();
+        return await _client.PutAsJsonAsync(ApiRoute, dto);
     }
 
-    public async Task TDeleteAsync(int id)
+    public async Task<HttpResponseMessage> TDeleteAsync(int id)
     {
-        var response = await _client.DeleteAsync($"{ApiRoute}/{id}");
-        response.EnsureSuccessStatusCode();
+        return await _client.DeleteAsync($"{ApiRoute}/{id}");
     }
 }

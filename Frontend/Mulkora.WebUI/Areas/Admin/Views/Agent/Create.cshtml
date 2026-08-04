@@ -1,0 +1,226 @@
+@model Mulkora.Dto.AgentDtos.CreateAgentDto
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Danışman Ekle";
+}
+
+<link rel="stylesheet" href="~/css/admin/agent-form.css" asp-append-version="true">
+
+<div class="agent-form-page">
+
+    <div class="agent-form-heading">
+        <div>
+            <a asp-area="Admin" asp-controller="Agent" asp-action="AgentList" class="agent-back-link">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 12H5M11 18l-6-6 6-6"/>
+                </svg>
+                Danışmanlara dön
+            </a>
+
+            <h1>Yeni Danışman Ekle</h1>
+            <p>Danışmanın giriş hesabını ve profesyonel profil bilgilerini oluşturun.</p>
+        </div>
+
+        <div class="agent-form-badge">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M5 21a7 7 0 0 1 14 0M19 5v6M16 8h6"/>
+            </svg>
+            Yeni kayıt
+        </div>
+    </div>
+
+    <form asp-area="Admin" asp-controller="Agent" asp-action="Create" method="post" class="agent-form">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="agent-validation-summary"></div>
+
+        <div class="agent-form-layout">
+
+            <div class="agent-form-main">
+
+                <section class="agent-form-card">
+                    <div class="agent-form-card-header">
+                        <span class="agent-form-card-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="8" r="4"/>
+                                <path d="M5 21a7 7 0 0 1 14 0"/>
+                            </svg>
+                        </span>
+
+                        <div>
+                            <h2>Hesap bilgileri</h2>
+                            <p>Danışmanın sisteme giriş yaparken kullanacağı bilgiler.</p>
+                        </div>
+                    </div>
+
+                    <div class="agent-form-grid">
+                        <div class="agent-form-group">
+                            <label asp-for="Name">Ad</label>
+                            <input asp-for="Name" class="agent-input" placeholder="Danışmanın adı">
+                            <span asp-validation-for="Name" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="Surname">Soyad</label>
+                            <input asp-for="Surname" class="agent-input" placeholder="Danışmanın soyadı">
+                            <span asp-validation-for="Surname" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="Email">E-posta adresi</label>
+                            <input asp-for="Email" class="agent-input" type="email" placeholder="ornek@mulkora.com">
+                            <span asp-validation-for="Email" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="Password">Geçici şifre</label>
+                            <input asp-for="Password" class="agent-input" type="password" placeholder="En az 8 karakter">
+                            <span asp-validation-for="Password" class="agent-validation"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="agent-form-card">
+                    <div class="agent-form-card-header">
+                        <span class="agent-form-card-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 21V7h16v14M8 7V3h8v4M8 12h2M14 12h2M8 16h2M14 16h2"/>
+                            </svg>
+                        </span>
+
+                        <div>
+                            <h2>Profesyonel profil</h2>
+                            <p>Danışmanın uzmanlık, bölge ve ofis bilgileri.</p>
+                        </div>
+                    </div>
+
+                    <div class="agent-form-grid">
+                        <div class="agent-form-group agent-form-group-full">
+                            <label asp-for="Title">Unvan</label>
+                            <input asp-for="Title" class="agent-input" placeholder="Örneğin: Kıdemli Gayrimenkul Danışmanı">
+                            <span asp-validation-for="Title" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="City">Şehir</label>
+                            <input asp-for="City" class="agent-input" placeholder="İstanbul">
+                            <span asp-validation-for="City" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="District">İlçe</label>
+                            <input asp-for="District" class="agent-input" placeholder="Sarıyer">
+                            <span asp-validation-for="District" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="OfficeName">Ofis adı</label>
+                            <input asp-for="OfficeName" class="agent-input" placeholder="Mülkora İstanbul">
+                            <span asp-validation-for="OfficeName" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="LicenseNumber">Lisans numarası</label>
+                            <input asp-for="LicenseNumber" class="agent-input" placeholder="TR-IST-2026-0001">
+                            <span asp-validation-for="LicenseNumber" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="ExperienceYear">Deneyim yılı</label>
+                            <input asp-for="ExperienceYear" class="agent-input" type="number" min="0" placeholder="0">
+                            <span asp-validation-for="ExperienceYear" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group">
+                            <label asp-for="ImageUrl">Profil görseli</label>
+                            <input asp-for="ImageUrl" class="agent-input" placeholder="https://...">
+                            <span asp-validation-for="ImageUrl" class="agent-validation"></span>
+                        </div>
+
+                        <div class="agent-form-group agent-form-group-full">
+                            <label asp-for="About">Danışman hakkında</label>
+                            <textarea asp-for="About" class="agent-textarea" rows="6" placeholder="Danışmanın uzmanlık alanları ve deneyimi hakkında kısa açıklama yazın."></textarea>
+                            <span asp-validation-for="About" class="agent-validation"></span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+
+            <aside class="agent-form-sidebar">
+
+                <section class="agent-form-card agent-status-card">
+                    <div class="agent-form-card-header">
+                        <span class="agent-form-card-icon">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9"/>
+                                <path d="m8 12 3 3 5-6"/>
+                            </svg>
+                        </span>
+
+                        <div>
+                            <h2>Hesap durumu</h2>
+                            <p>Danışmanın erişim ve doğrulama ayarları.</p>
+                        </div>
+                    </div>
+
+                    <label class="agent-switch-row">
+                        <span>
+                            <strong>Aktif hesap</strong>
+                            <small>Danışman sisteme giriş yapabilir.</small>
+                        </span>
+
+                        <span class="agent-switch">
+                            <input asp-for="IsActive">
+                            <span class="agent-switch-slider"></span>
+                        </span>
+                    </label>
+
+                    <label class="agent-switch-row">
+                        <span>
+                            <strong>Doğrulanmış danışman</strong>
+                            <small>Profil doğrulanmış olarak gösterilir.</small>
+                        </span>
+
+                        <span class="agent-switch">
+                            <input asp-for="IsVerified">
+                            <span class="agent-switch-slider"></span>
+                        </span>
+                    </label>
+                </section>
+
+                <section class="agent-form-note">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 11v5M12 8h.01"/>
+                    </svg>
+
+                    <div>
+                        <strong>Hesap oluşturma</strong>
+                        <p>Danışman eklendiğinde kullanıcı hesabı ve danışman profili birlikte oluşturulur.</p>
+                    </div>
+                </section>
+
+                <div class="agent-form-actions">
+                    <button type="submit" class="agent-submit-button">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M5 12h14M14 7l5 5-5 5"/>
+                        </svg>
+                        Danışmanı Kaydet
+                    </button>
+
+                    <a asp-area="Admin" asp-controller="Agent" asp-action="AgentList" class="agent-cancel-button">
+                        Vazgeç
+                    </a>
+                </div>
+
+            </aside>
+
+        </div>
+    </form>
+
+</div>
+
+<partial name="_ValidationScriptsPartial"/>

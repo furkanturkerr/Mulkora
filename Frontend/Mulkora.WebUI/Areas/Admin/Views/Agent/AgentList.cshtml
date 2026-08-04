@@ -1,0 +1,277 @@
+@model List<Mulkora.Dto.AgentDtos.ResultAgentDto>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Danışman Yönetimi";
+}
+
+<link rel="stylesheet" href="~/css/admin/agent.css" asp-append-version="true">
+
+<div class="agents-page">
+
+    <div class="agents-heading">
+        <div>
+            <span class="agents-eyebrow">Kullanıcı yönetimi</span>
+            <h1>Danışman Yönetimi</h1>
+            <p>Danışman profillerini, doğrulama durumlarını ve hesap erişimlerini yönetin.</p>
+        </div>
+
+        <a asp-area="Admin" asp-controller="Agent" asp-action="Create" class="agents-add-button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Danışman Ekle
+        </a>
+    </div>
+
+    <form asp-area="Admin" asp-controller="Agent" asp-action="" method="get" class="agents-filter">
+
+        <div class="agents-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/>
+                <path d="m16.5 16.5 4 4"/>
+            </svg>
+
+            <input type="search" name="search" placeholder="Danışman adı, e-posta veya ofis ara">
+        </div>
+
+        <div class="agents-filter-item">
+            <label for="city">Bölge</label>
+            <select id="city" name="city">
+                <option value="">Tüm bölgeler</option>
+                <option value="İstanbul">İstanbul</option>
+                <option value="Ankara">Ankara</option>
+                <option value="İzmir">İzmir</option>
+                <option value="Bursa">Bursa</option>
+                <option value="Samsun">Samsun</option>
+                <option value="Antalya">Antalya</option>
+                <option value="Muğla">Muğla</option>
+                <option value="Sakarya">Sakarya</option>
+            </select>
+        </div>
+
+        <div class="agents-filter-item">
+            <label for="status">Durum</label>
+            <select id="status" name="status">
+                <option value="">Tüm durumlar</option>
+                <option value="active">Aktif</option>
+                <option value="pending">İncelemede</option>
+                <option value="passive">Pasif</option>
+            </select>
+        </div>
+
+        <div class="agents-filter-item">
+            <label for="experience">Deneyim</label>
+            <select id="experience" name="experience">
+                <option value="">Tüm deneyimler</option>
+                <option value="0-3">0–3 yıl</option>
+                <option value="4-7">4–7 yıl</option>
+                <option value="8-10">8–10 yıl</option>
+                <option value="10+">10 yıl üzeri</option>
+            </select>
+        </div>
+
+        <div class="agents-filter-actions">
+            <button type="submit" class="agents-filter-button">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 5h16M7 12h10M10 19h4"/>
+                </svg>
+                Filtrele
+            </button>
+
+            <a asp-area="Admin" asp-controller="Agents" asp-action="Index" class="agents-clear-button">
+                Temizle
+            </a>
+        </div>
+
+    </form>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="agents-empty">
+            <div class="agents-empty-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M5 21a7 7 0 0 1 14 0"/>
+                    <path d="M19 4v6M16 7h6"/>
+                </svg>
+            </div>
+
+            <h2>Henüz danışman bulunmuyor</h2>
+            <p>İlk danışman hesabını oluşturarak danışman yönetimine başlayın.</p>
+
+            <a asp-area="Admin" asp-controller="Agent" asp-action="Create" class="agents-add-button">
+                Danışman Ekle
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="agents-grid">
+
+            @foreach (var agent in Model)
+            {
+                <article class="agent-card">
+
+                    <div class="agent-card-header">
+
+                        <div class="agent-profile">
+                            <img src="@(string.IsNullOrWhiteSpace(agent.ImageUrl) ? "/images/default-agent.png" : agent.ImageUrl)"
+                                 alt="@agent.Name @agent.Surname">
+
+                            <div class="agent-profile-info">
+                                <h2>@agent.Name @agent.Surname</h2>
+                                <span class="agent-title">@agent.Title</span>
+
+                                <span class="agent-location">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/>
+                                        <circle cx="12" cy="10" r="2"/>
+                                    </svg>
+                                    @agent.City / @agent.District
+                                </span>
+                            </div>
+                        </div>
+
+                        @if (!agent.IsActive)
+                        {
+                            <span class="agent-status agent-status-passive">
+                                <i></i>
+                                Pasif
+                            </span>
+                        }
+                        else if (agent.IsVerified)
+                        {
+                            <span class="agent-status agent-status-active">
+                                <i></i>
+                                Aktif
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="agent-status agent-status-pending">
+                                <i></i>
+                                İncelemede
+                            </span>
+                        }
+
+                    </div>
+
+                    <p class="agent-about">
+                        @(string.IsNullOrWhiteSpace(agent.About)
+                            ? "Danışman hakkında henüz açıklama eklenmemiş."
+                            : agent.About)
+                    </p>
+
+                    <div class="agent-details">
+
+                        <div class="agent-detail-item">
+                            <span class="agent-detail-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="9"/>
+                                    <path d="M12 7v5l3 2"/>
+                                </svg>
+                            </span>
+
+                            <div>
+                                <span>Deneyim</span>
+                                <strong>@agent.ExperienceYear yıl</strong>
+                            </div>
+                        </div>
+
+                        <div class="agent-detail-item">
+                            <span class="agent-detail-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4 21V7h16v14M8 7V3h8v4M8 12h2M14 12h2M8 16h2M14 16h2"/>
+                                </svg>
+                            </span>
+
+                            <div>
+                                <span>Ofis</span>
+                                <strong title="@agent.OfficeName">
+                                    @(string.IsNullOrWhiteSpace(agent.OfficeName) ? "Belirtilmedi" : agent.OfficeName)
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="agent-detail-item">
+                            <span class="agent-detail-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4 5h16v14H4V5Zm0 2 8 6 8-6"/>
+                                </svg>
+                            </span>
+
+                            <div>
+                                <span>E-posta</span>
+                                <strong title="@agent.Email">@agent.Email</strong>
+                            </div>
+                        </div>
+
+                        <div class="agent-detail-item">
+                            <span class="agent-detail-icon">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <rect x="6" y="3" width="12" height="18" rx="2"/>
+                                    <path d="M9 8h6M9 12h6M9 16h4"/>
+                                </svg>
+                            </span>
+
+                            <div>
+                                <span>Lisans numarası</span>
+                                <strong title="@agent.LicenseNumber">
+                                    @(string.IsNullOrWhiteSpace(agent.LicenseNumber) ? "Belirtilmedi" : agent.LicenseNumber)
+                                </strong>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="agent-card-footer">
+
+                        <a asp-area="Admin"
+                           asp-controller="Agent"
+                           asp-action="Update"
+                           asp-route-id="@agent.AgentId"
+                           class="agent-action agent-action-edit">
+
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m4 16-.8 4.8L8 20l11-11-4-4L4 16Z"/>
+                                <path d="m13.5 6.5 4 4"/>
+                            </svg>
+
+                            Düzenle
+                        </a>
+
+                        <form asp-area="Admin"
+                              asp-controller="Agent"
+                              asp-action="Delete"
+                              asp-route-id="@agent.AgentId"
+                              method="post"
+                              class="agent-delete-form">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit"
+                                    class="agent-action agent-action-delete"
+                                    onclick="return confirm('Bu danışmanı silmek istediğinize emin misiniz?')">
+
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M4 7h16"/>
+                                    <path d="M9 7V4h6v3"/>
+                                    <path d="m6 7 1 14h10l1-14"/>
+                                    <path d="M10 11v6M14 11v6"/>
+                                </svg>
+
+                                Sil
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+
+</div>

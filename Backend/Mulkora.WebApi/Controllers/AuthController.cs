@@ -1,103 +1,98 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.AuthDtos;
 
-namespace Mulkora.WebApi.Controllers
+namespace Mulkora.WebApi.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+[AllowAnonymous]
+public class AuthController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly ILoginService _loginService;
+    private readonly IRegisterService _registerService;
+    private readonly IPasswordResetService _passwordResetService;
+
+    public AuthController(
+        ILoginService loginService,
+        IRegisterService registerService,
+        IPasswordResetService passwordResetService)
     {
-        private readonly IRegisterService _registerService;
-        private readonly ILoginService _loginService;
-        private readonly IPasswordResetService _passwordResetService;
+        _loginService = loginService;
+        _registerService = registerService;
+        _passwordResetService = passwordResetService;
+    }
 
-        public AuthController(IRegisterService registerService, ILoginService loginService, IPasswordResetService passwordResetService)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDto dto)
+    {
+        var token = await _loginService.Login(dto);
+
+        return Ok(new AuthResponseDto
         {
-            _registerService = registerService;
-            _loginService = loginService;
-            _passwordResetService = passwordResetService;
+            Succeeded = true,
+            Token = token,
+            Message = "Giriş başarılı."
+        });
+    }
+    
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterDto dto)
+    {
+        var result = await _registerService.Register(dto);
+
+        if (!result.Succeeded)
+        {
+            var message = string.Join(" ", result.Errors
+                .Select(x => x.Description)
+                .Distinct());
+
+            throw new Exception(message);
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDto registerDto)
+        return NoContent();
+    }
+
+    [HttpGet("confirm-email")]
+    public async Task<IActionResult> ConfirmEmail(string userId, string token)
+    {
+        var result = await _registerService.ConfirmEmailAsync(userId, token);
+
+        if (!result.Succeeded)
         {
-            var result = await _registerService.Register(registerDto);
+            var message = string.Join(" ", result.Errors
+                .Select(x => x.Description)
+                .Distinct());
 
-            if (!result.Succeeded)
-            {
-                var errors = result.Errors
-                    .Select(x => x.Description)
-                    .Distinct();
-
-                foreach (var error in errors)
-                {
-                    ModelState.AddModelError("Register", error);
-                }
-
-                return ValidationProblem(ModelState);
-            }
-
-            return StatusCode(StatusCodes.Status201Created);
-        }
-        
-        [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            var result = await _registerService.ConfirmEmailAsync(userId, token);
-
-            if (!result.Succeeded) return BadRequest("Doğrulama bağlantısı geçersiz veya süresi dolmuş.");
-
-            return Ok();
-        }
-        
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginDto loginDto)
-        {
-            var token = await _loginService.Login(loginDto);
-            return Ok(new AuthResponseDto
-            {
-                Succeeded = true,
-                Token = token,
-                Message = "Giriş başarılı."
-            });
-        }
-        
-        [HttpPost("ForgotPassword")]
-        public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
-        {
-            await _passwordResetService.ForgotPasswordAsync(dto.Email);
-
-            return Ok(new
-            {
-                message =
-                    "E-posta kayıtlıysa şifre sıfırlama bağlantısı gönderildi."
-            });
+            throw new Exception(message);
         }
 
-        [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
-        {
-            await _passwordResetService.ResetPasswordAsync(dto);
+        return NoContent();
+    }
 
-            return Ok(new
-            {
-                message = "Şifreniz başarıyla yenilendi."
-            });
-        }
-        
-        [AllowAnonymous]
-        [HttpPost("resend-confirmation-email")]
-        public async Task<IActionResult> ResendConfirmationEmail(ResendConfirmationEmailDto dto)
-        {
-            await _registerService.ResendConfirmationEmailAsync(dto.Email);
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordDto dto)
+    {
+        await _passwordResetService.ForgotPasswordAsync(dto.Email);
 
-            return Ok(new
-            {
-                message =
-                    "E-posta kayıtlı ve doğrulanmamışsa yeni bağlantı gönderildi."
-            });
-        }
+        return NoContent();
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword(ResetPasswordDto dto)
+    {
+        await _passwordResetService.ResetPasswordAsync(dto);
+
+        return NoContent();
+    }
+
+    [HttpPost("resend-confirmation-email")]
+    public async Task<IActionResult> ResendConfirmationEmail(ResendConfirmationEmailDto dto)
+    {
+        await _registerService.ResendConfirmationEmailAsync(dto.Email);
+
+        return NoContent();
     }
 }

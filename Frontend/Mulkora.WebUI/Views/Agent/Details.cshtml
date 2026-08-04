@@ -1,0 +1,246 @@
+@model dynamic
+
+@{
+    Layout = "_Layout";
+}
+
+<section class="detail-header">
+  <div class="container">
+    <div class="breadcrumbs" style="color:var(--muted)"><a href="index.html">Ana Sayfa</a><span>/</span>
+      <a href="agents.html">Danışmanlar</a><span>/</span><span>Selin Aksoy</span>
+    </div>
+    <div class="detail-card">
+      <div style="display:grid;grid-template-columns:180px 1fr auto;gap:28px;align-items:center">
+        <img
+          src="assets/images/agents/agent-01.svg" alt="Selin Aksoy"
+          style="width:180px;height:205px;object-fit:cover;border-radius:20px">
+        <div><span class="badge success">Doğrulanmış danışman</span>
+          <h1 style="margin:10px 0 5px;font-size:46px;letter-spacing:-.05em">Selin Aksoy</h1>
+          <p class="muted" style="margin:0">İstanbul Avrupa Yakası · 8 yıl deneyim</p>
+          <div class="rating">
+            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 16l-5.5 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>
+            </svg>
+            4.9 · 86 değerlendirme · 32 aktif ilan
+          </div>
+        </div>
+        <div style="display:grid;gap:9px">
+          <a class="btn btn-primary" href="appointment.html">
+            <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/>
+            </svg>
+            Randevu al</a>
+          <button class="btn btn-outline" data-toast="Mesajınız danışmana iletildi.">
+            <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 5h16v11H9l-5 4V5Z"/>
+            </svg>
+            Mesaj gönder
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  <section class="section-sm">
+    <div class="container">
+      <div class="detail-layout">
+        <div>
+          <section class="detail-card"><h2>Hakkında</h2>
+            <p class="muted">Sarıyer, Beşiktaş ve Şişli bölgelerinde konut portföyleri üzerine uzmanlaşmıştır. Satın
+              alma ve kiralama sürecinde fiyat analizi, bölge karşılaştırması ve randevu planlaması konularında
+              danışmanlık verir.</p></section>
+          <section class="detail-card"><h2>Uzmanlık alanları</h2>
+            <div class="feature-grid">
+              <div class="feature"><span class="checkmark"><svg class="icon" width="14" height="14" viewBox="0 0 24 24"
+                                                                aria-hidden="true"><path
+                      d="m5 12 4 4L19 6"/></svg></span>Lüks konut
+              </div>
+              <div class="feature"><span class="checkmark"><svg class="icon" width="14" height="14" viewBox="0 0 24 24"
+                                                                aria-hidden="true"><path
+                      d="m5 12 4 4L19 6"/></svg></span>Villa
+              </div>
+              <div class="feature"><span class="checkmark"><svg class="icon" width="14" height="14" viewBox="0 0 24 24"
+                                                                aria-hidden="true"><path
+                      d="m5 12 4 4L19 6"/></svg></span>Rezidans
+              </div>
+              <div class="feature"><span class="checkmark"><svg class="icon" width="14" height="14" viewBox="0 0 24 24"
+                                                                aria-hidden="true"><path
+                      d="m5 12 4 4L19 6"/></svg></span>Yatırımlık daire
+              </div>
+              <div class="feature"><span class="checkmark"><svg class="icon" width="14" height="14" viewBox="0 0 24 24"
+                                                                aria-hidden="true"><path
+                      d="m5 12 4 4L19 6"/></svg></span>Fiyat analizi
+              </div>
+              <div class="feature"><span class="checkmark"><svg class="icon" width="14" height="14" viewBox="0 0 24 24"
+                                                                aria-hidden="true"><path
+                      d="m5 12 4 4L19 6"/></svg></span>Bölge danışmanlığı
+              </div>
+            </div>
+          </section>
+          <section class="detail-card"><h2>Danışmanın ilanları</h2>
+            <div class="property-grid" style="grid-template-columns:repeat(2,1fr)">
+              <article class="property-card " data-property-card>
+                <a href="property-detail.html" aria-label="Modern Bahçe Villası">
+                  <div class="property-media"><img src="assets/images/properties/property-01.svg"
+                                                   alt="Modern Bahçe Villası">
+                    <div class="property-tags"><span class="badge accent">Yeni</span><span class="badge">Satılık</span>
+                    </div>
+                  </div>
+                  <div class="property-body">
+                    <div class="property-price">₺18.750.000</div>
+                    <h3>Modern Bahçe Villası</h3>
+                    <div class="location">
+                      <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                      </svg>
+                      Zekeriyaköy, İstanbul
+                    </div>
+                    <p class="card-description">Doğayla iç içe, yüksek tavanlı ve özel bahçeli modern yaşam alanı.</p>
+                    <div class="specs"><span class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24"
+                                                               aria-hidden="true"><path
+                            d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"/></svg> 5+1</span><span
+                        class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"/></svg> 320 m²</span><span class="spec"><svg
+                          class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"/></svg> 3 Banyo</span>
+                    </div>
+                  </div>
+                </a>
+                <button class="favorite" type="button" data-id="01" aria-label="Favorilere ekle" aria-pressed="false">
+                  <svg class="icon" width="19" height="19" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8Z"/>
+                  </svg>
+                </button>
+              </article>
+              <article class="property-card " data-property-card>
+                <a href="property-detail.html" aria-label="Boğaz Manzaralı Rezidans">
+                  <div class="property-media"><img src="assets/images/properties/property-02.svg"
+                                                   alt="Boğaz Manzaralı Rezidans">
+                    <div class="property-tags"><span class="badge accent">Premium</span><span
+                        class="badge">Satılık</span></div>
+                  </div>
+                  <div class="property-body">
+                    <div class="property-price">₺24.900.000</div>
+                    <h3>Boğaz Manzaralı Rezidans</h3>
+                    <div class="location">
+                      <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                      </svg>
+                      Etiler, İstanbul
+                    </div>
+                    <p class="card-description">Akıllı ev sistemli, geniş teraslı ve kesintisiz şehir manzaralı
+                      rezidans.</p>
+                    <div class="specs"><span class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24"
+                                                               aria-hidden="true"><path
+                            d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"/></svg> 4+1</span><span
+                        class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"/></svg> 245 m²</span><span class="spec"><svg
+                          class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"/></svg> 2 Banyo</span>
+                    </div>
+                  </div>
+                </a>
+                <button class="favorite" type="button" data-id="02" aria-label="Favorilere ekle" aria-pressed="false">
+                  <svg class="icon" width="19" height="19" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8Z"/>
+                  </svg>
+                </button>
+              </article>
+              <article class="property-card " data-property-card>
+                <a href="property-detail.html" aria-label="Sahil Yakını Ferah Daire">
+                  <div class="property-media"><img src="assets/images/properties/property-03.svg"
+                                                   alt="Sahil Yakını Ferah Daire">
+                    <div class="property-tags"><span class="badge">Satılık</span></div>
+                  </div>
+                  <div class="property-body">
+                    <div class="property-price">₺8.450.000</div>
+                    <h3>Sahil Yakını Ferah Daire</h3>
+                    <div class="location">
+                      <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                      </svg>
+                      Bostanlı, İzmir
+                    </div>
+                    <p class="card-description">Sahile yürüme mesafesinde, yenilenmiş ve gün ışığı alan geniş daire.</p>
+                    <div class="specs"><span class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24"
+                                                               aria-hidden="true"><path
+                            d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"/></svg> 3+1</span><span
+                        class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"/></svg> 165 m²</span><span class="spec"><svg
+                          class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"/></svg> 2 Banyo</span>
+                    </div>
+                  </div>
+                </a>
+                <button class="favorite" type="button" data-id="03" aria-label="Favorilere ekle" aria-pressed="false">
+                  <svg class="icon" width="19" height="19" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8Z"/>
+                  </svg>
+                </button>
+              </article>
+              <article class="property-card " data-property-card>
+                <a href="property-detail.html" aria-label="Minimal Tasarım Loft">
+                  <div class="property-media"><img src="assets/images/properties/property-04.svg"
+                                                   alt="Minimal Tasarım Loft">
+                    <div class="property-tags"><span class="badge accent">Yeni</span><span class="badge">Kiralık</span>
+                    </div>
+                  </div>
+                  <div class="property-body">
+                    <div class="property-price">₺42.000 / ay</div>
+                    <h3>Minimal Tasarım Loft</h3>
+                    <div class="location">
+                      <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                      </svg>
+                      Nilüfer, Bursa
+                    </div>
+                    <p class="card-description">Yüksek tavan, açık plan mutfak ve ortak sosyal alanlara sahip loft.</p>
+                    <div class="specs"><span class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24"
+                                                               aria-hidden="true"><path
+                            d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"/></svg> 2+1</span><span
+                        class="spec"><svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"/></svg> 132 m²</span><span class="spec"><svg
+                          class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path
+                            d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"/></svg> 1 Banyo</span>
+                    </div>
+                  </div>
+                </a>
+                <button class="favorite" type="button" data-id="04" aria-label="Favorilere ekle" aria-pressed="false">
+                  <svg class="icon" width="19" height="19" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8Z"/>
+                  </svg>
+                </button>
+              </article>
+            </div>
+          </section>
+        </div>
+        <aside>
+          <div class="detail-card sticky-card"><h2>İletişim</h2>
+            <div class="contact-list">
+              <button class="btn btn-primary btn-block" data-toast="Telefon numarası: 0850 000 00 00">
+                <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 4h4l2 5-3 2a16 16 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2C10 21 3 14 3 6a2 2 0 0 1 2-2Z"/>
+                </svg>
+                Telefonu göster
+              </button>
+              <button class="btn btn-outline btn-block" data-toast="E-posta adresi: selin@mulkora.com">
+                <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 5h16v14H4V5Zm0 2 8 6 8-6"/>
+                </svg>
+                E-posta gönder
+              </button>
+            </div>
+            <div class="schedule-list">
+              <div><span>Pzt–Cum</span><strong>09:00–18:00</strong></div>
+              <div><span>Cumartesi</span><strong>10:00–16:00</strong></div>
+              <div><span>Pazar</span><strong>Randevulu</strong></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>

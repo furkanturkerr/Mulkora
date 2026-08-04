@@ -46,10 +46,20 @@ public class AccountController : Controller
         var client = _httpClientFactory.CreateClient("MulkoraApi");
         
         var response = await client.PostAsJsonAsync("api/Auth/login", dto);
-        var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
-        if (!response.IsSuccessStatusCode || result == null || !result.Succeeded || string.IsNullOrWhiteSpace(result.Token))
+        
+        if (!response.IsSuccessStatusCode)
         {
-            ModelState.AddModelError("", result.Message ?? "E-posta veya şifre hatalı.");
+            var error = await response.Content.ReadAsStringAsync();
+
+            ModelState.AddModelError("", string.IsNullOrWhiteSpace(error) ? "E-posta veya şifre hatalı." : error);
+            return View(dto);
+        }
+        
+        var result = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+
+        if (result == null || !result.Succeeded || string.IsNullOrWhiteSpace(result.Token))
+        {
+            ModelState.AddModelError("", "Giriş işlemi tamamlanamadı.");
             return View(dto);
         }
         
@@ -101,20 +111,17 @@ public class AccountController : Controller
 
         var client = _httpClientFactory.CreateClient("MulkoraApi");
         var response = await client.PostAsJsonAsync("api/Auth/Register", dto);
+        
         if (!response.IsSuccessStatusCode)
         {
-            var problem = await response.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+            var error = await response.Content.ReadAsStringAsync();
 
-            if (problem != null)
-            {
-                foreach (var errorList in problem.Errors.Values)
-                {
-                    foreach (var error in errorList)
-                    {
-                        ModelState.AddModelError("", error);
-                    }
-                }
-            }
+            ModelState.AddModelError(
+                "",
+                string.IsNullOrWhiteSpace(error)
+                    ? "Kayıt işlemi tamamlanamadı."
+                    : error);
+
             return View(dto);
         }
 
@@ -173,14 +180,17 @@ public class AccountController : Controller
 
         var client = _httpClientFactory.CreateClient("MulkoraApi");
 
-        var response = await client.PostAsJsonAsync("api/Auth/ForgotPassword", dto);
+        var response = await client.PostAsJsonAsync("api/Auth/forgot-password", dto);
 
         if (!response.IsSuccessStatusCode)
         {
+            var error = await response.Content.ReadAsStringAsync();
+
             ModelState.AddModelError(
                 "",
-                "İşlem sırasında bir hata oluştu."
-            );
+                string.IsNullOrWhiteSpace(error)
+                    ? "İşlem sırasında bir hata oluştu."
+                    : error);
 
             return View(dto);
         }
@@ -227,12 +237,13 @@ public class AccountController : Controller
 
         if (!response.IsSuccessStatusCode)
         {
-            var error = await response.Content.ReadFromJsonAsync<ApiErrorResponse>();
+            var error = await response.Content.ReadAsStringAsync();
 
             ModelState.AddModelError(
                 "",
-                error?.Message ?? "Şifre yenilenemedi."
-            );
+                string.IsNullOrWhiteSpace(error)
+                    ? "Şifre yenilenemedi."
+                    : error);
 
             return View(dto);
         }
@@ -271,12 +282,17 @@ public class AccountController : Controller
 
         if (!response.IsSuccessStatusCode)
         {
+            var error = await response.Content.ReadAsStringAsync();
+
             ModelState.AddModelError(
                 "",
-                "Doğrulama e-postası gönderilemedi.");
+                string.IsNullOrWhiteSpace(error)
+                    ? "Doğrulama e-postası gönderilemedi."
+                    : error);
 
             return View(dto);
         }
+
 
         return View("ResendConfirmationEmailSent");
     }

@@ -86,18 +86,13 @@ public class PasswordResetService : IPasswordResetService
     public async Task ResetPasswordAsync(ResetPasswordDto dto)
     {
         if (dto.NewPassword != dto.ConfirmPassword)
-        {
-            throw new ArgumentException(
-                "Yeni şifreler birbiriyle eşleşmiyor.");
-        }
-        
+            throw new Exception("Yeni şifreler birbiriyle eşleşmiyor.");
+
         var user = await _userManager.FindByEmailAsync(dto.Email);
+
         if (user == null)
-        {
-            throw new ArgumentException(
-                "Şifre sıfırlama bağlantısı geçersiz.");
-        }
-        
+            throw new Exception("Şifre sıfırlama bağlantısı geçersiz.");
+
         string decodedToken;
 
         try
@@ -107,19 +102,21 @@ public class PasswordResetService : IPasswordResetService
         }
         catch
         {
-            throw new ArgumentException(
-                "Şifre sıfırlama bağlantısı geçersiz.");
+            throw new Exception("Şifre sıfırlama bağlantısı geçersiz.");
         }
 
-        var result = await _userManager.ResetPasswordAsync(user, decodedToken, dto.NewPassword);
+        var result = await _userManager.ResetPasswordAsync(
+            user,
+            decodedToken,
+            dto.NewPassword);
 
         if (!result.Succeeded)
         {
-            var errors = string.Join(
-                ", ",
-                result.Errors.Select(x => x.Description));
+            var errors = string.Join(" ", result.Errors
+                .Select(x => x.Description)
+                .Distinct());
 
-            throw new ArgumentException(errors);
+            throw new Exception(errors);
         }
     }
 }

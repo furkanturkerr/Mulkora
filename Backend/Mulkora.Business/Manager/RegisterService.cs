@@ -37,7 +37,16 @@ public class RegisterService : IRegisterService
         if (!result.Succeeded)
             return result;
 
-        await SendConfirmationEmailAsync(appUser);
+        try
+        {
+            await SendConfirmationEmailAsync(appUser);
+        }
+        catch (Exception e)
+        {
+            await _userManager.DeleteAsync(appUser);
+            Console.WriteLine(e);
+            throw;
+        }
 
         return result;
     }
@@ -82,11 +91,9 @@ public class RegisterService : IRegisterService
 
     private async Task SendConfirmationEmailAsync(AppUser user)
     {
-        var token =
-            await _userManager.GenerateEmailConfirmationTokenAsync(user);
+        var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-        var encodedToken = WebEncoders.Base64UrlEncode(
-            Encoding.UTF8.GetBytes(token));
+        var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
         var frontendUrl = _configuration["FrontendUrl"]
                           ?? throw new InvalidOperationException(

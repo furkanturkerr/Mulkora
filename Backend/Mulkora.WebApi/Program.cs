@@ -1,13 +1,12 @@
 using System.Text;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Mulkora.Business.Abstract;
 using Mulkora.Business.Manager;
-using Mulkora.Business.Validators.AuthValidators;
+using Mulkora.Business.Validators.AgentValidators;
 using Mulkora.DataAccess.Abstract;
 using Mulkora.DataAccess.Concrete;
 using Mulkora.DataAccess.EntityFramework;
@@ -22,7 +21,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -37,7 +40,7 @@ builder.Services
         options.Password.RequireUppercase = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireDigit = true;
-        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireNonAlphanumeric = true;
     })
     .AddRoles<AppRole>()
     .AddEntityFrameworkStores<Context>()
@@ -49,9 +52,8 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
     options.TokenLifespan = TimeSpan.FromHours(1);
 });
 
-builder.Services.AddFluentValidationAutoValidation();
 
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<CreateAgentDtoValidator>();
 
 builder.Services.AddDbContext<Context>(options =>
 {
@@ -67,13 +69,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();
 builder.Services.AddScoped<IEmailService, MailService>();
 builder.Services.AddScoped<IRegisterService, RegisterService>();
 builder.Services.AddScoped<ILoginService, LoginService>();
 builder.Services.AddScoped<IContactDal, EfContactDal>();
 builder.Services.AddScoped<IContactService, ContactManager>();
+builder.Services.AddScoped<IAgentDal, EfAgentDal>();
+builder.Services.AddScoped<IAgentService, AgentManager>();
+builder.Services.AddScoped<IRoleService, RoleManager>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");

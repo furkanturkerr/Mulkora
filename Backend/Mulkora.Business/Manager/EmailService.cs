@@ -35,6 +35,8 @@ public class MailService : IEmailService
         }.ToMessageBody();
 
         using var smtpClient = new SmtpClient();
+        
+        smtpClient.CheckCertificateRevocation = false;
 
         await smtpClient.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
 

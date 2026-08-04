@@ -1,5 +1,4 @@
 using FluentValidation;
-using Mulkora.WebApi.Models;
 
 namespace Mulkora.WebApi.Middlewares;
 
@@ -20,63 +19,39 @@ public class ExceptionMiddleware
         {
             await _next(context);
         }
+        catch (ValidationException exception)
+        {
+            var message = string.Join(" ", exception.Errors
+                .Select(x => x.ErrorMessage)
+                .Distinct());
+
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, message);
+        }
+        catch (UnauthorizedAccessException exception)
+        {
+            await WriteErrorAsync(context, StatusCodes.Status401Unauthorized, exception.Message);
+        }
+        catch (Exception exception) when (exception.GetType() == typeof(Exception))
+        {
+            await WriteErrorAsync(context, StatusCodes.Status400BadRequest, exception.Message);
+        }
         catch (Exception exception)
         {
-            await HandleExceptionAsync(context, exception);
+            _logger.LogError(exception, "Beklenmeyen bir hata oluştu.");
+
+            await WriteErrorAsync(
+                context,
+                StatusCodes.Status500InternalServerError,
+                "Beklenmeyen bir hata oluştu.");
         }
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static async Task WriteErrorAsync(HttpContext context, int statusCode, string message)
     {
-        var statusCode = StatusCodes.Status500InternalServerError;
-        var message = "Beklenmeyen bir hata oluştu.";
-        Dictionary<string, string[]>? errors = null;
-
-        switch (exception)
-        {
-            case ValidationException validationException:
-                statusCode = StatusCodes.Status400BadRequest;
-                message = "Validasyon hatası oluştu.";
-                errors = validationException.Errors
-                    .GroupBy(x => x.PropertyName)
-                    .ToDictionary(
-                        x => x.Key,
-                        x => x.Select(y => y.ErrorMessage).ToArray());
-                break;
-
-            case ArgumentException:
-                statusCode = StatusCodes.Status400BadRequest;
-                message = exception.Message;
-                break;
-
-            case KeyNotFoundException:
-                statusCode = StatusCodes.Status404NotFound;
-                message = exception.Message;
-                break;
-            
-            case UnauthorizedAccessException:
-                statusCode = StatusCodes.Status401Unauthorized;
-                message = exception.Message;
-                break;
-        }
-
-        if (statusCode == StatusCodes.Status500InternalServerError)
-            _logger.LogError(exception, "Beklenmeyen bir hata oluştu.");
-        else
-            _logger.LogWarning(exception, "İstek işlenirken hata oluştu.");
-
+        context.Response.Clear();
         context.Response.StatusCode = statusCode;
-        context.Response.ContentType = "application/json";
+        context.Response.ContentType = "text/plain; charset=utf-8";
 
-        var response = new ApiErrorResponse
-        {
-            StatusCode = statusCode,
-            Message = message,
-            Path = context.Request.Path,
-            TraceId = context.TraceIdentifier,
-            Errors = errors
-        };
-
-        await context.Response.WriteAsJsonAsync(response);
+        await context.Response.WriteAsync(message);
     }
 }
