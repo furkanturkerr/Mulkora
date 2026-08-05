@@ -149,6 +149,18 @@ public class AgentManager : IAgentService
         var agents = await _agentDal.GetAllWithUserAsync();
         return _mapper.Map<List<ResultAgentDto>>(agents);
     }
+    
+    public async Task<List<ResultAgentDto>> TGetListAgentTrue()
+    {
+        var agents = await _agentDal.GetListAgentTrue();
+        return _mapper.Map<List<ResultAgentDto>>(agents);
+    }
+
+    public async Task<List<ResultAgentDto>> TGetFilterAgent(string? text, bool? isTrue)
+    {
+        var agents = await _agentDal.GetFilterAgent(text, isTrue);
+        return _mapper.Map<List<ResultAgentDto>>(agents);
+    }
 
     public async Task<UpdateAgentDto> GetByIdAsync(int id)
     {

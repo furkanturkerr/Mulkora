@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using MimeKit;
 using Mulkora.Business.Abstract;
 
-namespace Mulkora.WebApi.Services;
+namespace Mulkora.Business.Manager;
 
 public class MailService : IEmailService
 {

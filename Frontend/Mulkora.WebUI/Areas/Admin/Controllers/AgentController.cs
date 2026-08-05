@@ -17,9 +17,11 @@ public class AgentController : Controller
     }
 
     // GET
-    public async Task<IActionResult> AgentList()
+    public async Task<IActionResult> AgentList(string? text, bool? isTrue)
     {
-        var values = await _agentService.GetAllAsync();
+        var values = await _agentService.GetFilterAgent(text, isTrue);
+        ViewBag.Text = text;
+        ViewBag.IsTrue = isTrue;
         return View(values);
     }
 

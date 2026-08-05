@@ -21,6 +21,20 @@ namespace Mulkora.WebApi.Controllers
             var agents = await _agentService.GetAllAsync();
             return Ok(agents);
         }
+        
+        [HttpGet("true")]
+        public async Task<IActionResult> GetListAgentTrue()
+        {
+            var agents = await _agentService.TGetListAgentTrue();
+            return Ok(agents);
+        }
+        
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFilterAgent(string? text, bool? isTrue)
+        {
+            var agents = await _agentService.TGetFilterAgent(text, isTrue);
+            return Ok(agents);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)

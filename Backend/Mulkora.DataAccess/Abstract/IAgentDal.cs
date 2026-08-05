@@ -6,4 +6,6 @@ public interface IAgentDal : IGenericDal<Agent>
 {
     Task<List<Agent>> GetAllWithUserAsync();
     Task<Agent> GetWithUserByIdAsync(int id);
+    Task<List<Agent>> GetListAgentTrue();
+    Task<List<Agent>> GetFilterAgent(string? text, bool? isTrue);
 }

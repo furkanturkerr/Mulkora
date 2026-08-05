@@ -13,7 +13,6 @@ using Mulkora.DataAccess.EntityFramework;
 using Mulkora.Entity.Concrete;
 using Mulkora.WebApi.Identity;
 using Mulkora.WebApi.Middlewares;
-using Mulkora.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

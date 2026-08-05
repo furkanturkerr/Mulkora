@@ -32,4 +32,37 @@ public class EfAgentDal : GenericRepository<Agent>, IAgentDal
             .FirstOrDefaultAsync();
         return value;
     }
+
+    public async Task<List<Agent>> GetListAgentTrue()
+    {
+        return await _context.Agents
+            .Where(x => x.IsActive == true && x.IsVerified == true)
+            .Include(x => x.AppUser)
+            .AsNoTracking()
+            .OrderByDescending(x => x.CreatedDate)
+            .ToListAsync();
+    }
+
+    public async Task<List<Agent>> GetFilterAgent(string? text, bool? isTrue)
+    {
+        var query = _context.Agents
+            .Include(x => x.AppUser)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(text))
+        {
+            query = query.Where(x =>
+                x.City.Contains(text) ||
+                x.AppUser.Name.Contains(text) ||
+                x.AppUser.Surname.Contains(text) ||
+                x.AppUser.Email.Contains(text));
+        }
+
+        if (isTrue != null)
+        {
+            query = query.Where(x=>x.IsActive == isTrue);
+        }
+        
+        return await query.ToListAsync();
+    }
 }

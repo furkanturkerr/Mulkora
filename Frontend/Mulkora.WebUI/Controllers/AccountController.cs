@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.AuthDtos;
-using Mulkora.Dto.Common;
 
 namespace Mulkora.WebUI.Controllers;
 
