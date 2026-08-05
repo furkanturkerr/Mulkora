@@ -22,7 +22,7 @@ public class Context : IdentityDbContext<AppUser, AppRole, string>
             .OnDelete(DeleteBehavior.Cascade);
     }
 
-    DbSet<Contact> Contacts { get; set; }
+    public DbSet<Contact> Contacts { get; set; }
     
     public DbSet<Agent> Agents { get; set; }
 }

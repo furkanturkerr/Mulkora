@@ -1,4 +1,9 @@
-﻿<!doctype html>
+﻿
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<!doctype html>
 <html lang="tr">
 <head>
     <meta charset="utf-8">
@@ -17,11 +22,11 @@
                 <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg" alt="Mülkora"><span>Mülk<strong>ora</strong></span>
             </a>
             <div class="nav-menu">
-                <a class="active" asp-controller="Default" asp-action="Index">Ana Sayfa</a>
-                <a class="" asp-controller="Default" asp-action="Index">İlanlar</a>
-                <a class="" asp-controller="Agent" asp-action="Index">Danışmanlar</a>
-                <a class="" asp-controller="About" asp-action="Index">Hakkımızda</a>
-                <a class="" asp-controller="Contact" asp-action="Index">İletişim</a>
+                <a asp-controller="Default" asp-action="Index" class="@(currentController == "Default" ? "active" : "")" >Ana Sayfa</a>
+                <a asp-controller="Default" asp-action="Index">İlanlar</a>
+                <a asp-controller="Agent" asp-action="Index" class="@(currentController == "Agent" ? "active" : "")">Danışmanlar</a>
+                <a asp-controller="About" asp-action="Index" class="@(currentController == "About" ? "active" : "")">Hakkımızda</a>
+                <a asp-controller="Contact" asp-action="Index" class="@(currentController == "Contact" ? "active" : "")">İletişim</a>
             </div>
             <div class="nav-actions">
                 <a class="icon-btn" asp-controller="Default" asp-action="Index" aria-label="Favoriler">

@@ -46,4 +46,10 @@ public class ContactManager : IContactService
     {
         await _contactDal.DeleteAsync(id);
     }
+
+    public async Task<List<ResultContactDto>> GetFullListAsync(int page)
+    {
+        var values = await _contactDal.GetFullListAsync(page);
+        return _mapper.Map<List<ResultContactDto>>(values);
+    }
 }

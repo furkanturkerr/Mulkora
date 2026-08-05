@@ -16,10 +16,24 @@ namespace Mulkora.WebApi.Controllers
             _contactService = contactService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get(int page)
+        {
+            var values = await _contactService.GetFullListAsync(page);
+            return Ok(values);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateContactDto createContactDto)
         {
             await _contactService.TInsertAsync(createContactDto);
+            return Ok();
+        }
+        
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _contactService.TDeleteAsync(id);
             return Ok();
         }
     }

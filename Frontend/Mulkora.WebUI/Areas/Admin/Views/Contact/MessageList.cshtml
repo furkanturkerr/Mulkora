@@ -1,0 +1,650 @@
+@model List<Mulkora.Dto.ContactDtos.ResultContactDto>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Gelen Mesajlar";
+    
+    var currentPage = ViewBag.CurrentPage != null
+        ? (int)ViewBag.CurrentPage
+        : 1;
+
+    var hasNextPage = ViewBag.HasNextPage != null
+                      && (bool)ViewBag.HasNextPage;
+}
+
+<style>
+    .contact-admin-page {
+        --contact-primary: #173a31;
+        --contact-primary-dark: #102d26;
+        --contact-accent: #d7a15f;
+        --contact-surface: #ffffff;
+        --contact-soft: #f7f5ef;
+        --contact-text: #17211d;
+        --contact-muted: #748079;
+        --contact-line: rgba(23, 33, 29, 0.1);
+
+        width: 100%;
+        padding: 24px 8px 60px;
+        color: var(--contact-text);
+    }
+
+    .contact-admin-page *,
+    .contact-admin-page *::before,
+    .contact-admin-page *::after {
+        box-sizing: border-box;
+    }
+
+    .contact-admin-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 22px;
+    }
+
+    .contact-admin-eyebrow {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--contact-accent);
+        font-size: 11px;
+        font-weight: 850;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+    }
+
+    .contact-admin-header h1 {
+        margin: 0;
+        color: var(--contact-text);
+        font-size: clamp(30px, 3vw, 42px);
+        font-weight: 850;
+        line-height: 1.08;
+        letter-spacing: -0.05em;
+    }
+
+    .contact-admin-header p {
+        margin: 8px 0 0;
+        color: var(--contact-muted);
+        font-size: 14px;
+    }
+
+    .contact-message-count {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 16px;
+        color: var(--contact-primary);
+        background: rgba(23, 58, 49, 0.08);
+        border: 1px solid rgba(23, 58, 49, 0.1);
+        border-radius: 13px;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .contact-table-card {
+        overflow: hidden;
+        background: var(--contact-surface);
+        border: 1px solid var(--contact-line);
+        border-radius: 20px;
+        box-shadow: 0 12px 34px rgba(22, 39, 33, 0.055);
+    }
+
+    .contact-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .contact-table th {
+        padding: 15px 18px;
+        color: var(--contact-muted);
+        background: var(--contact-soft);
+        border-bottom: 1px solid var(--contact-line);
+        font-size: 10px;
+        font-weight: 850;
+        letter-spacing: 0.1em;
+        text-align: left;
+        text-transform: uppercase;
+    }
+
+    .contact-table th:last-child {
+        width: 100px;
+        text-align: right;
+    }
+
+    .contact-table td {
+        padding: 18px;
+        vertical-align: top;
+        border-bottom: 1px solid var(--contact-line);
+    }
+
+    .contact-table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .contact-table tbody tr {
+        transition: background 0.2s ease;
+    }
+
+    .contact-table tbody tr:hover {
+        background: rgba(247, 245, 239, 0.6);
+    }
+
+    .contact-sender {
+        display: flex;
+        min-width: 210px;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .contact-sender-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        display: grid;
+        place-items: center;
+        color: var(--contact-primary);
+        background: #e5efec;
+        border-radius: 13px;
+    }
+
+    .contact-sender-icon svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .contact-sender-info {
+        min-width: 0;
+    }
+
+    .contact-sender-info strong {
+        display: block;
+        overflow: hidden;
+        color: var(--contact-text);
+        font-size: 13px;
+        font-weight: 820;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .contact-sender-info a {
+        display: block;
+        margin-top: 4px;
+        overflow: hidden;
+        color: var(--contact-muted);
+        font-size: 11px;
+        text-decoration: none;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .contact-sender-info a:hover {
+        color: var(--contact-primary);
+    }
+
+    .contact-subject-badge {
+        display: inline-flex;
+        min-height: 31px;
+        align-items: center;
+        padding: 0 11px;
+        color: #80551d;
+        background: #f7ead7;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+    .contact-message-text {
+        min-width: 280px;
+        max-width: 660px;
+        margin: 0;
+        color: #5f6c66;
+        font-size: 12px;
+        line-height: 1.65;
+        overflow-wrap: anywhere;
+    }
+
+    .contact-delete-form {
+        display: flex;
+        justify-content: flex-end;
+        margin: 0;
+    }
+
+    .contact-delete-button {
+        appearance: none;
+        display: inline-flex;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        color: #a13f3d;
+        background: #f8e3e2;
+        border: 1px solid transparent;
+        border-radius: 11px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .contact-delete-button:hover {
+        color: #ffffff;
+        background: #b94a48;
+        transform: translateY(-1px);
+    }
+
+    .contact-delete-button svg {
+        width: 17px;
+        height: 17px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .contact-empty-state {
+        display: grid;
+        min-height: 390px;
+        place-items: center;
+        align-content: center;
+        padding: 45px 24px;
+        text-align: center;
+        background: var(--contact-surface);
+        border: 1px solid var(--contact-line);
+        border-radius: 22px;
+    }
+
+    .contact-empty-icon {
+        width: 72px;
+        height: 72px;
+        display: grid;
+        place-items: center;
+        margin-bottom: 18px;
+        color: var(--contact-primary);
+        background: #e5efec;
+        border-radius: 21px;
+    }
+
+    .contact-empty-icon svg {
+        width: 31px;
+        height: 31px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .contact-empty-state h2 {
+        margin: 0;
+        color: var(--contact-text);
+        font-size: 23px;
+        font-weight: 820;
+    }
+
+    .contact-empty-state p {
+        max-width: 440px;
+        margin: 8px 0 0;
+        color: var(--contact-muted);
+        font-size: 13px;
+        line-height: 1.65;
+    }
+
+    @@media (max-width: 850px) {
+        .contact-table-card {
+            overflow: visible;
+            background: transparent;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .contact-table,
+        .contact-table tbody,
+        .contact-table tr,
+        .contact-table td {
+            display: block;
+            width: 100%;
+        }
+
+        .contact-table thead {
+            display: none;
+        }
+
+        .contact-table tbody {
+            display: grid;
+            gap: 13px;
+        }
+
+        .contact-table tr {
+            padding: 17px;
+            background: #ffffff;
+            border: 1px solid var(--contact-line);
+            border-radius: 17px;
+            box-shadow: 0 8px 24px rgba(22, 39, 33, 0.045);
+        }
+
+        .contact-table td {
+            display: grid;
+            grid-template-columns: 105px minmax(0, 1fr);
+            gap: 12px;
+            padding: 11px 0;
+            border-bottom: 1px solid var(--contact-line);
+        }
+
+        .contact-table td::before {
+            content: attr(data-label);
+            color: var(--contact-muted);
+            font-size: 9px;
+            font-weight: 850;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .contact-table td:last-child {
+            border-bottom: 0;
+        }
+
+        .contact-sender {
+            min-width: 0;
+        }
+
+        .contact-message-text {
+            min-width: 0;
+            max-width: none;
+        }
+
+        .contact-delete-form {
+            justify-content: flex-start;
+        }
+    }
+
+    @@media (max-width: 560px) {
+        .contact-admin-page {
+            padding: 18px 0 45px;
+        }
+
+        .contact-admin-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .contact-table td {
+            grid-template-columns: 1fr;
+            gap: 7px;
+        }
+
+        .contact-table td::before {
+            display: block;
+        }
+
+        .contact-delete-button {
+            width: 100%;
+        }
+    }
+
+    .contact-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .contact-pagination-button {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        padding: 0 15px;
+        color: var(--contact-primary);
+        background: var(--contact-surface);
+        border: 1px solid var(--contact-line);
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 800;
+        text-decoration: none;
+        transition: 0.2s ease;
+    }
+
+    .contact-pagination-button:hover {
+        color: #ffffff;
+        background: var(--contact-primary);
+        border-color: var(--contact-primary);
+        transform: translateY(-1px);
+    }
+
+    .contact-pagination-button svg {
+        width: 16px;
+        height: 16px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.9;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .contact-pagination-button.disabled {
+        color: #a5aca8;
+        background: #f2f3f1;
+        border-color: #e3e6e3;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .contact-pagination-current {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        justify-content: center;
+        padding: 0 15px;
+        color: #ffffff;
+        background: var(--contact-primary);
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 850;
+    }
+
+    @@media (max-width: 560px) {
+    .contact-pagination {
+        justify-content: space-between;
+    }
+
+    .contact-pagination-button {
+        padding: 0 12px;
+    }
+
+    .contact-pagination-current {
+        padding: 0 12px;
+    }
+    }
+</style>
+
+
+
+<div class="contact-admin-page">
+
+    <header class="contact-admin-header">
+        <div>
+            <span class="contact-admin-eyebrow">İletişim yönetimi</span>
+            <h1>Gelen Mesajlar</h1>
+            <p>İletişim sayfasından gönderilen kullanıcı mesajlarını görüntüleyin ve yönetin.</p>
+        </div>
+
+        <span class="contact-message-count">
+            @(Model?.Count ?? 0) mesaj
+        </span>
+    </header>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <section class="contact-empty-state">
+            <span class="contact-empty-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                    <path d="m3 7 9 6 9-6"></path>
+                </svg>
+            </span>
+
+            <h2>Henüz mesaj bulunmuyor</h2>
+            <p>İletişim sayfasından gönderilen mesajlar burada görüntülenecek.</p>
+        </section>
+    }
+    else
+    {
+        <div class="contact-table-card">
+            <table class="contact-table">
+                <thead>
+                <tr>
+                    <th>Gönderen</th>
+                    <th>Konu</th>
+                    <th>Mesaj</th>
+                    <th>İşlem</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                @foreach (var contact in Model)
+                {
+                    <tr>
+                        <td data-label="Gönderen">
+                            <div class="contact-sender">
+                                <span class="contact-sender-icon">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <circle cx="12" cy="8" r="4"></circle>
+                                        <path d="M5 21a7 7 0 0 1 14 0"></path>
+                                    </svg>
+                                </span>
+
+                                <div class="contact-sender-info">
+                                    <strong>
+                                        @(string.IsNullOrWhiteSpace(contact.NameSurname)
+                                            ? "İsimsiz kullanıcı"
+                                            : contact.NameSurname)
+                                    </strong>
+
+                                    <a href="mailto:@contact.Email">
+                                        @contact.Email
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td data-label="Konu">
+                            <span class="contact-subject-badge">
+                                @(string.IsNullOrWhiteSpace(contact.Subject)
+                                    ? "Konu belirtilmedi"
+                                    : contact.Subject)
+                            </span>
+                        </td>
+
+                        <td data-label="Mesaj">
+                            <p class="contact-message-text">
+                                @(string.IsNullOrWhiteSpace(contact.MessageText)
+                                    ? "Mesaj içeriği bulunmuyor."
+                                    : contact.MessageText)
+                            </p>
+                        </td>
+
+                        <td data-label="İşlem">
+                            <form asp-area="Admin"
+                                  asp-controller="Contact"
+                                  asp-action="Delete"
+                                  asp-route-id="@contact.ContactId"
+                                  method="post"
+                                  class="contact-delete-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="contact-delete-button"
+                                        title="Mesajı sil"
+                                        aria-label="Mesajı sil"
+                                        onclick="return confirm('Bu mesajı silmek istediğinize emin misiniz?')">
+
+                                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M8 6V4h8v2"></path>
+                                        <path d="m19 6-1 14H6L5 6"></path>
+                                        <path d="M10 11v5"></path>
+                                        <path d="M14 11v5"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="contact-pagination">
+
+            @if (currentPage > 1)
+            {
+                <a asp-area="Admin"
+                   asp-controller="Contact"
+                   asp-action="MessageList"
+                   asp-route-page="@(currentPage - 1)"
+                   class="contact-pagination-button">
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6"></path>
+                    </svg>
+
+                    Önceki
+                </a>
+            }
+            else
+            {
+                <span class="contact-pagination-button disabled">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m15 18-6-6 6-6"></path>
+                    </svg>
+
+                    Önceki
+                </span>
+            }
+
+            <span class="contact-pagination-current">
+                Sayfa @currentPage
+            </span>
+
+            @if (hasNextPage)
+            {
+                <a asp-area="Admin"
+                   asp-controller="Contact"
+                   asp-action="MessageList"
+                   asp-route-page="@(currentPage + 1)"
+                   class="contact-pagination-button">
+
+                    Sonraki
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </a>
+            }
+            else
+            {
+                <span class="contact-pagination-button disabled">
+                    Sonraki
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </span>
+            }
+
+        </div>
+        
+    }
+
+</div>
