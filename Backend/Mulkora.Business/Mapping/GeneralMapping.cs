@@ -3,7 +3,10 @@ using Mulkora.Dto.AgentDtos;
 using Mulkora.Dto.CategoryDtos;
 using Mulkora.Dto.ContactDtos;
 using Mulkora.Dto.FeatureDtos;
+using Mulkora.Dto.PropertyDtos;
+using Mulkora.Dto.PropertyImageDtos;
 using Mulkora.Entity.Concrete;
+using Mulkora.Entity.Enums;
 
 namespace Mulkora.Business.Mapping;
 
@@ -33,5 +36,9 @@ public class GeneralMapping : Profile
         CreateMap<Feature, ResultFeatureDto>();
         CreateMap<CreateFeatureDto, Feature>();
         CreateMap<UpdateFeatureDto, Feature>().ReverseMap();
+        
+        CreateMap<Property, ResultPropertyDto>();
+        CreateMap<CreatePropertyDto, Property>();
+        CreateMap<UpdatePropertyDto, Property>().ReverseMap();
     }
 }

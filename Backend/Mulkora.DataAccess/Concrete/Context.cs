@@ -25,4 +25,12 @@ public class Context : IdentityDbContext<AppUser, AppRole, string>
     public DbSet<Contact> Contacts { get; set; }
     
     public DbSet<Agent> Agents { get; set; }
+    
+    public DbSet<Property> Properties { get; set; }
+
+    public DbSet<PropertyImage> PropertyImages { get; set; }
+
+    public DbSet<Category> Categories { get; set; }
+    
+    public DbSet<Feature> Features { get; set; }
 }

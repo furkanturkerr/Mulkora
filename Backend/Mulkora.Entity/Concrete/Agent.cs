@@ -29,4 +29,6 @@ public class Agent
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
     public AppUser AppUser { get; set; } = null!;
+    
+    public ICollection<Property> Properties { get; set; } = new List<Property>();
 }

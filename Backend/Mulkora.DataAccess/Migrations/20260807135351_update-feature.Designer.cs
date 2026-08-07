@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mulkora.DataAccess.Concrete;
 
@@ -11,9 +12,11 @@ using Mulkora.DataAccess.Concrete;
 namespace Mulkora.DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260807135351_update-feature")]
+    partial class updatefeature
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,6 +24,21 @@ namespace Mulkora.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("FeatureProperty", b =>
+                {
+                    b.Property<int>("FeaturesFeatureId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertiesPropertyId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FeaturesFeatureId", "PropertiesPropertyId");
+
+                    b.HasIndex("PropertiesPropertyId");
+
+                    b.ToTable("FeatureProperty");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
@@ -463,9 +481,29 @@ namespace Mulkora.DataAccess.Migrations
                     b.Property<bool>("IsCover")
                         .HasColumnType("bit");
 
+                    b.Property<int>("PropertyId")
+                        .HasColumnType("int");
+
                     b.HasKey("PropertyImageId");
 
+                    b.HasIndex("PropertyId");
+
                     b.ToTable("PropertyImages");
+                });
+
+            modelBuilder.Entity("FeatureProperty", b =>
+                {
+                    b.HasOne("Mulkora.Entity.Concrete.Feature", null)
+                        .WithMany()
+                        .HasForeignKey("FeaturesFeatureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Mulkora.Entity.Concrete.Property", null)
+                        .WithMany()
+                        .HasForeignKey("PropertiesPropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -549,6 +587,17 @@ namespace Mulkora.DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Mulkora.Entity.Concrete.PropertyImage", b =>
+                {
+                    b.HasOne("Mulkora.Entity.Concrete.Property", "Property")
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Property");
+                });
+
             modelBuilder.Entity("Mulkora.Entity.Concrete.Agent", b =>
                 {
                     b.Navigation("Properties");
@@ -562,6 +611,11 @@ namespace Mulkora.DataAccess.Migrations
             modelBuilder.Entity("Mulkora.Entity.Concrete.Category", b =>
                 {
                     b.Navigation("Properties");
+                });
+
+            modelBuilder.Entity("Mulkora.Entity.Concrete.Property", b =>
+                {
+                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

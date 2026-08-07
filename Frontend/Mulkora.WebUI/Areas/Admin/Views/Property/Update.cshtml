@@ -1,0 +1,74 @@
+@model Mulkora.Dto.PropertyDtos.UpdatePropertyDto?
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="PropertyId" />
+
+    <label>Başlık</label>
+    <input asp-for="Title" />
+
+    <label>Açıklama</label>
+    <textarea asp-for="Description"></textarea>
+
+    <label>Fiyat</label>
+    <input asp-for="Price" type="number" />
+
+    <label>Şehir</label>
+    <input asp-for="City" />
+
+    <label>İlçe</label>
+    <input asp-for="District" />
+
+    <label>Adres</label>
+    <input asp-for="Address" />
+
+    <label>Oda Sayısı</label>
+    <input asp-for="RoomCount" type="number" />
+
+    <label>Salon Sayısı</label>
+    <input asp-for="LivingRoomCount" type="number" />
+
+    <label>Banyo Sayısı</label>
+    <input asp-for="BathroomCount" type="number" />
+
+    <label>Brüt Metrekare</label>
+    <input asp-for="GrossSquareMeter" type="number" />
+
+    <label>Net Metrekare</label>
+    <input asp-for="NetSquareMeter" type="number" />
+
+    <label>Bina Yaşı</label>
+    <input asp-for="BuildingAge" type="number" />
+
+    <label>Bulunduğu Kat</label>
+    <input asp-for="FloorNumber" type="number" />
+
+    <label>Toplam Kat</label>
+    <input asp-for="TotalFloor" type="number" />
+
+    <label>
+        <input asp-for="IsFurnished" type="checkbox" />
+        Eşyalı
+    </label>
+
+    <label>İlan Türü</label>
+    <select asp-for="ListingType">
+        <option value="1">Satılık</option>
+        <option value="2">Kiralık</option>
+    </select>
+
+    <label>Danışman</label>
+    <input asp-for="AgentId" type="number" />
+
+    <label>Kategori Id</label>
+    <select asp-for="CategoryId" asp-items="@ViewBag.CategoryList">
+        <option value="">Kategori Seç</option>
+    </select>
+
+    <button type="submit">Güncelle</button>
+</form>
