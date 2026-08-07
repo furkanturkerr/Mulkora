@@ -77,6 +77,8 @@ builder.Services.AddScoped<IContactService, ContactManager>();
 builder.Services.AddScoped<IAgentDal, EfAgentDal>();
 builder.Services.AddScoped<IAgentService, AgentManager>();
 builder.Services.AddScoped<IRoleService, RoleManager>();
+builder.Services.AddScoped<ICategoryDal, EfCategoryDal>();
+builder.Services.AddScoped<ICategoryService, CategoryManager>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");

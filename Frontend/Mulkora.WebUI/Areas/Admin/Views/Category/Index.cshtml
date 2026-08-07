@@ -1,0 +1,41 @@
+@model List<Mulkora.Dto.CategoryDtos.ResultCategoryDto>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Kategori ID</th>
+        <th>Kategori Adı</th>
+        <th>Durum</th>
+        <th>Güncelle</th>
+        <th>Sil</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var category in Model)
+    {
+        <tr>
+            <td>@category.CategoryId</td>
+            <td>@category.Name</td>
+            <td>@category.IsActive</td>
+            <th><a href="~/Admin/Category/Update/@category.CategoryId" class="btn btn-dark">Güncelle</a></th>
+            <th>
+                <form method="post" action="~/Admin/Category/Delete/@category.CategoryId">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                </form>
+            </th>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<br/>
+<a href="~/Admin/Category/Create" class="btn btn-dark">Yeni Kategori Ekle</a>

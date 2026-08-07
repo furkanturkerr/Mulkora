@@ -1,5 +1,6 @@
 using AutoMapper;
 using Mulkora.Dto.AgentDtos;
+using Mulkora.Dto.CategoryDtos;
 using Mulkora.Dto.ContactDtos;
 using Mulkora.Entity.Concrete;
 
@@ -23,5 +24,9 @@ public class GeneralMapping : Profile
             .ForMember(destination => destination.Name, option => option.MapFrom(source => source.AppUser.Name))
             .ForMember(destination => destination.Surname, option => option.MapFrom(source => source.AppUser.Surname))
             .ForMember(destination => destination.Email, option => option.MapFrom(source => source.AppUser.Email));
+
+        CreateMap<Category, ResultCategoryDto>();
+        CreateMap<CreateCategoryDto, Category>();
+        CreateMap<UpdateCategoryDto, Category>().ReverseMap();
     }
 }
