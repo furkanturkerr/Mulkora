@@ -1,0 +1,41 @@
+@model List<Mulkora.Dto.FeatureDtos.ResultFeatureDto>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Özellik ID</th>
+        <th>Özellik Adı</th>
+        <th>Durum</th>
+        <th>Güncelle</th>
+        <th>Sil</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var Feature in Model)
+    {
+        <tr>
+            <td>@Feature.FeatureId</td>
+            <td>@Feature.Name</td>
+            <td>@Feature.IsActive</td>
+            <th><a href="~/Admin/Feature/Update/@Feature.FeatureId" class="btn btn-dark">Güncelle</a></th>
+            <th>
+                <form method="post" action="~/Admin/Feature/Delete/@Feature.FeatureId">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                </form>
+            </th>
+        </tr>
+    }
+    </tbody>
+</table>
+
+<br/>
+<a href="~/Admin/Feature/Create" class="btn btn-dark">Yeni Özellik Ekle</a>

@@ -33,6 +33,7 @@ builder.Services
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IAgentService, AgentService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IFeatureService, FeatureService>();
 
 builder.Services.AddAuthorization();
 

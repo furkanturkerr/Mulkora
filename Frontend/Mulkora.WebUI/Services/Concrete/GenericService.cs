@@ -3,8 +3,7 @@ using Mulkora.WebUI.Services.Abstract;
 
 namespace Mulkora.WebUI.Services.Concrete;
 
-public abstract class GenericService<TResultDto, TCreateDto, TUpdateDto>
-    : IGenericService<TResultDto, TCreateDto, TUpdateDto>
+public abstract class GenericService<TResultDto, TCreateDto, TUpdateDto> : IGenericService<TResultDto, TCreateDto, TUpdateDto>
 {
     private readonly HttpClient _client;
 

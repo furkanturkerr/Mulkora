@@ -80,13 +80,22 @@
                 Kullanıcılar
             </a>
 
-            <a href="categories.html">
+            <a asp-area="Admin" asp-controller="Category" asp-action="Index">
                 <span class="nav-icon">
                     <svg class="icon" width="18" height="18" viewBox="0 0 24 24">
                         <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z"></path>
                     </svg>
                 </span>
                 Kategoriler
+            </a>
+            
+            <a asp-area="Admin" asp-controller="Feature" asp-action="Index">
+                <span class="nav-icon">
+                    <svg class="icon" width="18" height="18" viewBox="0 0 24 24">
+                        <path d="M4 4h6v6H4V4Zm10 0h6v6h-6V4ZM4 14h6v6H4v-6Zm10 0h6v6h-6v-6Z"></path>
+                    </svg>
+                </span>
+                Özellikler
             </a>
         </div>
 

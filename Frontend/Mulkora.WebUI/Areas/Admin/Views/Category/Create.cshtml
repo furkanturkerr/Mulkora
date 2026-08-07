@@ -1,0 +1,23 @@
+@model Mulkora.Dto.CategoryDtos.CreateCategoryDto
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<form method="post">
+    @Html.AntiForgeryToken()
+    
+    <label>Kategori Adı</label>
+    <input type="text" asp-for="Name" class="form-control"/>
+    <br/>    
+    
+    <label>Durum</label>
+    <select asp-for="IsActive">
+        <option value="">Durum Seç</option>
+        <option value="true">Aktif</option>
+        <option value="false">Pasif</option>
+    </select>
+    
+    <br/>
+    <button type="submit" class="btn btn-primary">Kaydet</button>
+</form>
