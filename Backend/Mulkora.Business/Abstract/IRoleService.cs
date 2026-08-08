@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Mulkora.Dto.RoleDtos;
 using Mulkora.Entity.Concrete;
 
 namespace Mulkora.Business.Abstract;
@@ -6,7 +7,8 @@ namespace Mulkora.Business.Abstract;
 public interface IRoleService
 {
     Task<List<AppRole>> GetAllRoles();
-    Task<IdentityResult> CreateRoleAsync(string roleName);
+    Task<IdentityResult> CreateRoleAsync(CreateRoleDto dto);
     Task<IdentityResult> DeleteRoleAsync(string id);
-    Task<IdentityResult> UpdateRoleAsync(string id, string roleName);
+    Task<IdentityResult> UpdateRoleAsync(UpdateRoleDto dto);
+    Task<AppRole> GetRoleByIdAsync(string id);
 }

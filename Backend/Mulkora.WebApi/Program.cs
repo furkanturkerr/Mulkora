@@ -83,6 +83,7 @@ builder.Services.AddScoped<IFeatureService, FeatureManager>();
 builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
 builder.Services.AddScoped<IPropertyService, PropertyManager>();
 builder.Services.AddScoped<IPropertyDal, EfPropertyDal>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");

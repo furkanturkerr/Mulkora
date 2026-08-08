@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
+using Mulkora.Dto.RoleDtos;
 
 namespace Mulkora.WebApi.Controllers
 {
@@ -20,11 +21,18 @@ namespace Mulkora.WebApi.Controllers
             var values = await _roleService.GetAllRoles();
             return Ok(values);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            var value = await _roleService.GetRoleByIdAsync(id);
+            return Ok(value);
+        }
         
         [HttpPost]
-        public async Task<IActionResult> Create(string roleName)
+        public async Task<IActionResult> Create(CreateRoleDto dto)
         {
-            var result = await _roleService.CreateRoleAsync(roleName);
+            var result = await _roleService.CreateRoleAsync(dto);
 
             if (!result.Succeeded)
             {
@@ -38,9 +46,9 @@ namespace Mulkora.WebApi.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(string id, string roleName)
+        public async Task<IActionResult> Update(UpdateRoleDto dto)
         {
-            var result = await _roleService.UpdateRoleAsync(id, roleName);
+            var result = await _roleService.UpdateRoleAsync(dto);
             
             if (!result.Succeeded)
             {

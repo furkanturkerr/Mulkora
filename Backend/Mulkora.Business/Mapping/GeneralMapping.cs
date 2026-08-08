@@ -5,6 +5,8 @@ using Mulkora.Dto.ContactDtos;
 using Mulkora.Dto.FeatureDtos;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.Dto.PropertyImageDtos;
+using Mulkora.Dto.RoleDtos;
+using Mulkora.Dto.UserDtos;
 using Mulkora.Entity.Concrete;
 using Mulkora.Entity.Enums;
 
@@ -40,5 +42,9 @@ public class GeneralMapping : Profile
         CreateMap<Property, ResultPropertyDto>();
         CreateMap<CreatePropertyDto, Property>();
         CreateMap<UpdatePropertyDto, Property>().ReverseMap();
+
+        CreateMap<AppUser, ResultUserDto>();
+
+
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Mulkora.Business.Abstract;
+using Mulkora.Dto.RoleDtos;
 using Mulkora.Entity.Concrete;
 
 namespace Mulkora.Business.Manager;
@@ -19,12 +20,18 @@ public class RoleManager : IRoleService
         var values = await _roleManager.Roles.ToListAsync();
         return values;
     }
+    
+    public async Task<AppRole> GetRoleByIdAsync(string id)
+    {
+        var value = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
+        return value;  
+    }
 
-    public async Task<IdentityResult> CreateRoleAsync(string roleName)
+    public async Task<IdentityResult> CreateRoleAsync(CreateRoleDto dto)
     {
         AppRole appRole = new AppRole
         {
-            Name = roleName
+            Name = dto.Name
         };
         
         var result = await _roleManager.CreateAsync(appRole);
@@ -43,13 +50,13 @@ public class RoleManager : IRoleService
         return await _roleManager.DeleteAsync(value);
     }
 
-    public async Task<IdentityResult> UpdateRoleAsync(string id, string roleName)
+    public async Task<IdentityResult> UpdateRoleAsync(UpdateRoleDto dto)
     {
-        var value = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == id);
+        var value = await _roleManager.Roles.FirstOrDefaultAsync(x => x.Id == dto.Id);
         if (value == null)
             return IdentityResult.Failed();
         
-        value.Name = roleName;
+        value.Name = dto.Name;
         return await _roleManager.UpdateAsync(value);
     }
 }

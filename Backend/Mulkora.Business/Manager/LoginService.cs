@@ -52,7 +52,7 @@ public class LoginService : ILoginService
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Name, user.Name),
-            new Claim(ClaimTypes.Surname, user.Surname),
+            new Claim(ClaimTypes.Surname, user.Surname)
         };
 
         foreach (var role in roles)
