@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="tr">
+
+@await Component.InvokeAsync("_AgentHeadComponentPartial")
+
+<body class="workspace-body">
+<div class="workspace-shell">
+
+    @await Component.InvokeAsync("_AgentSidebarComponentPartial")
+
+    <div class="sidebar-overlay"></div>
+    <div class="workspace-main">
+
+        @await Component.InvokeAsync("_AgentHeaderComponentPartial")
+
+        <main class="workspace-content">
+            @RenderBody()
+        </main>
+
+    </div>
+</div>
+
+<div class="panel-toast" role="status">
+    <span>
+        <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+            <path d="m5 12 4 4L19 6"/>
+        </svg>
+    </span>
+    <span data-toast-text>İşlem tamamlandı.</span>
+</div>
+
+<script src="~/Mulkora_Full_Theme_With_Panels/assets/js/dashboard.js"></script>
+
+</body>
+</html>
