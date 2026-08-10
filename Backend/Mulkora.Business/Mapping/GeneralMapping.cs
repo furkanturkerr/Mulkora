@@ -42,6 +42,7 @@ public class GeneralMapping : Profile
         CreateMap<Property, ResultPropertyDto>();
         CreateMap<CreatePropertyDto, Property>();
         CreateMap<UpdatePropertyDto, Property>().ReverseMap();
+        CreateMap<Property, GetByIdPropertyDto>();
 
         CreateMap<AppUser, ResultUserDto>();
 

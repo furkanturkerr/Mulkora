@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.PropertyDtos;
@@ -23,17 +24,34 @@ namespace Mulkora.WebApi.Controllers
             return Ok(values);
         }
         
+        [Authorize(Roles = "Agent")]
+        [HttpGet("my-properties")]
+        public async Task<IActionResult> GetMyProperties()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var values = await _propertyService.TGetPropertiesByUserIdAsync(userId);
+
+            return Ok(values);
+        }
+        
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var value = await _propertyService.TGetByIdAsync(id);
+            var value = await _propertyService.GetByIdAsync(id);
             return Ok(value);
         }
-
+        
+        [Authorize(Roles = "Agent")]
         [HttpPost]
-        public async Task<IActionResult> Create(CreatePropertyDto dto)
+        public async Task<IActionResult> CreateProperty(CreatePropertyDto dto)
         {
+            var agentId = int.Parse(User.FindFirstValue("AgentId")!);
+
+            dto.AgentId = agentId;
+
             await _propertyService.TInsertAsync(dto);
+
             return Ok();
         }
         
@@ -49,6 +67,21 @@ namespace Mulkora.WebApi.Controllers
         {
             await _propertyService.TDeleteAsync(id);
             return Ok();      
+        }
+        
+        [HttpPatch("{id}/send-for-approval")]
+        public async Task<IActionResult> SendForApproval(int id)
+        {
+            var agentIdClaim = User.FindFirstValue("AgentId");
+
+            if (string.IsNullOrEmpty(agentIdClaim))
+                return Unauthorized();
+
+            var agentId = int.Parse(agentIdClaim);
+
+            await _propertyService.TSendForApprovalAsync(id, agentId);
+
+            return Ok();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.AgentDtos;
@@ -46,6 +47,8 @@ namespace Mulkora.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateAgentDto dto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            
             var result = await _agentService.CreateAgentAsync(dto);
 
             if (!result.Succeeded)

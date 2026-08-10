@@ -65,6 +65,7 @@ public class RegisterService : IRegisterService
         try
         {
             var decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
+            await _userManager.AddToRoleAsync(user, "CUSTOMERS");
             return await _userManager.ConfirmEmailAsync(user, decodedToken);
         }
         catch

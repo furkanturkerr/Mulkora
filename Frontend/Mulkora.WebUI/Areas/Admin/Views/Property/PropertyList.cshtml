@@ -103,11 +103,11 @@
                     <td>@item.CreatedDate.ToString("dd MMM yyyy")</td>
                     <td>
                         <div class="table-actions">
-                            <button class="table-action" title="Görüntüle">
+                            <a asp-area="Admin" asp-controller="Property" asp-action="Details" asp-route-id="@item.PropertyId" class="table-action" title="Görüntüle">
                                 <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
                                     <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Zm10 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                                 </svg>
-                            </button>
+                            </a>
 
                             <a href="~/Admin/Property/Update/@item.PropertyId" class="table-action" title="Düzenle">
                                 <svg class="icon" width="16" height="16" viewBox="0 0 24 24">

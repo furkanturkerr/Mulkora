@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Mulkora.Business.Abstract;
+using Mulkora.DataAccess.Abstract;
 using Mulkora.Dto.AuthDtos;
 using Mulkora.Entity.Concrete;
 
@@ -14,12 +15,14 @@ public class LoginService : ILoginService
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IConfiguration _configuration;
+    private readonly IAgentDal _agentDal;
 
 
-    public LoginService(UserManager<AppUser> userManager, IConfiguration configuration)
+    public LoginService(UserManager<AppUser> userManager, IConfiguration configuration, IAgentDal agentDal)
     {
         _userManager = userManager;
         _configuration = configuration;
+        _agentDal = agentDal;
     }
 
     public async Task<string> Login(LoginDto loginDto)
@@ -54,6 +57,13 @@ public class LoginService : ILoginService
             new Claim(ClaimTypes.Name, user.Name),
             new Claim(ClaimTypes.Surname, user.Surname)
         };
+        
+        var agent = await _agentDal.GetByUserIdAsync(user.Id);
+
+        if (agent != null)
+        {
+            claims.Add(new Claim("AgentId", agent.AgentId.ToString()));
+        }
 
         foreach (var role in roles)
         {

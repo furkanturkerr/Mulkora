@@ -1,7 +1,7 @@
 @model List<Mulkora.Dto.PropertyDtos.ResultPropertyDto>
 
 @{
-    Layout = "_AdminLayout";
+    Layout = "_AgentLayout";
 }
 
 <div class="page-heading">
@@ -9,7 +9,7 @@
         <h1>İlan Yönetimi</h1>
         <p>Tüm ilanları durum, tip ve danışmana göre görüntüleyin ve yönetin.</p></div>
     <div class="page-heading-actions">
-        <button class="panel-btn panel-btn-outline">Toplu işlem</button>
+        <a asp-area="Agent" asp-controller="Property" asp-action="Create" class="panel-btn panel-btn-outline">Yeni ilan ekle</a>
     </div>
 </div>
 <div class="toolbar">
@@ -104,23 +104,42 @@
                     <td>@item.CreatedDate.ToString("dd MMM yyyy")</td>
                     <td>
                         <div class="table-actions">
-                            <button class="table-action" title="Görüntüle">
-                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
-                                    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Zm10 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
-                                </svg>
-                            </button>
 
-                            <a href="~/Admin/Property/Update/@item.PropertyId" class="table-action" title="Düzenle">
+                            @if (item.Status == 1 || item.Status == 4)
+                            {
+                                <form asp-area="Agent" asp-controller="Property" asp-action="SendForApproval" asp-route-id="@item.PropertyId" method="post">
+                                    <button type="submit" class="table-action" title="Onaya Gönder">
+                                        <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                                            <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/>
+                                        </svg>
+                                    </button>
+                                </form>
+                            }
+
+                            <a asp-area="Agent"
+                               asp-controller="Property"
+                               asp-action="Update"
+                               asp-route-id="@item.PropertyId"
+                               class="table-action"
+                               title="Düzenle">
+
                                 <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
                                     <path d="m4 20 4.5-1L19 8.5 15.5 5 5 15.5 4 20ZM13.5 7l3.5 3.5"/>
                                 </svg>
                             </a>
 
-                            <button class="table-action" title="Sil">
+                            <a asp-area="Agent"
+                               asp-controller="Property"
+                               asp-action="Delete"
+                               asp-route-id="@item.PropertyId"
+                               class="table-action"
+                               title="Sil">
+
                                 <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
                                     <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>
                                 </svg>
-                            </button>
+                            </a>
+
                         </div>
                     </td>
                 </tr>

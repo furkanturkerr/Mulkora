@@ -1,12 +1,12 @@
 namespace Mulkora.Dto.PropertyDtos;
 
-public class UpdatePropertyDto
+public class GetByIdPropertyDto
 {
     public int PropertyId { get; set; }
 
-    public string Title { get; set; } 
-
-    public string Description { get; set; } 
+    public string Title { get; set; }
+    
+    public string Description { get; set; }
 
     public decimal Price { get; set; }
 
@@ -37,12 +37,14 @@ public class UpdatePropertyDto
     public bool IsFeatured { get; set; }
 
     public int ListingType { get; set; }
-    
-    public DateTime? CreatedDate { get; set; } 
 
-    public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+    public int Status { get; set; }
+
+    public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
+
+    public DateTime? UpdatedDate { get; set; }
 
     public int AgentId { get; set; }
-
+    
     public int CategoryId { get; set; }
 }

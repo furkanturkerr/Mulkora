@@ -42,6 +42,15 @@ public class EfAgentDal : GenericRepository<Agent>, IAgentDal
             .OrderByDescending(x => x.CreatedDate)
             .ToListAsync();
     }
+    
+    public async Task<Agent?> GetByUserIdAsync(string id)
+    {
+        var value = await _context.Agents
+            .Include(x => x.AppUser)
+            .FirstOrDefaultAsync(x => x.AppUserId == id);
+
+        return value;
+    }
 
     public async Task<List<Agent>> GetFilterAgent(string? text, bool? isTrue)
     {

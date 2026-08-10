@@ -52,4 +52,11 @@ public class PropertyController : Controller
         await _propertyService.TDeleteAsync(id);
         return RedirectToAction(nameof(PropertyList));  
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Details(int id)
+    {
+        var value = await _propertyService.GetByIdAsync(id);
+        return View(value);
+    }
 }
