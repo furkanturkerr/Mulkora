@@ -19,12 +19,14 @@ builder.Services.AddHttpClient("MulkoraApi", client =>
 builder.Services.AddHttpContextAccessor();
 
 builder.Services
-    .AddAuthentication(
-        CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
-        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.AccessDeniedPath = "/Error/403";
+
+        options.Cookie.Name = "MulkoraAuth";
+        options.Cookie.HttpOnly = true;
 
         options.ExpireTimeSpan = TimeSpan.FromMinutes(120);
         options.SlidingExpiration = false;
@@ -42,11 +44,7 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

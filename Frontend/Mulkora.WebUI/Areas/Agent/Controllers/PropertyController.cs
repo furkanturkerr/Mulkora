@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.WebUI.Services.Abstract;
@@ -6,6 +7,7 @@ using Mulkora.WebUI.Services.Abstract;
 namespace Mulkora.WebUI.Areas.Agent.Controllers;
 
 [Area("Agent")]
+[Authorize(Roles = "Agent")]
 [AutoValidateAntiforgeryToken]
 
 public class PropertyController : Controller

@@ -1,0 +1,110 @@
+@{
+    ViewData["Title"] = "Erişim Engellendi";
+}
+
+<link rel="stylesheet"
+      href="~/css/error-pages.css"
+      asp-append-version="true" />
+
+<section class="mkrx-status-page">
+    <div class="mkrx-status-shell">
+        <div class="mkrx-status-card">
+
+            <div class="mkrx-status-head">
+
+                <div class="mkrx-status-brand">
+                    <span class="mkrx-status-brand-line"></span>
+                    <span class="mkrx-status-brand-text">
+                        Mülkora Güvenlik
+                    </span>
+                </div>
+
+                <div class="mkrx-status-code-badge">
+                    403
+                </div>
+
+            </div>
+
+            <div class="mkrx-status-body">
+
+                <div class="mkrx-status-side">
+
+                    <div class="mkrx-status-icon-wrap">
+
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <path d="M12 3 4.5 6v5c0 4.8 3.1 8.3 7.5 10 4.4-1.7 7.5-5.2 7.5-10V6L12 3Z"></path>
+
+                            <path d="m9 9 6 6"></path>
+                            <path d="m15 9-6 6"></path>
+
+                        </svg>
+
+                    </div>
+
+                    <div class="mkrx-status-big-code">
+                        403
+                    </div>
+
+                </div>
+
+                <div class="mkrx-status-content">
+
+                    <div class="mkrx-status-kicker">
+                        Erişim Engellendi
+                    </div>
+
+                    <h1 class="mkrx-status-title">
+                        Bu alana erişim yetkin bulunmuyor.
+                    </h1>
+
+                    <p class="mkrx-status-description">
+                        Hesabınla giriş yapmış durumdasın ancak mevcut rolün
+                        bu sayfayı görüntülemene izin vermiyor.
+                    </p>
+
+                    <div class="mkrx-status-note">
+
+                        <span class="mkrx-status-note-dot"></span>
+
+                        <span>
+                            Yetkili olduğun bölümlere dönerek işlemlerine
+                            devam edebilirsin.
+                        </span>
+
+                    </div>
+
+                    <div class="mkrx-status-actions">
+
+                        <a href="/"
+                           class="mkrx-status-btn mkrx-status-btn--primary">
+
+                            Ana Sayfaya Dön
+
+                            <span class="mkrx-status-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+                        <a href="javascript:history.back()"
+                           class="mkrx-status-btn mkrx-status-btn--ghost">
+
+                            Önceki Sayfa
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>

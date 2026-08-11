@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "Sayfa Bulunamadı";
+}
+
+<link rel="stylesheet"
+      href="~/css/error-pages.css"
+      asp-append-version="true" />
+
+<section class="mkrx-status-page">
+    <div class="mkrx-status-shell">
+        <div class="mkrx-status-card">
+
+            <div class="mkrx-status-head">
+
+                <div class="mkrx-status-brand">
+                    <span class="mkrx-status-brand-line"></span>
+
+                    <span class="mkrx-status-brand-text">
+                        Mülkora
+                    </span>
+                </div>
+
+                <div class="mkrx-status-code-badge">
+                    404
+                </div>
+
+            </div>
+
+            <div class="mkrx-status-body">
+
+                <div class="mkrx-status-side">
+
+                    <div class="mkrx-status-icon-wrap">
+
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <circle cx="10.5"
+                                    cy="10.5"
+                                    r="6.5">
+                            </circle>
+
+                            <path d="m15.5 15.5 4 4"></path>
+
+                        </svg>
+
+                    </div>
+
+                    <div class="mkrx-status-big-code">
+                        404
+                    </div>
+
+                </div>
+
+                <div class="mkrx-status-content">
+
+                    <div class="mkrx-status-kicker">
+                        Sayfa Bulunamadı
+                    </div>
+
+                    <h1 class="mkrx-status-title">
+                        Aradığın sayfayı bulamadık.
+                    </h1>
+
+                    <p class="mkrx-status-description">
+                        Bağlantı değişmiş, sayfa kaldırılmış veya adres
+                        yanlış yazılmış olabilir.
+                    </p>
+
+                    <div class="mkrx-status-note">
+
+                        <span class="mkrx-status-note-dot"></span>
+
+                        <span>
+                            Adresi kontrol edebilir veya önceki sayfaya
+                            dönerek tekrar deneyebilirsin.
+                        </span>
+
+                    </div>
+
+                    <div class="mkrx-status-actions">
+
+                        <a href="/"
+                           class="mkrx-status-btn mkrx-status-btn--primary">
+
+                            Ana Sayfaya Dön
+
+                            <span class="mkrx-status-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+                        <a href="javascript:history.back()"
+                           class="mkrx-status-btn mkrx-status-btn--ghost">
+
+                            Önceki Sayfa
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>

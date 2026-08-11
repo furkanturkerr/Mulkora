@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Giriş Gerekli";
+}
+
+<link rel="stylesheet" href="~/css/error-pages.css" asp-append-version="true" />
+
+<section class="mkrx-status-page">
+    <div class="mkrx-status-shell">
+        <div class="mkrx-status-card">
+
+            <div class="mkrx-status-head">
+                <div class="mkrx-status-brand">
+                    <span class="mkrx-status-brand-line"></span>
+                    <span class="mkrx-status-brand-text">Mülkora Güvenlik</span>
+                </div>
+
+                <div class="mkrx-status-code-badge">
+                    401
+                </div>
+            </div>
+
+            <div class="mkrx-status-body">
+
+                <div class="mkrx-status-side">
+                    <div class="mkrx-status-icon-wrap">
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <rect x="5" y="10" width="14" height="10" rx="2"></rect>
+                            <path d="M8 10V7a4 4 0 0 1 8 0v3"></path>
+                        </svg>
+                    </div>
+
+                    <div class="mkrx-status-big-code">
+                        401
+                    </div>
+                </div>
+
+                <div class="mkrx-status-content">
+                    <div class="mkrx-status-kicker">
+                        Oturum Gerekli
+                    </div>
+
+                    <h1 class="mkrx-status-title">
+                        Devam etmek için hesabına giriş yap.
+                    </h1>
+
+                    <p class="mkrx-status-description">
+                        Görüntülemek istediğin alan yalnızca oturum açmış kullanıcılar için açık.
+                        Giriş yaptıktan sonra işlemlerine kaldığın yerden devam edebilirsin.
+                    </p>
+
+                    <div class="mkrx-status-note">
+                        <span class="mkrx-status-note-dot"></span>
+                        <span>
+                            Oturumun kapanmış olabilir. Yeniden giriş yapman bu sorunu çözer.
+                        </span>
+                    </div>
+
+                    <div class="mkrx-status-actions">
+                        <a href="/Login/Index" class="mkrx-status-btn mkrx-status-btn--primary">
+                            Giriş Yap
+                            <span class="mkrx-status-arrow">→</span>
+                        </a>
+
+                        <a href="/" class="mkrx-status-btn mkrx-status-btn--ghost">
+                            Ana Sayfaya Dön
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>

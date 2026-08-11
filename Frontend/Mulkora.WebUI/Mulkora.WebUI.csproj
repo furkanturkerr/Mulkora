@@ -177,6 +177,8 @@
       <_ContentIncludedByDefault Remove="Areas\Admin\Views\Testimonial\Create.cshtml" />
       <_ContentIncludedByDefault Remove="Areas\Admin\Views\Testimonial\Index.cshtml" />
       <_ContentIncludedByDefault Remove="Areas\Admin\Views\Testimonial\Update.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
     </ItemGroup>
 
 </Project>
