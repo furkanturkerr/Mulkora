@@ -44,4 +44,5 @@ public class CreatePropertyDto
 
     public int CategoryId { get; set; }
     
+    public List<int> FeatureIds { get; set; } = new();
 }

@@ -7,5 +7,7 @@ public interface IPropertyService : IGenericService<ResultPropertyDto, CreatePro
     Task<List<ResultPropertyDto>> GetPropertiesByUserIdAsync(string userId);
     Task CreatePropertyAsync(CreatePropertyDto dto, string token);
     Task SendForApprovalAsync(int id, string token);
+    Task ApproveAsync(int id, string token);
+    Task RejectAsync(int id, string token);
     Task<GetByIdPropertyDto> GetByIdAsync(int id);
 }

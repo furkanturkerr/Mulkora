@@ -1,74 +1,803 @@
-@model Mulkora.Dto.PropertyDtos.UpdatePropertyDto?
+@model Mulkora.WebUI.Areas.Admin.Models.UpdatePropertyViewModel
 
 @{
-    Layout = "_AdminLayout";
+    Layout = "_AgentLayout";
+    ViewData["Title"] = "İlan Güncelle";
 }
 
-<form method="post">
-    @Html.AntiForgeryToken()
+<style>
+    .property-update-page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 30px;
+    }
 
-    <input type="hidden" asp-for="PropertyId" />
+    .property-update-header {
+        margin-bottom: 24px;
+    }
 
-    <label>Başlık</label>
-    <input asp-for="Title" />
+    .property-update-header h1 {
+        margin: 0;
+        color: #17201d;
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: -.03em;
+    }
 
-    <label>Açıklama</label>
-    <textarea asp-for="Description"></textarea>
+    .property-update-header p {
+        margin: 7px 0 0;
+        color: #7c8984;
+        font-size: 14px;
+    }
 
-    <label>Fiyat</label>
-    <input asp-for="Price" type="number" />
+    .property-form {
+        display: grid;
+        gap: 20px;
+    }
 
-    <label>Şehir</label>
-    <input asp-for="City" />
+    .property-card {
+        padding: 25px;
+        background: #fff;
+        border: 1px solid #e4e9e7;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(20, 35, 30, .03);
+    }
 
-    <label>İlçe</label>
-    <input asp-for="District" />
+    .property-card-header {
+        margin-bottom: 22px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #edf0ef;
+    }
 
-    <label>Adres</label>
-    <input asp-for="Address" />
+    .property-card-header h2 {
+        margin: 0;
+        color: #17201d;
+        font-size: 17px;
+        font-weight: 700;
+    }
 
-    <label>Oda Sayısı</label>
-    <input asp-for="RoomCount" type="number" />
+    .property-card-header p {
+        margin: 5px 0 0;
+        color: #89938f;
+        font-size: 13px;
+    }
 
-    <label>Salon Sayısı</label>
-    <input asp-for="LivingRoomCount" type="number" />
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
 
-    <label>Banyo Sayısı</label>
-    <input asp-for="BathroomCount" type="number" />
+    .form-grid-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
 
-    <label>Brüt Metrekare</label>
-    <input asp-for="GrossSquareMeter" type="number" />
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
 
-    <label>Net Metrekare</label>
-    <input asp-for="NetSquareMeter" type="number" />
+    .form-group.full {
+        grid-column: 1 / -1;
+    }
 
-    <label>Bina Yaşı</label>
-    <input asp-for="BuildingAge" type="number" />
+    .form-group label {
+        color: #44504c;
+        font-size: 13px;
+        font-weight: 600;
+    }
 
-    <label>Bulunduğu Kat</label>
-    <input asp-for="FloorNumber" type="number" />
+    .form-control {
+        width: 100%;
+        height: 46px;
+        padding: 0 13px;
 
-    <label>Toplam Kat</label>
-    <input asp-for="TotalFloor" type="number" />
+        border: 1px solid #dfe5e2;
+        border-radius: 9px;
 
-    <label>
-        <input asp-for="IsFurnished" type="checkbox" />
-        Eşyalı
-    </label>
+        background: #fff;
+        color: #17201d;
 
-    <label>İlan Türü</label>
-    <select asp-for="ListingType">
-        <option value="1">Satılık</option>
-        <option value="2">Kiralık</option>
-    </select>
+        font-size: 14px;
 
-    <label>Danışman</label>
-    <input asp-for="AgentId" type="number" />
+        outline: none;
+        transition: .2s;
+        box-sizing: border-box;
+    }
 
-    <label>Kategori Id</label>
-    <select asp-for="CategoryId" asp-items="@ViewBag.CategoryList">
-        <option value="">Kategori Seç</option>
-    </select>
+    textarea.form-control {
+        height: 130px;
+        padding: 13px;
+        resize: vertical;
+        line-height: 1.5;
+    }
 
-    <button type="submit">Güncelle</button>
-</form>
+    .form-control:focus {
+        border-color: #173a31;
+        box-shadow: 0 0 0 3px rgba(23, 58, 49, .08);
+    }
+
+    .validation-message {
+        color: #c84b4b;
+        font-size: 12px;
+    }
+
+    .validation-summary-errors {
+        padding: 13px 16px;
+        border: 1px solid #f3c8c8;
+        border-radius: 9px;
+        background: #fff5f5;
+        color: #b43f3f;
+        font-size: 13px;
+    }
+
+    .check-box-wrapper {
+        height: 46px;
+        padding: 0 14px;
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        border: 1px solid #dfe5e2;
+        border-radius: 9px;
+
+        background: #fafbfb;
+    }
+
+    .check-box-wrapper input {
+        width: 17px;
+        height: 17px;
+        accent-color: #173a31;
+        cursor: pointer;
+    }
+
+    .check-box-wrapper label {
+        margin: 0;
+        cursor: pointer;
+    }
+
+    /* Feature */
+
+    .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .feature-option {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+
+        min-height: 48px;
+        padding: 0 14px;
+
+        border: 1px solid #dfe5e2;
+        border-radius: 10px;
+
+        background: #fafbfb;
+
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .feature-option:hover {
+        border-color: #b8c7c1;
+        background: #f6f8f7;
+    }
+
+    .feature-option input {
+        width: 17px;
+        height: 17px;
+        margin: 0;
+
+        flex-shrink: 0;
+
+        accent-color: #173a31;
+        cursor: pointer;
+    }
+
+    .feature-option span {
+        color: #44504c;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .feature-option:has(input:checked) {
+        border-color: #72978b;
+        background: #f0f6f4;
+    }
+
+    .feature-option:has(input:checked) span {
+        color: #173a31;
+    }
+
+    .feature-empty {
+        grid-column: 1 / -1;
+
+        padding: 18px;
+
+        border: 1px dashed #d9dfdc;
+        border-radius: 10px;
+
+        color: #89938f;
+        font-size: 13px;
+        text-align: center;
+    }
+
+    /* Actions */
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .property-btn {
+        height: 43px;
+        padding: 0 19px;
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        font-size: 13px;
+        font-weight: 600;
+
+        text-decoration: none;
+        cursor: pointer;
+
+        transition: .2s;
+    }
+
+    .property-btn-secondary {
+        border: 1px solid #dde3e0;
+        background: #fff;
+        color: #59645f;
+    }
+
+    .property-btn-secondary:hover {
+        background: #f5f7f6;
+        color: #17201d;
+    }
+
+    .property-btn-primary {
+        border: 1px solid #173a31;
+        background: #173a31;
+        color: #fff;
+    }
+
+    .property-btn-primary:hover {
+        background: #204c40;
+    }
+
+    @@media (max-width: 850px) {
+
+        .property-update-page {
+            padding: 20px;
+        }
+
+        .form-grid,
+        .form-grid-3,
+        .feature-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
+
+        .form-actions {
+            flex-direction: column-reverse;
+            align-items: stretch;
+        }
+
+        .property-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="property-update-page">
+
+    <div class="property-update-header">
+
+        <h1>İlan Güncelle</h1>
+
+        <p>
+            İlan bilgilerini ve özelliklerini düzenleyerek
+            değişiklikleri kaydedin.
+        </p>
+
+    </div>
+
+
+    <form asp-action="Update"
+          method="post"
+          class="property-form">
+
+        @Html.AntiForgeryToken()
+
+        <input type="hidden"
+               asp-for="Property.PropertyId" />
+
+        <input type="hidden"
+               asp-for="Property.AgentId" />
+
+        <input type="hidden"
+               asp-for="Property.CreatedDate" />
+
+
+        <div asp-validation-summary="ModelOnly"></div>
+
+
+        <!-- TEMEL BİLGİLER -->
+
+        <section class="property-card">
+
+            <div class="property-card-header">
+
+                <h2>Temel Bilgiler</h2>
+
+                <p>
+                    İlanın başlık, açıklama, fiyat ve kategori
+                    bilgilerini düzenleyin.
+                </p>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group full">
+
+                    <label asp-for="Property.Title">
+                        İlan Başlığı
+                    </label>
+
+                    <input asp-for="Property.Title"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.Title"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label asp-for="Property.Description">
+                        Açıklama
+                    </label>
+
+                    <textarea asp-for="Property.Description"
+                              class="form-control"></textarea>
+
+                    <span asp-validation-for="Property.Description"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.Price">
+                        Fiyat
+                    </label>
+
+                    <input asp-for="Property.Price"
+                           type="number"
+                           step="0.01"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.Price"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.ListingType">
+                        İlan Türü
+                    </label>
+
+                    <select asp-for="Property.ListingType"
+                            class="form-control">
+
+                        <option value="1">Satılık</option>
+                        <option value="2">Kiralık</option>
+
+                    </select>
+
+                    <span asp-validation-for="Property.ListingType"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.CategoryId">
+                        Kategori
+                    </label>
+
+                    <select asp-for="Property.CategoryId"
+                            asp-items="@ViewBag.CategoryList"
+                            class="form-control">
+
+                        <option value="">
+                            Kategori Seç
+                        </option>
+
+                    </select>
+
+                    <span asp-validation-for="Property.CategoryId"
+                          class="validation-message"></span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- KONUM -->
+
+        <section class="property-card">
+
+            <div class="property-card-header">
+
+                <h2>Konum Bilgileri</h2>
+
+                <p>
+                    İlanın bulunduğu şehir, ilçe ve açık adres
+                    bilgilerini düzenleyin.
+                </p>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label asp-for="Property.City">
+                        Şehir
+                    </label>
+
+                    <input asp-for="Property.City"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.City"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.District">
+                        İlçe
+                    </label>
+
+                    <input asp-for="Property.District"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.District"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group full">
+
+                    <label asp-for="Property.Address">
+                        Açık Adres
+                    </label>
+
+                    <input asp-for="Property.Address"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.Address"
+                          class="validation-message"></span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ODA BİLGİLERİ -->
+
+        <section class="property-card">
+
+            <div class="property-card-header">
+
+                <h2>Oda Bilgileri</h2>
+
+                <p>
+                    Oda, salon ve banyo sayılarını düzenleyin.
+                </p>
+
+            </div>
+
+
+            <div class="form-grid form-grid-3">
+
+                <div class="form-group">
+
+                    <label asp-for="Property.RoomCount">
+                        Oda Sayısı
+                    </label>
+
+                    <input asp-for="Property.RoomCount"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.RoomCount"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.LivingRoomCount">
+                        Salon Sayısı
+                    </label>
+
+                    <input asp-for="Property.LivingRoomCount"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.LivingRoomCount"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.BathroomCount">
+                        Banyo Sayısı
+                    </label>
+
+                    <input asp-for="Property.BathroomCount"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.BathroomCount"
+                          class="validation-message"></span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ALAN VE BİNA -->
+
+        <section class="property-card">
+
+            <div class="property-card-header">
+
+                <h2>Alan ve Bina Bilgileri</h2>
+
+                <p>
+                    Metrekare, bina yaşı ve kat bilgilerini düzenleyin.
+                </p>
+
+            </div>
+
+
+            <div class="form-grid form-grid-3">
+
+                <div class="form-group">
+
+                    <label asp-for="Property.GrossSquareMeter">
+                        Brüt m²
+                    </label>
+
+                    <input asp-for="Property.GrossSquareMeter"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.GrossSquareMeter"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.NetSquareMeter">
+                        Net m²
+                    </label>
+
+                    <input asp-for="Property.NetSquareMeter"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.NetSquareMeter"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.BuildingAge">
+                        Bina Yaşı
+                    </label>
+
+                    <input asp-for="Property.BuildingAge"
+                           type="number"
+                           min="0"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.BuildingAge"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.FloorNumber">
+                        Bulunduğu Kat
+                    </label>
+
+                    <input asp-for="Property.FloorNumber"
+                           type="number"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.FloorNumber"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label asp-for="Property.TotalFloor">
+                        Toplam Kat
+                    </label>
+
+                    <input asp-for="Property.TotalFloor"
+                           type="number"
+                           min="1"
+                           class="form-control" />
+
+                    <span asp-validation-for="Property.TotalFloor"
+                          class="validation-message"></span>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Eşya Durumu</label>
+
+                    <div class="check-box-wrapper">
+
+                        <input asp-for="Property.IsFurnished" />
+
+                        <label asp-for="Property.IsFurnished">
+                            Eşyalı
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>Öne Çıkarma</label>
+
+                    <div class="check-box-wrapper">
+
+                        <input asp-for="Property.IsFeatured" />
+
+                        <label asp-for="Property.IsFeatured">
+                            Öne Çıkan İlan
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ÖZELLİKLER -->
+
+        <section class="property-card">
+
+            <div class="property-card-header">
+
+                <h2>İlan Özellikleri</h2>
+
+                <p>
+                    İlanda bulunan özellikleri seçin.
+                    Birden fazla özellik seçebilirsiniz.
+                </p>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+                @if (Model.Features.Any())
+                {
+                    @foreach (var feature in Model.Features)
+                    {
+                        <label class="feature-option">
+
+                            <input type="checkbox"
+                                   name="Property.FeatureIds"
+                                   value="@feature.FeatureId"
+                                   checked="@feature.IsSelected" />
+
+                            <span>
+                                @feature.Name
+                            </span>
+
+                        </label>
+                    }
+                }
+                else
+                {
+                    <div class="feature-empty">
+                        Henüz tanımlanmış ilan özelliği bulunmuyor.
+                    </div>
+                }
+
+            </div>
+
+        </section>
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-actions">
+
+            <a asp-area="Agent"
+               asp-controller="Property"
+               asp-action="PropertyList"
+               class="property-btn property-btn-secondary">
+
+                Vazgeç
+
+            </a>
+
+
+            <button type="submit"
+                    class="property-btn property-btn-primary">
+
+                Değişiklikleri Kaydet
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>

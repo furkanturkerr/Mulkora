@@ -1,0 +1,132 @@
+@using System.Security.Claims
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+}
+
+<header class="site-header">
+    <div class="container">
+        <nav class="nav-shell" aria-label="Ana menü">
+            <a class="logo" asp-controller="Default" asp-action="Index">
+                <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/logo.svg" alt="Mülkora"><span>Mülk<strong>ora</strong></span>
+            </a>
+            <div class="nav-menu">
+                <a asp-controller="Default" asp-action="Index" class="@(currentController == "Default" ? "active" : "")" >Ana Sayfa</a>
+                <a asp-controller="Default" asp-action="Index">İlanlar</a>
+                <a asp-controller="Agent" asp-action="Index" class="@(currentController == "Agent" ? "active" : "")">Danışmanlar</a>
+                <a asp-controller="About" asp-action="Index" class="@(currentController == "About" ? "active" : "")">Hakkımızda</a>
+                <a asp-controller="Contact" asp-action="Index" class="@(currentController == "Contact" ? "active" : "")">İletişim</a>
+            </div>
+            
+            
+            @if (User.Identity.IsAuthenticated == false)
+            {
+                <div class="nav-actions">
+                   <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                    <button class="menu-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false">
+                        <svg class="icon" width="21" height="21" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 7h16M4 12h16M4 17h16"/>
+                        </svg>
+                    </button>
+                </div>
+            }
+            else
+            {
+                <div class="nav-actions">
+                <a class="icon-btn" asp-controller="Default" asp-action="Index" aria-label="Favoriler">
+                    <svg class="icon" width="19" height="19" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                            d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8Z"/>
+                    </svg>
+                </a>
+                <div class="account-wrap">
+                    
+                    <button class="account-button" type="button" aria-label="Hesap menüsü">
+                        
+                        <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/agents/agent-04.svg" alt="">
+
+                        <span>@User.FindFirst(ClaimTypes.Name)?.Value</span>
+
+                        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m8 10 4 4 4-4"/>
+                        </svg>
+                    </button>
+
+                    <div class="account-menu">
+                        
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/>
+                                </svg>
+                                Admin
+                            </a>
+                        }
+                        
+                        @if (User.IsInRole("Agent"))
+                        {
+                            <a asp-area="Agent" asp-controller="Property" asp-action="PropertyList">
+                                <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/>
+                                </svg>
+                                Agent
+                            </a>
+                        }
+                        
+                        
+                        <a href="profile.html">
+                            <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/>
+                            </svg>
+                            Profilim</a>
+                        <a href="appointments.html">
+                            <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/>
+                            </svg>
+                            Randevularım</a>
+                        <a href="favorites.html">
+                            <svg class="icon" width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21.2l8.8-8.8a5.5 5.5 0 0 0 0-7.8Z"/>
+                            </svg>
+                            Favorilerim
+                        </a>
+                        
+                        <form method="post"
+                              asp-controller="Account"
+                              asp-action="Logout"
+                              class="account-menu-logout">
+
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="account-menu-link">
+                                <svg class="icon"
+                                     width="17"
+                                     height="17"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.7"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round"
+                                     aria-hidden="true">
+
+                                    <path d="M10 5H5v14h5" />
+                                    <path d="M14 8l4 4-4 4" />
+                                    <path d="M18 12H9" />
+                                </svg>
+
+                                <span>Çıkış Yap</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <button class="menu-toggle" type="button" aria-label="Menüyü aç" aria-expanded="false">
+                    <svg class="icon" width="21" height="21" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 7h16M4 12h16M4 17h16"/>
+                    </svg>
+                </button>
+            </div>
+            }
+        </nav>
+    </div>
+</header>

@@ -19,4 +19,11 @@ public class EfPropertyDal : GenericRepository<Property>, IPropertyDal
         var values = await _context.Properties.Where(x => x.Agent.AppUserId == userId).ToListAsync();
         return values;
     }
+
+    public async Task<List<Property>> GetPropertiesWithFeaturesAsync()
+    {
+        return await _context.Properties
+            .Include(x => x.Features)
+            .ToListAsync();
+    }
 }

@@ -46,7 +46,12 @@ namespace Mulkora.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProperty(CreatePropertyDto dto)
         {
-            var agentId = int.Parse(User.FindFirstValue("AgentId")!);
+            var agentIdClaim = User.FindFirstValue("AgentId");
+
+            if (!int.TryParse(agentIdClaim, out var agentId))
+            {
+                return Unauthorized();
+            }
 
             dto.AgentId = agentId;
 
@@ -81,6 +86,22 @@ namespace Mulkora.WebApi.Controllers
 
             await _propertyService.TSendForApprovalAsync(id, agentId);
 
+            return Ok();
+        }
+        
+        [HttpPatch("{id}/approve")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            await _propertyService.TApproveAsync(id);
+            return Ok();
+        }
+        
+        [HttpPatch("{id}/reject")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Reject(int id)
+        {
+            await _propertyService.TRejectAsync(id);
             return Ok();
         }
     }

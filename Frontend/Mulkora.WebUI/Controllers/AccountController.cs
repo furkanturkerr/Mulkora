@@ -69,7 +69,8 @@ public class AccountController : Controller
         claims.Add(new Claim("access_token", result.Token));
 
         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme,
-            "unique_name", "role");
+            ClaimTypes.Name,
+            ClaimTypes.Role);
 
         var principal = new ClaimsPrincipal(identity);
         

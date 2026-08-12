@@ -24,4 +24,10 @@ public class ErrorController : Controller
         Response.StatusCode = 404;
         return View("NotFound");
     }
+    
+    [Route("Error/500")]
+    public IActionResult InternalServerError()
+    {
+        return View();
+    }
 }

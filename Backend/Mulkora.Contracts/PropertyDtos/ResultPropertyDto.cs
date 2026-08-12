@@ -1,3 +1,4 @@
+using Mulkora.Dto.FeatureDtos;
 using Mulkora.Dto.PropertyImageDtos;
 
 namespace Mulkora.Dto.PropertyDtos;
@@ -49,4 +50,6 @@ public class ResultPropertyDto
     public int AgentId { get; set; }
     
     public int CategoryId { get; set; }
+
+    public List<ResultFeatureDto> Features { get; set; } = new();
 }

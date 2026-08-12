@@ -11,16 +11,18 @@ public class PropertyManager : IPropertyService
 {
     private readonly IPropertyDal _propertyDal;
     private readonly IMapper _mapper;   
+    private readonly IFeatureDal _featureDal;
 
-    public PropertyManager(IPropertyDal propertyDal, IMapper mapper)
+    public PropertyManager(IPropertyDal propertyDal, IMapper mapper, IFeatureDal featureDal)
     {
         _propertyDal = propertyDal;
         _mapper = mapper;
+        _featureDal = featureDal;
     }
 
     public async Task<List<ResultPropertyDto>> TGetListAsync()
     {
-        var values = await _propertyDal.GetListAsync();
+        var values = await _propertyDal.GetPropertiesWithFeaturesAsync();
         return _mapper.Map<List<ResultPropertyDto>>(values);
     }
     
@@ -40,12 +42,21 @@ public class PropertyManager : IPropertyService
     {
         var value = _mapper.Map<Property>(dto);
         value.Status = PropertyStatus.Draft;
+
+        var features = await _featureDal.GetFeatureByPropertyIdAsync(dto.FeatureIds);
+        value.Features = features;
+        
         await _propertyDal.InsertAsync(value);
     }
 
     public async Task TUpdateAsync(UpdatePropertyDto dto)
     {
         var value = _mapper.Map<Property>(dto);
+        value.UpdatedDate = DateTime.UtcNow;
+        
+        var features = await _featureDal.GetFeatureByPropertyIdAsync(dto.FeatureIds);
+        value.Features = features;
+        
         await _propertyDal.UpdateAsync(value);
     }
 
@@ -77,12 +88,31 @@ public class PropertyManager : IPropertyService
 
     public async Task TApproveAsync(int id)
     {
-        throw new NotImplementedException();
+        var property = await _propertyDal.GetByIdAsync(id);
+        
+        if (property == null)
+        throw new Exception("İlan bulunamadı.");
+        
+        if (property.Status != PropertyStatus.PendingApproval)
+            throw new Exception("Sadece onay bekleyen ilanlar onaylanabilir.");
+        
+        property.Status = PropertyStatus.Published;
+        await _propertyDal.UpdateAsync(property);
     }
 
     public async Task TRejectAsync(int id)
     {
-        throw new NotImplementedException();
+        var property = await _propertyDal.GetByIdAsync(id);
+
+        if (property == null)
+            throw new Exception("İlan bulunamadı.");
+
+        if (property.Status != PropertyStatus.PendingApproval)
+            throw new Exception("Sadece onay bekleyen ilanlar reddedilebilir.");
+
+        property.Status = PropertyStatus.Rejected;
+
+        await _propertyDal.UpdateAsync(property);
     }
 
     public async Task TMakePassiveAsync(int id, int agentId)

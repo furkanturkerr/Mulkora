@@ -52,6 +52,34 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         response.EnsureSuccessStatusCode();
     }
 
+    public async Task ApproveAsync(int id, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+        
+        var request = new HttpRequestMessage(
+            HttpMethod.Patch,
+            $"{ApiRoute}/{id}/approve");
+        
+       var response = await _client.SendAsync(request);
+        
+        response.EnsureSuccessStatusCode();       
+    }
+
+    public async Task RejectAsync(int id, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+        
+        var request = new HttpRequestMessage(
+            HttpMethod.Patch,
+            $"{ApiRoute}/{id}/reject");
+        
+        var response = await _client.SendAsync(request);
+        
+        response.EnsureSuccessStatusCode();      
+    }
+
     public async Task<GetByIdPropertyDto> GetByIdAsync(int id)
     {
         var response = await _client.GetAsync($"{ApiRoute}/{id}");

@@ -40,9 +40,11 @@ public class UpdatePropertyDto
     
     public DateTime? CreatedDate { get; set; } 
 
-    public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedDate { get; set; }
 
     public int AgentId { get; set; }
 
     public int CategoryId { get; set; }
+    
+    public List<int> FeatureIds { get; set; } = new();
 }

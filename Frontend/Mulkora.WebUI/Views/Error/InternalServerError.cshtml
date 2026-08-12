@@ -1,0 +1,110 @@
+@{
+    ViewData["Title"] = "Bir Sorun Oluştu";
+}
+
+<link rel="stylesheet"
+      href="~/css/error-pages.css"
+      asp-append-version="true" />
+
+<section class="mkrx-status-page">
+    <div class="mkrx-status-shell">
+        <div class="mkrx-status-card">
+
+            <div class="mkrx-status-head">
+
+                <div class="mkrx-status-brand">
+                    <span class="mkrx-status-brand-line"></span>
+
+                    <span class="mkrx-status-brand-text">
+                        Mülkora
+                    </span>
+                </div>
+
+                <div class="mkrx-status-code-badge">
+                    500
+                </div>
+
+            </div>
+
+            <div class="mkrx-status-body">
+
+                <div class="mkrx-status-side">
+
+                    <div class="mkrx-status-icon-wrap">
+
+                        <svg viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+
+                            <path d="M12 3 2.8 19h18.4L12 3Z" />
+                            <path d="M12 9v4" />
+                            <path d="M12 17h.01" />
+
+                        </svg>
+
+                    </div>
+
+                    <div class="mkrx-status-big-code">
+                        500
+                    </div>
+
+                </div>
+
+                <div class="mkrx-status-content">
+
+                    <div class="mkrx-status-kicker">
+                        Beklenmeyen Bir Hata
+                    </div>
+
+                    <h1 class="mkrx-status-title">
+                        Şu anda bir şeyler yolunda gitmedi.
+                    </h1>
+
+                    <p class="mkrx-status-description">
+                        İşlemin sırasında beklenmeyen bir sorun oluştu.
+                        Sayfayı tekrar deneyebilir veya ana sayfaya dönerek
+                        işlemlerine devam edebilirsin.
+                    </p>
+
+                    <div class="mkrx-status-note">
+
+                        <span class="mkrx-status-note-dot"></span>
+
+                        <span>
+                            Sorun devam ederse daha sonra tekrar deneyebilirsin.
+                        </span>
+
+                    </div>
+
+                    <div class="mkrx-status-actions">
+
+                        <a href="/"
+                           class="mkrx-status-btn mkrx-status-btn--primary">
+
+                            Ana Sayfaya Dön
+
+                            <span class="mkrx-status-arrow">
+                                →
+                            </span>
+
+                        </a>
+
+                        <a href="javascript:location.reload()"
+                           class="mkrx-status-btn mkrx-status-btn--ghost">
+
+                            Tekrar Dene
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
