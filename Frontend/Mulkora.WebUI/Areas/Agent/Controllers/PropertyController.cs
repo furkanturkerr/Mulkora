@@ -2,8 +2,9 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.PropertyDtos;
+using Mulkora.WebUI.Areas.Agent.Models;
+using Mulkora.WebUI.Models;
 using Mulkora.WebUI.Services.Abstract;
-
 namespace Mulkora.WebUI.Areas.Agent.Controllers;
 
 [Area("Agent")]
@@ -13,10 +14,14 @@ namespace Mulkora.WebUI.Areas.Agent.Controllers;
 public class PropertyController : Controller
 {
     private readonly IPropertyService _propertyService;
+    private readonly IFeatureService _featureService;
+    private readonly IPropertyImageService _propertyImageService;
 
-    public PropertyController(IPropertyService propertyService)
+    public PropertyController(IPropertyService propertyService, IFeatureService featureService, IPropertyImageService propertyImageService)
     {
         _propertyService = propertyService;
+        _featureService = featureService;
+        _propertyImageService = propertyImageService;
     }
 
     // GET
@@ -27,32 +32,110 @@ public class PropertyController : Controller
         return View(values);
     }
 
-    public IActionResult Create()
+    [HttpGet]
+    public async Task<IActionResult> Create()
     {
-        return View();  
+        var features = await _featureService.GetAllAsync();
+
+        var model = new CreatePropertyViewModel
+        {
+            Property = new CreatePropertyDto(),
+
+            Features = features
+                .Where(x => x.IsActive)
+                .Select(x => new FeatureOptionViewModel
+                {
+                    FeatureId = x.FeatureId,
+                    Name = x.Name,
+                    IsSelected = false
+                })
+                .ToList()
+        };
+
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreatePropertyDto dto)
+    public async Task<IActionResult> Create(CreatePropertyViewModel model)
     {
         var token = User.FindFirstValue("access_token");
-
-        await _propertyService.CreatePropertyAsync(dto, token);
+        
+        var propertyId = await _propertyService.CreatePropertyAsync(model.Property, token!);
+        
+        if (model.Images != null && model.Images.Count > 0)
+        {
+            await _propertyImageService.UploadPropertyImagesAsync(propertyId, model.Images, token!);
+        }
 
         return RedirectToAction(nameof(PropertyList));
     }
 
+    [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var value = await _propertyService.TGetByIdAsync(id);
-        return View(value);
+        var value = await _propertyService.GetByIdAsync(id);
+
+        if (value == null)
+        {
+            return NotFound();
+        }
+        
+        var token = User.FindFirstValue("access_token");
+
+        var features = await _featureService.GetAllAsync();
+
+        var selectedFeatureIds = value.Features
+            .Select(x => x.FeatureId)
+            .ToHashSet();
+
+        var propertyImages = await _propertyImageService.GetImagesByPropertyIdAsync(id, token!);
+
+        var model = new UpdatePropertyViewModel
+        {
+            Property = new UpdatePropertyDto
+            {
+                PropertyId = value.PropertyId,
+                Title = value.Title,
+                Description = value.Description,
+                Price = value.Price,
+                ListingType = value.ListingType,
+                CategoryId = value.CategoryId,
+                City = value.City,
+                District = value.District,
+                Address = value.Address,
+                RoomCount = value.RoomCount,
+                LivingRoomCount = value.LivingRoomCount,
+                BathroomCount = value.BathroomCount,
+                GrossSquareMeter = value.GrossSquareMeter,
+                NetSquareMeter = value.NetSquareMeter,
+                BuildingAge = value.BuildingAge,
+                FloorNumber = value.FloorNumber,
+                TotalFloor = value.TotalFloor,
+                IsFurnished = value.IsFurnished,
+                FeatureIds = selectedFeatureIds.ToList()
+            },
+
+            Features = features.Select(x => new FeatureOptionViewModel
+            {
+                FeatureId = x.FeatureId,
+                Name = x.Name,
+                IsSelected = selectedFeatureIds.Contains(x.FeatureId)
+            }).ToList(),
+            
+            PropertyImages = propertyImages
+        };
+
+        return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Update(UpdatePropertyDto dto)
+    public async Task<IActionResult> Update(UpdatePropertyViewModel model)
     {
-        await _propertyService.TUpdateAsync(dto);
-        return RedirectToAction(nameof(PropertyList));
+        var token = User.FindFirstValue("access_token");
+        
+        await _propertyService.UpdatePropertyAsync(model.Property, token!);
+        
+        return RedirectToAction(nameof(PropertyList));  
     }
     
     [HttpPost]

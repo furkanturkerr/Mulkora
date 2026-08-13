@@ -53,6 +53,8 @@ public class Property
     public int CategoryId { get; set; }
     
     public Category Category { get; set; } = null!;
+
+    public List<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
     
     public ICollection<Feature> Features { get; set; } = new List<Feature>();
 }

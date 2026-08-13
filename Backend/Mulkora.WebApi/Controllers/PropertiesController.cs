@@ -55,14 +55,24 @@ namespace Mulkora.WebApi.Controllers
 
             dto.AgentId = agentId;
 
-            await _propertyService.TInsertAsync(dto);
+            var propertyId = await _propertyService.TAddAsync(dto);
 
-            return Ok();
+            return Ok(propertyId);
         }
         
+        [Authorize(Roles = "Agent")]
         [HttpPut]
         public async Task<IActionResult> Update(UpdatePropertyDto dto)
         {
+            var agentIdClaim = User.FindFirstValue("AgentId");
+
+            if (!int.TryParse(agentIdClaim, out var agentId))
+            {
+                return Unauthorized();
+            }
+
+            dto.AgentId = agentId;
+            
             await _propertyService.TUpdateAsync(dto);
             return Ok();      
         }

@@ -24,6 +24,54 @@ public class EfPropertyDal : GenericRepository<Property>, IPropertyDal
     {
         return await _context.Properties
             .Include(x => x.Features)
+            .OrderByDescending(x => x.CreatedDate)
+            .AsNoTracking()
             .ToListAsync();
     }
+
+    public async Task InsertWithFeaturesAsync(Property property, List<int> featureIds)
+    {
+        var selectedFeatureIds = featureIds.Distinct().ToList();
+        
+        var features = await _context.Features.Where(x => selectedFeatureIds.Contains(x.FeatureId)).ToListAsync();
+
+        foreach (var feature in features)
+        {
+            property.Features.Add(feature);
+        }
+        
+        await _context.Properties.AddAsync(property);
+        await _context.SaveChangesAsync();
+    }
+    
+    //Distinct() tekrar eden ID’yi kaldırır:
+    public async Task UpdateWithFeaturesAsync(Property property, List<int> featureIds)
+    {
+        var selectedFeatureIds = featureIds?
+            .Distinct()
+            .ToList() ?? new List<int>();
+
+        var features = await _context.Features
+            .Where(x => selectedFeatureIds.Contains(x.FeatureId))
+            .ToListAsync();
+
+        property.Features.Clear();
+
+        foreach (var feature in features)
+        {
+            property.Features.Add(feature);
+        }
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Property> GetByIdWithFeaturesAsync(int id)
+    {
+        return await _context.Properties
+            .Where(x => x.PropertyId == id)
+            .Include(x => x.Features)
+            .FirstOrDefaultAsync();
+    }
+    
+    
 }

@@ -43,6 +43,8 @@ public class UpdatePropertyDto
     public DateTime UpdatedDate { get; set; }
 
     public int AgentId { get; set; }
+    
+    public int Status { get; set; }
 
     public int CategoryId { get; set; }
     

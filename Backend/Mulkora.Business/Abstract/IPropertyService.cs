@@ -12,4 +12,9 @@ public interface IPropertyService : IGenericService<ResultPropertyDto, CreatePro
     Task TMarkAsSoldAsync(int id, int agentId);
     Task TMarkAsRentedAsync(int id, int agentId);
     Task<GetByIdPropertyDto> GetByIdAsync(int id);
+    
+    
+    Task<int> TAddAsync(CreatePropertyDto dto);
+
+    Task TUpdateAsync(UpdatePropertyDto dto);
 }

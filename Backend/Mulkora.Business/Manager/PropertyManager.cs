@@ -34,30 +34,59 @@ public class PropertyManager : IPropertyService
 
     public async Task<UpdatePropertyDto> TGetByIdAsync(int id)
     {
-        var value = await _propertyDal.GetByIdAsync(id);
+        var value = await _propertyDal.GetByIdWithFeaturesAsync(id);
         return _mapper.Map<UpdatePropertyDto>(value);
     }
 
-    public async Task TInsertAsync(CreatePropertyDto dto)
+    public Task TInsertAsync(CreatePropertyDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<GetByIdPropertyDto> GetByIdAsync(int id)
+    {
+        var value = await _propertyDal.GetByIdWithFeaturesAsync(id);
+        return _mapper.Map<GetByIdPropertyDto>(value);
+    }
+
+    public async Task<int> TAddAsync(CreatePropertyDto dto)
     {
         var value = _mapper.Map<Property>(dto);
+
+        value.CreatedDate = DateTime.UtcNow;
+        value.UpdatedDate = DateTime.UtcNow;
         value.Status = PropertyStatus.Draft;
 
-        var features = await _featureDal.GetFeatureByPropertyIdAsync(dto.FeatureIds);
-        value.Features = features;
-        
-        await _propertyDal.InsertAsync(value);
+        await _propertyDal.InsertWithFeaturesAsync(value, dto.FeatureIds);
+        return value.PropertyId;
     }
 
     public async Task TUpdateAsync(UpdatePropertyDto dto)
     {
-        var value = _mapper.Map<Property>(dto);
+        var value = await _propertyDal.GetByIdWithFeaturesAsync(dto.PropertyId);
+
+        if (value == null)
+        {
+            throw new Exception("İlan bulunamadı.");
+        }
+
+        if (value.AgentId != dto.AgentId)
+        {
+            throw new Exception(
+                "Bu ilanı güncelleme yetkiniz bulunmuyor.");
+        }
+
+        var createdDate = value.CreatedDate;
+        var agentId = value.AgentId;
+
+        _mapper.Map(dto, value);
+
+        value.CreatedDate = createdDate;
+        value.Status = PropertyStatus.Draft;
+        value.AgentId = agentId;
         value.UpdatedDate = DateTime.UtcNow;
-        
-        var features = await _featureDal.GetFeatureByPropertyIdAsync(dto.FeatureIds);
-        value.Features = features;
-        
-        await _propertyDal.UpdateAsync(value);
+
+        await _propertyDal.UpdateWithFeaturesAsync(value, dto.FeatureIds);
     }
 
     public async Task TDeleteAsync(int id)
@@ -128,11 +157,5 @@ public class PropertyManager : IPropertyService
     public async Task TMarkAsRentedAsync(int id, int agentId)
     {
         throw new NotImplementedException();
-    }
-
-    public async Task<GetByIdPropertyDto> GetByIdAsync(int id)
-    {
-        var value = await _propertyDal.GetByIdAsync(id);
-        return _mapper.Map<GetByIdPropertyDto>(value);
     }
 }

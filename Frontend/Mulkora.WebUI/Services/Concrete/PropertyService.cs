@@ -17,18 +17,16 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
     
     public async Task<List<ResultPropertyDto>> GetPropertiesByUserIdAsync(string token)
     {
-        _client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         var response = await _client.GetAsync($"{ApiRoute}/my-properties");
 
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadFromJsonAsync<List<ResultPropertyDto>>()
-               ?? new List<ResultPropertyDto>();
+        return await response.Content.ReadFromJsonAsync<List<ResultPropertyDto>>() ?? new List<ResultPropertyDto>();
     }
     
-    public async Task CreatePropertyAsync(CreatePropertyDto dto, string token)
+    public async Task<int> CreatePropertyAsync(CreatePropertyDto dto, string token)
     {
         _client.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Bearer", token);
@@ -36,6 +34,11 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         var response = await _client.PostAsJsonAsync(ApiRoute, dto);
 
         response.EnsureSuccessStatusCode();
+        
+        var propertyId =
+            await response.Content.ReadFromJsonAsync<int>();
+
+        return propertyId;
     }
     
     public async Task SendForApprovalAsync(int id, string token)
@@ -86,5 +89,15 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<GetByIdPropertyDto>();
+    }
+
+    public async Task UpdatePropertyAsync(UpdatePropertyDto dto, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _client.PutAsJsonAsync(ApiRoute, dto);
+
+        response.EnsureSuccessStatusCode();
     }
 }

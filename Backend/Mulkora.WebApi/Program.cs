@@ -14,6 +14,7 @@ using Mulkora.DataAccess.EntityFramework;
 using Mulkora.Entity.Concrete;
 using Mulkora.WebApi.Identity;
 using Mulkora.WebApi.Middlewares;
+using Mulkora.WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -85,6 +86,9 @@ builder.Services.AddScoped<IFeatureDal, EfFeatureDal>();
 builder.Services.AddScoped<IPropertyService, PropertyManager>();
 builder.Services.AddScoped<IPropertyDal, EfPropertyDal>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPropertyImageDal, EfPropertyImageDal>();
+builder.Services.AddScoped<IPropertyImageService, PropertyImageManager>();
+builder.Services.AddScoped<ImageFileService>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");
@@ -154,6 +158,8 @@ var app = builder.Build();
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors("CorsPolicy");
+
+app.UseStaticFiles();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

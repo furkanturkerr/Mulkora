@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.WebUI.Areas.Admin.Models;
+using Mulkora.WebUI.Models;
 using Mulkora.WebUI.Services.Abstract;
 
 namespace Mulkora.WebUI.Areas.Admin.Controllers;
@@ -16,7 +17,6 @@ public class PropertyController : Controller
     private readonly IAgentService _agentService;
     private readonly IFeatureService _featureService;
     private readonly ICategoryService _categoryService;
-
     public PropertyController(IPropertyService propertyService, IAgentService agentService, ICategoryService categoryService, IFeatureService featureService)
     {
         _propertyService = propertyService;
@@ -35,7 +35,7 @@ public class PropertyController : Controller
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var value = await _propertyService.TGetByIdAsync(id);
+        var value = await _propertyService.GetByIdAsync(id);
 
         var categories = await _categoryService.GetAllAsync();
 
@@ -48,15 +48,40 @@ public class PropertyController : Controller
 
         var features = await _featureService.GetAllAsync();
 
+        var selectedFeatureIds = value.Features
+            .Select(x => x.FeatureId)
+            .ToList();
+
         var model = new UpdatePropertyViewModel
         {
-            Property = value,
+            Property = new UpdatePropertyDto
+            {
+                PropertyId = value.PropertyId,
+                Title = value.Title,
+                Description = value.Description,
+                Price = value.Price,
+                ListingType = value.ListingType,
+                CategoryId = value.CategoryId,
+                City = value.City,
+                District = value.District,
+                Address = value.Address,
+                RoomCount = value.RoomCount,
+                LivingRoomCount = value.LivingRoomCount,
+                BathroomCount = value.BathroomCount,
+                GrossSquareMeter = value.GrossSquareMeter,
+                NetSquareMeter = value.NetSquareMeter,
+                BuildingAge = value.BuildingAge,
+                FloorNumber = value.FloorNumber,
+                TotalFloor = value.TotalFloor,
+                IsFurnished = value.IsFurnished,
+                FeatureIds = selectedFeatureIds
+            },
 
             Features = features.Select(x => new FeatureOptionViewModel
             {
                 FeatureId = x.FeatureId,
                 Name = x.Name,
-                IsSelected = value.FeatureIds.Contains(x.FeatureId)
+                IsSelected = selectedFeatureIds.Contains(x.FeatureId)
             }).ToList()
         };
 
@@ -64,10 +89,13 @@ public class PropertyController : Controller
     }
     
     [HttpPost]
-    public async Task<IActionResult> Update(UpdatePropertyDto dto)
+    public async Task<IActionResult> Update(UpdatePropertyViewModel model)
     {
-        await _propertyService.TUpdateAsync(dto);
-        return RedirectToAction(nameof(PropertyList));   
+        var token = User.FindFirstValue("access_token");
+        
+        await _propertyService.UpdatePropertyAsync(model.Property, token!);
+
+        return RedirectToAction(nameof(PropertyList));
     }
 
     [HttpPost]

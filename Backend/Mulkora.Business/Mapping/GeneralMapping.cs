@@ -40,16 +40,25 @@ public class GeneralMapping : Profile
         CreateMap<UpdateFeatureDto, Feature>().ReverseMap();
 
         CreateMap<Property, ResultPropertyDto>();
-        CreateMap<UpdatePropertyDto, Property>()
-            .ForMember(x => x.Features, opt => opt.Ignore());
-        CreateMap<Property, GetByIdPropertyDto>();
-
+        
         CreateMap<CreatePropertyDto, Property>()
-            .ForMember(x => x.Features, opt => opt.Ignore());
+            .ForMember(
+                destination => destination.Features,
+                options => options.Ignore());
+
+        CreateMap<UpdatePropertyDto, Property>()
+            .ForMember(
+                destination => destination.Features,
+                options => options.Ignore());
+
+        CreateMap<Property, GetByIdPropertyDto>();
         //ıgnore : Yani normal alanları map et, ilişkiyi ayrıca kur.
         
-        
         CreateMap<AppUser, ResultUserDto>();
+        
+        CreateMap<PropertyImage, ResultPropertyImageDto>();
+        CreateMap<CreatePropertyImagesDto, PropertyImage>();
+        CreateMap<UpdatePropertyImageDto, PropertyImage>().ReverseMap();
 
 
     }

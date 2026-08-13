@@ -1,0 +1,34 @@
+using Microsoft.EntityFrameworkCore;
+using Mulkora.DataAccess.Abstract;
+using Mulkora.DataAccess.Concrete;
+using Mulkora.DataAccess.Repository;
+using Mulkora.Entity.Concrete;
+
+namespace Mulkora.DataAccess.EntityFramework;
+
+public class EfPropertyImageDal : GenericRepository<PropertyImage>, IPropertyImageDal
+{
+    private readonly Context _context;
+
+    public EfPropertyImageDal(Context context) : base(context)
+    {
+        _context = context;
+    }
+
+    public async Task InsertRangeAsync(List<PropertyImage> propertyImages)
+    {
+        await _context.PropertyImages.AddRangeAsync(propertyImages);
+        //Tek kayır değil o yüzden AddRangeAsync
+
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<List<PropertyImage>> GetImagesByPropertyIdAsync(int propertyId)
+    {
+        var values = await _context.PropertyImages
+            .Where(x => x.PropertyId == propertyId)
+            .ToListAsync();
+        
+        return values;
+    }
+}
