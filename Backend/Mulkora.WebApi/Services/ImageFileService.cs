@@ -75,4 +75,20 @@ public class ImageFileService
 
         return imageUrls;
     }
+    
+    public void DeleteImage(string imageUrl)
+    {
+        var fileName = Path.GetFileName(imageUrl);
+
+        var filePath = Path.Combine(
+            _environment.WebRootPath,
+            "property-images",
+            fileName
+        );
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+        }
+    }
 }

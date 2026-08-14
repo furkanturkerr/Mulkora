@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using Mulkora.Business.Abstract;
 using Mulkora.DataAccess.Abstract;
 using Mulkora.Dto.PropertyDtos;
@@ -10,14 +11,16 @@ namespace Mulkora.Business.Manager;
 public class PropertyManager : IPropertyService
 {
     private readonly IPropertyDal _propertyDal;
-    private readonly IMapper _mapper;   
-    private readonly IFeatureDal _featureDal;
+    private readonly IMapper _mapper;
+    private readonly IValidator<CreatePropertyDto> _createValidator;
+    private readonly IValidator<UpdatePropertyDto> _updateValidator;
 
-    public PropertyManager(IPropertyDal propertyDal, IMapper mapper, IFeatureDal featureDal)
+    public PropertyManager(IPropertyDal propertyDal, IMapper mapper, IValidator<CreatePropertyDto> createValidator, IValidator<UpdatePropertyDto> updateValidator)
     {
         _propertyDal = propertyDal;
         _mapper = mapper;
-        _featureDal = featureDal;
+        _createValidator = createValidator;
+        _updateValidator = updateValidator;
     }
 
     public async Task<List<ResultPropertyDto>> TGetListAsync()
@@ -51,6 +54,12 @@ public class PropertyManager : IPropertyService
 
     public async Task<int> TAddAsync(CreatePropertyDto dto)
     {
+        var validationResult = await _createValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+        
         var value = _mapper.Map<Property>(dto);
 
         value.CreatedDate = DateTime.UtcNow;
@@ -63,6 +72,12 @@ public class PropertyManager : IPropertyService
 
     public async Task TUpdateAsync(UpdatePropertyDto dto)
     {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            throw new ValidationException(validationResult.Errors);
+        }
+        
         var value = await _propertyDal.GetByIdWithFeaturesAsync(dto.PropertyId);
 
         if (value == null)

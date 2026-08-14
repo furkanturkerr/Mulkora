@@ -39,7 +39,13 @@ public class GeneralMapping : Profile
         CreateMap<CreateFeatureDto, Feature>();
         CreateMap<UpdateFeatureDto, Feature>().ReverseMap();
 
-        CreateMap<Property, ResultPropertyDto>();
+        CreateMap<Property, ResultPropertyDto>()
+            .ForMember(destination => destination.ImageUrl, options => options.MapFrom(source =>
+                source.PropertyImages
+                    .OrderBy(x => x.PropertyImageId)
+                    .Select(x => x.ImageUrl)
+                    .FirstOrDefault() ?? string.Empty
+            ));
         
         CreateMap<CreatePropertyDto, Property>()
             .ForMember(
@@ -59,6 +65,7 @@ public class GeneralMapping : Profile
         CreateMap<PropertyImage, ResultPropertyImageDto>();
         CreateMap<CreatePropertyImagesDto, PropertyImage>();
         CreateMap<UpdatePropertyImageDto, PropertyImage>().ReverseMap();
+        
 
 
     }

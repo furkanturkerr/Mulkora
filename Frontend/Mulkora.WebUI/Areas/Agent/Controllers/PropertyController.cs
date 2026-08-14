@@ -59,9 +59,18 @@ public class PropertyController : Controller
     public async Task<IActionResult> Create(CreatePropertyViewModel model)
     {
         var token = User.FindFirstValue("access_token");
-        
-        var propertyId = await _propertyService.CreatePropertyAsync(model.Property, token!);
-        
+
+        var response = await _propertyService.CreatePropertyAsync(model.Property, token!);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            TempData["ErrorMessage"] = await response.Content.ReadAsStringAsync();
+
+            return RedirectToAction(nameof(Create));
+        }
+
+        var propertyId = await response.Content.ReadFromJsonAsync<int>();
+
         if (model.Images != null && model.Images.Count > 0)
         {
             await _propertyImageService.UploadPropertyImagesAsync(propertyId, model.Images, token!);
@@ -133,7 +142,19 @@ public class PropertyController : Controller
     {
         var token = User.FindFirstValue("access_token");
         
-        await _propertyService.UpdatePropertyAsync(model.Property, token!);
+        var response = await _propertyService.UpdatePropertyAsync(model.Property, token!);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            TempData["ErrorMessage"] = await response.Content.ReadAsStringAsync();
+
+            return RedirectToAction(nameof(Create));
+        }
+
+        if (model.NewImages.Count > 0)
+        {
+            await _propertyImageService.UploadPropertyImagesAsync(model.Property.PropertyId, model.NewImages, token!);
+        }
         
         return RedirectToAction(nameof(PropertyList));  
     }
@@ -146,5 +167,15 @@ public class PropertyController : Controller
         await _propertyService.SendForApprovalAsync(id, token!);
 
         return RedirectToAction(nameof(PropertyList));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteImage(int imageId, int propertyId)
+    {
+        var token = User.FindFirstValue("access_token");
+
+        await _propertyImageService.DeleteImageAsync(imageId, token!);
+
+        return RedirectToAction(nameof(Update), new { id = propertyId });
     }
 }

@@ -16,7 +16,10 @@ public class EfPropertyDal : GenericRepository<Property>, IPropertyDal
 
     public async Task<List<Property>> GetPropertiesByUserIdAsync(string userId)
     {
-        var values = await _context.Properties.Where(x => x.Agent.AppUserId == userId).ToListAsync();
+        var values = await _context.Properties
+            .Include(x=>x.PropertyImages)
+            .Where(x => x.Agent.AppUserId == userId)
+            .ToListAsync();
         return values;
     }
 

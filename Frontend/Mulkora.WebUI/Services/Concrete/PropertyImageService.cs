@@ -52,4 +52,13 @@ public class PropertyImageService : GenericService<ResultPropertyImageDto, Creat
 
         response.EnsureSuccessStatusCode();
     } 
+    
+    public async Task DeleteImageAsync(int imageId, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        var response = await _client.DeleteAsync($"{ApiRoute}/{imageId}");
+
+        response.EnsureSuccessStatusCode();
+    }
 }

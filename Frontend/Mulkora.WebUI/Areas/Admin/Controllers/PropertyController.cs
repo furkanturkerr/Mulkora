@@ -93,7 +93,14 @@ public class PropertyController : Controller
     {
         var token = User.FindFirstValue("access_token");
         
-        await _propertyService.UpdatePropertyAsync(model.Property, token!);
+        var response = await _propertyService.UpdatePropertyAsync(model.Property, token!);
+        
+        if (!response.IsSuccessStatusCode)
+        {
+            TempData["ErrorMessage"] = await response.Content.ReadAsStringAsync();
+
+            return RedirectToAction(nameof(Update), new { id = model.Property.PropertyId});
+        }
 
         return RedirectToAction(nameof(PropertyList));
     }

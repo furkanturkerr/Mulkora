@@ -9,4 +9,6 @@ public interface IPropertyImageService
     Task TInsertImagesAsync(CreatePropertyImagesDto dto);
     
     Task<List<UpdatePropertyImageDto>> TGetImagesByPropertyIdAsync(int propertyId);
+    
+    Task<string> TDeleteImageAsync(int imageId, int agentId);
 }

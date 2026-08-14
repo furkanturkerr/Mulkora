@@ -31,4 +31,11 @@ public class EfPropertyImageDal : GenericRepository<PropertyImage>, IPropertyIma
         
         return values;
     }
+    
+    public async Task<PropertyImage?> GetByIdWithPropertyAsync(int imageId)
+    {
+        return await _context.PropertyImages
+            .Include(x => x.Property)
+            .FirstOrDefaultAsync(x => x.PropertyImageId == imageId);
+    }
 }

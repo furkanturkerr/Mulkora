@@ -598,6 +598,13 @@ ViewData["Title"] = "Yeni İlan Ekle";
             </div>
 
         </section>
+        
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
 
     </form>
 

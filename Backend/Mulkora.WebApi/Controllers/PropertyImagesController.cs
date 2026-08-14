@@ -58,4 +58,22 @@ public class PropertyImagesController : ControllerBase
 
         return Ok(images);
     }
+    
+    [HttpDelete("{imageId:int}")]
+    [Authorize(Roles = "Agent")]
+    public async Task<IActionResult> Delete(int imageId)
+    {
+        var agentIdClaim = User.FindFirstValue("AgentId");
+
+        if (!int.TryParse(agentIdClaim, out var agentId))
+        {
+            return Unauthorized();
+        }
+
+        var imageUrl = await _propertyImageService.TDeleteImageAsync(imageId, agentId);
+
+        _imageFileService.DeleteImage(imageUrl);
+
+        return NoContent();
+    }
 }

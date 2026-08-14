@@ -45,7 +45,6 @@ public class PropertyImageManager : IPropertyImageService
             {
                 PropertyId = dto.PropertyId,
                 ImageUrl = dto.ImageUrls[i],
-
                 // Sıralama 1'den başlar.
                 DisplayOrder = i + 1
             };
@@ -60,5 +59,26 @@ public class PropertyImageManager : IPropertyImageService
     {
         var values = await _propertyImageDal.GetImagesByPropertyIdAsync(propertyId);
         return _mapper.Map<List<UpdatePropertyImageDto>>(values);
+    }
+
+    public async Task<string> TDeleteImageAsync(int imageId, int agentId)
+    {
+        var image = await _propertyImageDal.GetByIdWithPropertyAsync(imageId);
+        
+        if (image == null)
+        {
+            throw new Exception("Görsel bulunamadı.");
+        }
+
+        if (image.Property.AgentId != agentId)
+        {
+            throw new Exception("Bu görseli silme yetkiniz bulunmuyor.");
+        }
+
+        var imageUrl = image.ImageUrl;
+
+        await _propertyImageDal.DeleteAsync(imageId);
+
+        return imageUrl;
     }
 }

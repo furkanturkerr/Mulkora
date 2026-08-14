@@ -6,4 +6,5 @@ public interface IPropertyImageService
 {
     Task<List<UpdatePropertyImageDto>> GetImagesByPropertyIdAsync(int propertyId, string token);
     Task UploadPropertyImagesAsync(int propertyId, List<IFormFile> images, string token);
+    Task DeleteImageAsync(int imageId, string token);
 }

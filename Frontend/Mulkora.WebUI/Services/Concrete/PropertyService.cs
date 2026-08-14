@@ -26,29 +26,18 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         return await response.Content.ReadFromJsonAsync<List<ResultPropertyDto>>() ?? new List<ResultPropertyDto>();
     }
     
-    public async Task<int> CreatePropertyAsync(CreatePropertyDto dto, string token)
+    public async Task<HttpResponseMessage> CreatePropertyAsync(CreatePropertyDto dto, string token)
     {
-        _client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var response = await _client.PostAsJsonAsync(ApiRoute, dto);
-
-        response.EnsureSuccessStatusCode();
-        
-        var propertyId =
-            await response.Content.ReadFromJsonAsync<int>();
-
-        return propertyId;
+        return await _client.PostAsJsonAsync(ApiRoute, dto);
     }
     
     public async Task SendForApprovalAsync(int id, string token)
     {
-        _client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var request = new HttpRequestMessage(
-            HttpMethod.Patch,
-            $"{ApiRoute}/{id}/send-for-approval");
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"{ApiRoute}/{id}/send-for-approval");
 
         var response = await _client.SendAsync(request);
 
@@ -57,12 +46,9 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
 
     public async Task ApproveAsync(int id, string token)
     {
-        _client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         
-        var request = new HttpRequestMessage(
-            HttpMethod.Patch,
-            $"{ApiRoute}/{id}/approve");
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"{ApiRoute}/{id}/approve");
         
        var response = await _client.SendAsync(request);
         
@@ -71,12 +57,9 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
 
     public async Task RejectAsync(int id, string token)
     {
-        _client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         
-        var request = new HttpRequestMessage(
-            HttpMethod.Patch,
-            $"{ApiRoute}/{id}/reject");
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"{ApiRoute}/{id}/reject");
         
         var response = await _client.SendAsync(request);
         
@@ -91,13 +74,10 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         return await response.Content.ReadFromJsonAsync<GetByIdPropertyDto>();
     }
 
-    public async Task UpdatePropertyAsync(UpdatePropertyDto dto, string token)
+    public async Task<HttpResponseMessage> UpdatePropertyAsync(UpdatePropertyDto dto, string token)
     {
-        _client.DefaultRequestHeaders.Authorization =
-            new AuthenticationHeaderValue("Bearer", token);
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-        var response = await _client.PutAsJsonAsync(ApiRoute, dto);
-
-        response.EnsureSuccessStatusCode();
+        return await _client.PutAsJsonAsync(ApiRoute, dto);
     }
 }

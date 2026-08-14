@@ -163,7 +163,9 @@
 
                         <div class="table-property">
 
-                            <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg"
+                            <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl)
+                                          ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
+                                          : $"http://localhost:5214{item.ImageUrl}")"
                                  alt="@item.Title">
 
                             <div>

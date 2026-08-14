@@ -40,6 +40,8 @@ public class ResultPropertyDto
     public bool IsFeatured { get; set; }
 
     public int ListingType { get; set; }
+    
+    public string ImageUrl { get; set; } = string.Empty;
 
     public int Status { get; set; }
 
