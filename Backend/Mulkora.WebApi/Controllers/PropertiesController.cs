@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.PropertyDtos;
+using Mulkora.Entity.Enums;
 
 namespace Mulkora.WebApi.Controllers
 {
@@ -23,14 +24,22 @@ namespace Mulkora.WebApi.Controllers
             var values = await _propertyService.TGetListAsync();
             return Ok(values);
         }
+
+        [HttpGet("filter")]
+        public async Task<IActionResult> GetFilter(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType, int page = 1, int pageSize = 8)
+        {
+            var values = await _propertyService.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize);
+
+            return Ok(values);
+        }
         
         [Authorize(Roles = "Agent")]
         [HttpGet("my-properties")]
-        public async Task<IActionResult> GetMyProperties()
+        public async Task<IActionResult> GetMyProperties(string? text, PropertyStatus? IsStatus)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var values = await _propertyService.TGetPropertiesByUserIdAsync(userId);
+            var values = await _propertyService.TGetPropertiesByUserIdAsync(userId!, text, IsStatus);
 
             return Ok(values);
         }

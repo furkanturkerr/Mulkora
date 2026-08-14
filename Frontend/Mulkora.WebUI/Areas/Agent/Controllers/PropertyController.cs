@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.WebUI.Areas.Agent.Models;
 using Mulkora.WebUI.Models;
@@ -16,19 +17,21 @@ public class PropertyController : Controller
     private readonly IPropertyService _propertyService;
     private readonly IFeatureService _featureService;
     private readonly IPropertyImageService _propertyImageService;
+    private readonly ICategoryService _categoryService;
 
-    public PropertyController(IPropertyService propertyService, IFeatureService featureService, IPropertyImageService propertyImageService)
+    public PropertyController(IPropertyService propertyService, IFeatureService featureService, IPropertyImageService propertyImageService, ICategoryService categoryService)
     {
         _propertyService = propertyService;
         _featureService = featureService;
         _propertyImageService = propertyImageService;
+        _categoryService = categoryService;
     }
 
     // GET
-    public async Task<IActionResult> PropertyList()
+    public async Task<IActionResult> PropertyList(string? text, int? IsStatus)
     {
         var token = User.FindFirstValue("access_token");
-        var values = await _propertyService.GetPropertiesByUserIdAsync(token);
+        var values = await _propertyService.GetPropertiesByUserIdAsync(token, text, IsStatus);
         return View(values);
     }
 
@@ -36,6 +39,10 @@ public class PropertyController : Controller
     public async Task<IActionResult> Create()
     {
         var features = await _featureService.GetAllAsync();
+        
+        var categories = await _categoryService.GetAllAsync();
+
+        ViewBag.CategoryList = new SelectList(categories, "CategoryId", "Name");
 
         var model = new CreatePropertyViewModel
         {
@@ -88,6 +95,11 @@ public class PropertyController : Controller
         {
             return NotFound();
         }
+        
+        var categories = await _categoryService.GetAllAsync();
+        
+        ViewBag.CategoryList = new SelectList(categories, "CategoryId", "Name");
+
         
         var token = User.FindFirstValue("access_token");
 

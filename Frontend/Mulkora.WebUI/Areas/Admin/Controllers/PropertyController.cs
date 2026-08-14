@@ -17,18 +17,21 @@ public class PropertyController : Controller
     private readonly IAgentService _agentService;
     private readonly IFeatureService _featureService;
     private readonly ICategoryService _categoryService;
-    public PropertyController(IPropertyService propertyService, IAgentService agentService, ICategoryService categoryService, IFeatureService featureService)
+    private readonly IPropertyImageService _propertyImageService;
+    public PropertyController(IPropertyService propertyService, IAgentService agentService, ICategoryService categoryService, IFeatureService featureService, IPropertyImageService propertyImageService)
     {
         _propertyService = propertyService;
         _agentService = agentService;
         _categoryService = categoryService;
         _featureService = featureService;
+        _propertyImageService = propertyImageService;
     }
 
     // GET
-    public async Task<IActionResult> PropertyList()
+    public async Task<IActionResult> PropertyList(string? text, int? IsStatus, string? City, string? District, int? ListingType, int page = 1)
     {
-        var values = await _propertyService.GetAllAsync();
+        const int pageSize = 8;
+        var values = await _propertyService.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize);
         return View(values);
     }
     
@@ -74,6 +77,7 @@ public class PropertyController : Controller
                 FloorNumber = value.FloorNumber,
                 TotalFloor = value.TotalFloor,
                 IsFurnished = value.IsFurnished,
+                IsFeatured = value.IsFeatured,
                 FeatureIds = selectedFeatureIds
             },
 
@@ -115,8 +119,29 @@ public class PropertyController : Controller
     [HttpGet]
     public async Task<IActionResult> Details(int id)
     {
-        var value = await _propertyService.GetByIdAsync(id);
-        return View(value);
+        var token = User.FindFirstValue("access_token");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return Unauthorized();
+        }
+
+        var property = await _propertyService.GetByIdAsync(id);
+
+        if (property == null)
+        {
+            return NotFound();
+        }
+
+        var propertyImages = await _propertyImageService.GetImagesByPropertyIdAsync(id, token);
+
+        var model = new PropertyDetailsViewModel
+        {
+            Property = property,
+            PropertyImages = propertyImages
+        };
+
+        return View(model);
     }
     
     [HttpPost]

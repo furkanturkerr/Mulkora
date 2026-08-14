@@ -29,9 +29,9 @@ public class PropertyManager : IPropertyService
         return _mapper.Map<List<ResultPropertyDto>>(values);
     }
     
-    public async Task<List<ResultPropertyDto>> TGetPropertiesByUserIdAsync(string userId)
+    public async Task<List<ResultPropertyDto>> TGetPropertiesByUserIdAsync(string userId, string? text, PropertyStatus? IsStatus)
     {
-        var values = await _propertyDal.GetPropertiesByUserIdAsync(userId);
+        var values = await _propertyDal.GetPropertiesByUserIdAsync(userId, text,  IsStatus);
         return _mapper.Map<List<ResultPropertyDto>>(values);
     }
 
@@ -102,6 +102,38 @@ public class PropertyManager : IPropertyService
         value.UpdatedDate = DateTime.UtcNow;
 
         await _propertyDal.UpdateWithFeaturesAsync(value, dto.FeatureIds);
+    }
+
+    public async Task<List<ResultPropertyDto>> GetFilterProperty(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType, int page, int pageSize)
+    {
+        if (page < 1)
+        {
+            page = 1;
+        }
+
+        if (pageSize < 1)
+        {
+            pageSize = 8;
+        }
+
+        var totalCount = await _propertyDal.GetFilterPropertyCount(text, IsStatus, City, District, ListingType);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        if (totalPages > 0 && page > totalPages)
+        {
+            page = totalPages;
+        }
+
+        var properties = await _propertyDal.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize);
+        var values = _mapper.Map<List<ResultPropertyDto>>(properties);
+
+        foreach (var value in values)
+        {
+            value.CurrentPage = page;
+            value.TotalPages = totalPages;
+        }
+
+        return values;
     }
 
     public async Task TDeleteAsync(int id)

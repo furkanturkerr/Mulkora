@@ -40,6 +40,7 @@ public class GeneralMapping : Profile
         CreateMap<UpdateFeatureDto, Feature>().ReverseMap();
 
         CreateMap<Property, ResultPropertyDto>()
+            .ForMember(destination => destination.AgentName, options => options.MapFrom(source => source.Agent.AppUser.Name))
             .ForMember(destination => destination.ImageUrl, options => options.MapFrom(source =>
                 source.PropertyImages
                     .OrderBy(x => x.PropertyImageId)

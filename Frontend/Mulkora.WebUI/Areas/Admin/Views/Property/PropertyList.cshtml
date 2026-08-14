@@ -1,141 +1,286 @@
 @model List<Mulkora.Dto.PropertyDtos.ResultPropertyDto>
 
 @{
-    Layout = "_AdminLayout";
+Layout = "_AdminLayout";
+
+var filterText = Context.Request.Query["text"].ToString();
+var filterStatus = Context.Request.Query["IsStatus"].ToString();
+var filterCity = Context.Request.Query["City"].ToString();
+var filterDistrict = Context.Request.Query["District"].ToString();
+var filterListingType = Context.Request.Query["ListingType"].ToString();
+
+var currentPage = Model.FirstOrDefault()?.CurrentPage ?? 1;
+var totalPages = Model.FirstOrDefault()?.TotalPages ?? 1;
+
+var startPage = Math.Max(1, currentPage - 2);
+var endPage = Math.Min(totalPages, currentPage + 2);
+
+var hasFilter = !string.IsNullOrWhiteSpace(filterText)
+|| !string.IsNullOrWhiteSpace(filterStatus)
+|| !string.IsNullOrWhiteSpace(filterCity)
+|| !string.IsNullOrWhiteSpace(filterDistrict)
+|| !string.IsNullOrWhiteSpace(filterListingType);
 }
 
-<div class="page-heading">
-    <div>
-        <h1>İlan Yönetimi</h1>
-        <p>Tüm ilanları durum, tip ve danışmana göre görüntüleyin ve yönetin.</p></div>
-    <div class="page-heading-actions">
-        <button class="panel-btn panel-btn-outline">Toplu işlem</button>
-    </div>
-</div>
-<div class="toolbar">
-    <div class="toolbar-group">
-        <label style="position:relative">
-            <svg class="icon" width="17" height="17" viewBox="0 0 24 24">
-                <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4"/>
-            </svg>
-            <input class="panel-input" data-filter-text="[data-property-row]" type="search"
-                   placeholder="İlan adı veya konum ara" style="padding-left:38px"></label>
-        <select
-            class="panel-select">
-            <option>Tüm durumlar</option>
-            <option>Yayında</option>
-            <option>Onay bekliyor</option>
-            <option>Pasif</option>
-        </select>
-        <select class="panel-select">
-            <option>Tüm tipler</option>
-            <option>Satılık</option>
-            <option>Kiralık</option>
-        </select></div>
-    <div class="toolbar-group">
-        <button class="panel-btn panel-btn-outline">
-            <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
-                <path d="M4 5h16M7 12h10M10 19h4"/>
-            </svg>
-            Filtreler
-        </button>
-        <button class="panel-btn panel-btn-outline">Dışa aktar</button>
-    </div>
-</div>
+<link rel="stylesheet" href="~/css/admin/property-list.css"/>
 
-<section class="panel-card">
-    <div class="panel-table-wrap">
-        <table class="panel-table">
-            <thead>
-            <tr>
-                <th>İlan</th>
-                <th>Danışman</th>
-                <th>Fiyat</th>
-                <th>Durum</th>
-                <th>Eklenme</th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            
-            @foreach (var item in Model)
+<div class="admin-property-page">
+
+    <div class="admin-property-heading">
+        <h1>İlan Yönetimi</h1>
+        <p>Tüm ilanları görüntüleyin, filtreleyin ve ilan bilgilerini yönetin.</p>
+    </div>
+
+    <section class="admin-property-panel">
+
+        <form asp-area="Admin" asp-controller="Property" asp-action="PropertyList" method="get" class="admin-property-filter">
+
+            <label class="admin-filter-search">
+                <svg class="admin-svg admin-filter-icon" width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4"/>
+                </svg>
+
+                <input type="search" name="text" value="@filterText" class="admin-filter-control" placeholder="İlan adı veya konum ara">
+            </label>
+
+            <select name="IsStatus" class="admin-filter-control">
+                <option value="">Tüm durumlar</option>
+                <option value="1" selected="@(filterStatus == "1" ? "selected" : null)">Taslak</option>
+                <option value="2" selected="@(filterStatus == "2" ? "selected" : null)">Onay bekliyor</option>
+                <option value="3" selected="@(filterStatus == "3" ? "selected" : null)">Yayında</option>
+                <option value="4" selected="@(filterStatus == "4" ? "selected" : null)">Reddedildi</option>
+                <option value="5" selected="@(filterStatus == "5" ? "selected" : null)">Pasif</option>
+                <option value="6" selected="@(filterStatus == "6" ? "selected" : null)">Satıldı</option>
+                <option value="7" selected="@(filterStatus == "7" ? "selected" : null)">Kiralandı</option>
+            </select>
+
+            <select name="ListingType" class="admin-filter-control">
+                <option value="">Tüm ilan türleri</option>
+                <option value="1" selected="@(filterListingType == "1" ? "selected" : null)">Satılık</option>
+                <option value="2" selected="@(filterListingType == "2" ? "selected" : null)">Kiralık</option>
+            </select>
+
+            <input type="text" name="City" value="@filterCity" class="admin-filter-control" placeholder="Şehir">
+            <input type="text" name="District" value="@filterDistrict" class="admin-filter-control" placeholder="İlçe">
+
+            <div class="admin-filter-actions">
+
+                <button type="submit" class="admin-filter-button admin-filter-submit">
+                    <svg class="admin-svg" width="14" height="14" viewBox="0 0 24 24">
+                        <path d="M4 5h16M7 12h10M10 19h4"/>
+                    </svg>
+                    Filtrele
+                </button>
+
+                @if (hasFilter)
+                {
+                <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" class="admin-filter-button admin-filter-clear">Temizle</a>
+                }
+
+            </div>
+
+        </form>
+
+        <div class="admin-table-information">
+
+            <div>
+                <strong>İlan listesi</strong>
+                <span>Bu sayfada @Model.Count ilan gösteriliyor</span>
+            </div>
+
+            @if (hasFilter)
             {
-                <tr data-property-row>
+            <span class="admin-active-filter">Filtre uygulanıyor</span>
+            }
+
+        </div>
+
+        <div class="admin-property-table-wrap">
+
+            <table class="admin-property-table">
+
+                <thead>
+                <tr>
+                    <th>İlan</th>
+                    <th>Danışman</th>
+                    <th>Fiyat</th>
+                    <th>Durum</th>
+                    <th>Eklenme</th>
+                    <th>İşlemler</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                @if (Model.Count == 0)
+                {
+                <tr>
+                    <td colspan="6" class="admin-property-empty">
+
+                            <span class="admin-property-empty-icon">
+                                <svg class="admin-svg" width="25" height="25" viewBox="0 0 24 24">
+                                    <path d="M3 10.5 12 3l9 7.5V21H3V10.5ZM9 21v-6h6v6"/>
+                                </svg>
+                            </span>
+
+                        <strong>İlan bulunamadı</strong>
+                        <span>Filtreleri değiştirerek tekrar deneyebilirsiniz.</span>
+
+                    </td>
+                </tr>
+                }
+                else
+                {
+                @foreach (var item in Model)
+                {
+                <tr>
+
                     <td>
-                        <div class="table-property">
-                            <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg"
-                                 alt="">
-                            <div><strong>@item.Title</strong><span>@item.District, @item.City</span></div>
+                        <div class="admin-property-information">
+
+                            <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg") : $"http://localhost:5214{item.ImageUrl}")" alt="@item.Title" class="admin-property-image">
+
+                            <div class="admin-property-content">
+                                <strong>@item.Title</strong>
+                                <span>@item.District, @item.City</span>
+                            </div>
+
                         </div>
                     </td>
-                    <td>@item.AgentId</td>
-                    <td><strong>₺@item.Price.ToString("N")</strong></td>
-                    
-                    @if (item.Status == 1)
-                    {
-                        <td><span class="status status-info">Taslak</span></td>
-                    }
-                    else if (item.Status == 2)
-                    {
-                        <td><span class="status status-warning">Onay Bekliyor</span></td>
-                    }
-                    else if (item.Status == 3)
-                    {
-                        <td><span class="status status-success">Yayında</span></td>
-                    }
-                    else if (item.Status == 4)
-                    {
-                        <td><span class="status status-danger">Reddedildi</span></td>
-                    }
-                    else if (item.Status == 5)
-                    {
-                        <td><span class="status status-secondary">Pasif</span></td>
-                    }
-                    else if (item.Status == 6)
-                    {
-                        <td><span class="status status-success">Satıldı</span></td>
-                    }
-                    else if (item.Status == 7)
-                    {
-                        <td><span class="status status-success">Kiralandı</span></td>
-                    }
-                    
-                    <td>@item.CreatedDate.ToString("dd MMM yyyy")</td>
+
                     <td>
-                        <div class="table-actions">
-                            <a asp-area="Admin" asp-controller="Property" asp-action="Details" asp-route-id="@item.PropertyId" class="table-action" title="Görüntüle">
-                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                        <span class="admin-agent-badge">#@item.AgentName</span>
+                    </td>
+
+                    <td>
+                        <span class="admin-property-price">₺@item.Price.ToString("N0")</span>
+                    </td>
+
+                    <td>
+                        @if (item.Status == 1)
+                        {
+                        <span class="admin-status admin-status-draft">Taslak</span>
+                        }
+                        else if (item.Status == 2)
+                        {
+                        <span class="admin-status admin-status-pending">Onay Bekliyor</span>
+                        }
+                        else if (item.Status == 3)
+                        {
+                        <span class="admin-status admin-status-published">Yayında</span>
+                        }
+                        else if (item.Status == 4)
+                        {
+                        <span class="admin-status admin-status-rejected">Reddedildi</span>
+                        }
+                        else if (item.Status == 5)
+                        {
+                        <span class="admin-status admin-status-passive">Pasif</span>
+                        }
+                        else if (item.Status == 6)
+                        {
+                        <span class="admin-status admin-status-sold">Satıldı</span>
+                        }
+                        else if (item.Status == 7)
+                        {
+                        <span class="admin-status admin-status-rented">Kiralandı</span>
+                        }
+                    </td>
+
+                    <td>
+                        <div class="admin-property-date">
+                            <strong>@item.CreatedDate.ToString("dd MMM yyyy")</strong>
+                            <span>Oluşturulma tarihi</span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="admin-table-actions">
+
+                            <a asp-area="Admin" asp-controller="Property" asp-action="Details" asp-route-id="@item.PropertyId" class="admin-table-action admin-action-details @(item.Status == 2 ? "admin-action-pending" : null)" title="@(item.Status == 2 ? "İncele ve onayla" : "Detayları görüntüle")">
+                                <svg class="admin-svg" width="15" height="15" viewBox="0 0 24 24">
                                     <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Zm10 2.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z"/>
                                 </svg>
                             </a>
 
-                            <a href="~/Admin/Property/Update/@item.PropertyId" class="table-action" title="Düzenle">
-                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                            <a asp-area="Admin" asp-controller="Property" asp-action="Update" asp-route-id="@item.PropertyId" class="admin-table-action admin-action-edit" title="Düzenle">
+                                <svg class="admin-svg" width="15" height="15" viewBox="0 0 24 24">
                                     <path d="m4 20 4.5-1L19 8.5 15.5 5 5 15.5 4 20ZM13.5 7l3.5 3.5"/>
                                 </svg>
                             </a>
 
-                            <button class="table-action" title="Sil">
-                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                            <button type="button" class="admin-table-action admin-action-delete" title="Sil">
+                                <svg class="admin-svg" width="15" height="15" viewBox="0 0 24 24">
                                     <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>
                                 </svg>
                             </button>
+
                         </div>
                     </td>
+
                 </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-</section>
-            <div class="pagination"><span>1.284 ilandan 1–8 arası gösteriliyor</span>
-                <div class="pagination-pages">
-                    <button>‹</button>
-                    <button class="active">1</button>
-                    <button>2</button>
-                    <button>3</button>
-                    <button>…</button>
-                    <button>161</button>
-                    <button>›</button>
-                </div>
-            </div>
+                }
+                }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <footer class="admin-pagination-footer">
+
+            <span class="admin-pagination-information">Sayfa @currentPage / @totalPages</span>
+
+            <nav class="admin-pagination" aria-label="İlan sayfaları">
+
+                @if (currentPage > 1)
+                {
+                <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" asp-route-page="@(currentPage - 1)" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-City="@filterCity" asp-route-District="@filterDistrict" asp-route-ListingType="@filterListingType" class="admin-pagination-link" title="Önceki sayfa">‹</a>
+                }
+                else
+                {
+                <span class="admin-pagination-disabled">‹</span>
+                }
+
+                @if (startPage > 1)
+                {
+                <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" asp-route-page="1" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-City="@filterCity" asp-route-District="@filterDistrict" asp-route-ListingType="@filterListingType" class="admin-pagination-link">1</a>
+
+                @if (startPage > 2)
+                {
+                <span class="admin-pagination-dots">...</span>
+                }
+                }
+
+                @for (var pageNumber = startPage; pageNumber <= endPage; pageNumber++)
+                {
+                <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" asp-route-page="@pageNumber" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-City="@filterCity" asp-route-District="@filterDistrict" asp-route-ListingType="@filterListingType" class="admin-pagination-link @(pageNumber == currentPage ? "active" : null)">@pageNumber</a>
+                }
+
+                @if (endPage < totalPages)
+                {
+                @if (endPage < totalPages - 1)
+                {
+                <span class="admin-pagination-dots">...</span>
+                }
+
+                <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" asp-route-page="@totalPages" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-City="@filterCity" asp-route-District="@filterDistrict" asp-route-ListingType="@filterListingType" class="admin-pagination-link">@totalPages</a>
+                }
+
+                @if (currentPage < totalPages)
+                {
+                <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" asp-route-page="@(currentPage + 1)" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-City="@filterCity" asp-route-District="@filterDistrict" asp-route-ListingType="@filterListingType" class="admin-pagination-link" title="Sonraki sayfa">›</a>
+                }
+                else
+                {
+                <span class="admin-pagination-disabled">›</span>
+                }
+
+            </nav>
+
+        </footer>
+
+    </section>
+
+</div>

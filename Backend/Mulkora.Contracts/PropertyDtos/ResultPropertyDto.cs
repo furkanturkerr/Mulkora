@@ -51,7 +51,11 @@ public class ResultPropertyDto
 
     public int AgentId { get; set; }
     
+    public string AgentName { get; set; } = string.Empty;
+    
     public int CategoryId { get; set; }
 
     public List<ResultFeatureDto> Features { get; set; } = new();
+    public int CurrentPage { get; set; }
+    public int TotalPages { get; set; }
 }

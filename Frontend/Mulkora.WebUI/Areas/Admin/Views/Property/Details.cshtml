@@ -1,10 +1,12 @@
-@model Mulkora.Dto.PropertyDtos.GetByIdPropertyDto
+@model Mulkora.WebUI.Areas.Admin.Models.PropertyDetailsViewModel
 
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "İlan İnceleme";
 
-    var statusText = Model.Status switch
+    var property = Model.Property;
+
+    var statusText = property.Status switch
     {
         1 => "Taslak",
         2 => "Onay Bekliyor",
@@ -16,456 +18,225 @@
         _ => "Bilinmiyor"
     };
 
-    var statusClass = Model.Status switch
+    var statusClass = property.Status switch
     {
-        1 => "draft",
-        2 => "pending",
-        3 => "published",
-        4 => "rejected",
-        5 => "passive",
-        6 => "published",
-        7 => "published",
-        _ => "passive"
+        1 => "details-status-draft",
+        2 => "details-status-pending",
+        3 => "details-status-published",
+        4 => "details-status-rejected",
+        5 => "details-status-passive",
+        6 => "details-status-sold",
+        7 => "details-status-rented",
+        _ => "details-status-passive"
     };
 
-    var listingType = Model.ListingType == 1 ? "Satılık" : "Kiralık";
+    var listingTypeText = property.ListingType == 1 ? "Satılık" : "Kiralık";
 }
 
-<style>
-    .property-review-page {
-        width: 100%;
-        padding: 38px 40px 55px;
-        box-sizing: border-box;
-    }
+<link rel="stylesheet" href="~/css/admin/property-details.css" asp-append-version="true">
 
-    .review-back {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        margin-bottom: 16px;
-        color: #78847f;
-        font-size: 13px;
-        font-weight: 600;
-        text-decoration: none;
-    }
+<div class="property-details-page">
 
-    .review-back:hover {
-        color: #173a31;
-    }
+    <header class="details-hero">
 
-    .review-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 25px;
-        margin-bottom: 28px;
-    }
+        <div class="details-hero-content">
 
-    .review-header h1 {
-        margin: 0;
-        color: #17201d;
-        font-size: 36px;
-        line-height: 1.1;
-        font-weight: 750;
-        letter-spacing: -.045em;
-    }
+            <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" class="details-back-link">
+                <svg class="details-svg" width="15" height="15" viewBox="0 0 24 24">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+                İlan yönetimine dön
+            </a>
 
-    .review-header p {
-        margin: 10px 0 0;
-        color: #84908b;
-        font-size: 14px;
-    }
+            <span class="details-hero-eyebrow">İlan inceleme · #@property.PropertyId</span>
 
-    .status-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 10px 14px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 700;
-        white-space: nowrap;
-    }
+            <h1>@property.Title</h1>
 
-    .status-badge.draft {
-        background: #eef1ef;
-        color: #61706a;
-    }
+            <div class="details-hero-location">
+                <svg class="details-svg" width="14" height="14" viewBox="0 0 24 24">
+                    <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/>
+                    <circle cx="12" cy="10" r="2.5"/>
+                </svg>
 
-    .status-badge.pending {
-        background: #fff3d3;
-        color: #926617;
-    }
+                <span>@property.District, @property.City</span>
+            </div>
 
-    .status-badge.published {
-        background: #e3f2eb;
-        color: #1d674b;
-    }
-
-    .status-badge.rejected {
-        background: #fce8e8;
-        color: #ac4343;
-    }
-
-    .status-badge.passive {
-        background: #ecefed;
-        color: #67736e;
-    }
-
-    .review-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) 340px;
-        gap: 24px;
-        align-items: start;
-    }
-
-    .review-main {
-        min-width: 0;
-    }
-
-    .review-card {
-        background: #fff;
-        border: 1px solid #e2e6e4;
-        border-radius: 20px;
-        box-shadow: 0 10px 35px rgba(31, 43, 38, .04);
-    }
-
-    .property-card {
-        padding: 25px;
-    }
-
-    .property-image {
-        position: relative;
-        width: 100%;
-        height: 420px;
-        overflow: hidden;
-        border-radius: 14px;
-        background: #edf1ef;
-    }
-
-    .property-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .listing-badge {
-        position: absolute;
-        top: 18px;
-        left: 18px;
-        padding: 9px 13px;
-        border-radius: 8px;
-        background: #26332f;
-        color: #fff;
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    .property-body {
-        padding: 28px 3px 4px;
-    }
-
-    .property-price {
-        margin-bottom: 12px;
-        color: #173a31;
-        font-size: 30px;
-        font-weight: 750;
-        letter-spacing: -.035em;
-    }
-
-    .property-title {
-        margin: 0;
-        color: #17201d;
-        font-size: 25px;
-        font-weight: 700;
-        letter-spacing: -.025em;
-    }
-
-    .property-location {
-        margin: 9px 0 0;
-        color: #7f8b86;
-        font-size: 14px;
-    }
-
-    .section-divider {
-        height: 1px;
-        margin: 26px 0;
-        background: #e8ecea;
-    }
-
-    .section-heading {
-        margin: 0 0 13px;
-        color: #202b27;
-        font-size: 16px;
-        font-weight: 700;
-    }
-
-    .property-description {
-        margin: 0;
-        color: #66736e;
-        font-size: 14px;
-        line-height: 1.8;
-    }
-
-    .property-features {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-    }
-
-    .feature-box {
-        padding: 16px;
-        border: 1px solid #e5e9e7;
-        border-radius: 11px;
-        background: #f8f9f8;
-    }
-
-    .feature-box span {
-        display: block;
-        margin-bottom: 6px;
-        color: #929c98;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .feature-box strong {
-        color: #29342f;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    .review-side {
-        display: grid;
-        gap: 18px;
-    }
-
-    .side-card {
-        padding: 24px;
-    }
-
-    .side-card h3 {
-        margin: 0 0 22px;
-        color: #19231f;
-        font-size: 17px;
-        font-weight: 700;
-    }
-
-    .info-row {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 20px;
-        padding: 14px 0;
-        border-bottom: 1px solid #eaedec;
-    }
-
-    .info-row:first-of-type {
-        padding-top: 0;
-    }
-
-    .info-row:last-child {
-        padding-bottom: 0;
-        border-bottom: 0;
-    }
-
-    .info-row span {
-        color: #909a96;
-        font-size: 13px;
-    }
-
-    .info-row strong {
-        max-width: 190px;
-        color: #37423e;
-        font-size: 13px;
-        font-weight: 650;
-        text-align: right;
-        line-height: 1.55;
-    }
-
-    .decision-text {
-        margin: -8px 0 20px;
-        color: #7f8a86;
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-    .decision-actions {
-        display: grid;
-        gap: 10px;
-    }
-
-    .decision-btn {
-        width: 100%;
-        height: 48px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: .2s;
-    }
-
-    .decision-btn svg {
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .approve-btn {
-        border: 1px solid #173f35;
-        background: #173f35;
-        color: #fff;
-    }
-
-    .approve-btn:hover {
-        background: #1e5144;
-    }
-
-    .reject-btn {
-        border: 1px solid #ead6d6;
-        background: #fff;
-        color: #ae4848;
-    }
-
-    .reject-btn:hover {
-        background: #fdf2f2;
-    }
-
-    .decision-result {
-        padding: 15px;
-        border-radius: 10px;
-        background: #f2f5f3;
-        color: #6e7974;
-        font-size: 13px;
-        line-height: 1.6;
-    }
-
-    @@media (max-width: 1100px) {
-        .review-layout {
-            grid-template-columns: 1fr;
-        }
-
-        .review-side {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-
-    @@media (max-width: 800px) {
-        .property-review-page {
-            padding: 25px 20px;
-        }
-
-        .review-header {
-            align-items: flex-start;
-            flex-direction: column;
-        }
-
-        .review-header h1 {
-            font-size: 29px;
-        }
-
-        .property-image {
-            height: 300px;
-        }
-
-        .property-features {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .review-side {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-
-<div class="property-review-page">
-
-    <a asp-area="Admin" asp-controller="Property" asp-action="PropertyList" class="review-back">
-        ← İlanlara dön
-    </a>
-
-    <div class="review-header">
-        <div>
-            <h1>İlan İnceleme</h1>
-            <p>#@Model.PropertyId numaralı ilanı inceleyin ve yayın kararını verin.</p>
         </div>
 
-        <span class="status-badge @statusClass">@statusText</span>
-    </div>
+        <div class="details-hero-summary">
+            <div class="details-hero-price">₺@property.Price.ToString("N0")</div>
 
-    <div class="review-layout">
+            <div class="details-hero-summary-bottom">
+                <span class="details-listing-type">@listingTypeText</span>
+                <span class="details-status @statusClass">@statusText</span>
+            </div>
+        </div>
 
-        <main class="review-main">
+    </header>
 
-            <section class="review-card property-card">
+    <div class="details-layout">
 
-                <div class="property-image">
-                    <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg" alt="@Model.Title">
-                    <span class="listing-badge">@listingType</span>
+        <main class="details-main">
+
+            <section class="details-card">
+
+                <div class="details-card-header">
+
+                    <div class="details-card-heading">
+                        <span class="details-card-icon">
+                            <svg class="details-svg" width="18" height="18" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                <circle cx="8.5" cy="9" r="1.5"/>
+                                <path d="m21 15-5-5L5 20"/>
+                            </svg>
+                        </span>
+
+                        <div>
+                            <h2>İlan Görselleri</h2>
+                            <p>İlana ait yüklenen bütün görseller.</p>
+                        </div>
+                    </div>
+
+                    <span class="details-card-count">@Model.PropertyImages.Count görsel</span>
+
                 </div>
 
-                <div class="property-body">
+                <div class="details-card-body">
 
-                    <div class="property-price">₺@Model.Price.ToString("N0")</div>
+                    @if (Model.PropertyImages != null && Model.PropertyImages.Any())
+                    {
+                        <div class="details-gallery">
 
-                    <h2 class="property-title">@Model.Title</h2>
+                            @foreach (var image in Model.PropertyImages.OrderBy(x => x.DisplayOrder))
+                            {
+                                <div class="details-gallery-item">
+                                    <img src="@($"http://localhost:5214{image.ImageUrl}")" alt="@property.Title">
+                                    <span class="details-image-order">@image.DisplayOrder</span>
+                                </div>
+                            }
 
-                    <p class="property-location">@Model.District, @Model.City</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="details-gallery-empty">
+                            Bu ilana ait yüklenmiş görsel bulunmuyor.
+                        </div>
+                    }
 
-                    <div class="section-divider"></div>
+                </div>
 
-                    <h3 class="section-heading">İlan Açıklaması</h3>
-                    <p class="property-description">@Model.Description</p>
+            </section>
 
-                    <div class="section-divider"></div>
+            <section class="details-card">
 
-                    <h3 class="section-heading">Mülk Özellikleri</h3>
+                <div class="details-card-header">
 
-                    <div class="property-features">
+                    <div class="details-card-heading">
+                        <span class="details-card-icon">
+                            <svg class="details-svg" width="18" height="18" viewBox="0 0 24 24">
+                                <path d="M4 4h16v16H4zM8 9h8M8 13h8M8 17h5"/>
+                            </svg>
+                        </span>
 
-                        <div class="feature-box">
-                            <span>Oda</span>
-                            <strong>@Model.RoomCount Oda</strong>
+                        <div>
+                            <h2>İlan Açıklaması</h2>
+                            <p>Danışman tarafından girilen ilan açıklaması ve adresi.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="details-card-body">
+                    <p class="details-description">@property.Description</p>
+
+                    <div class="details-address">
+                        <svg class="details-svg" width="17" height="17" viewBox="0 0 24 24">
+                            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/>
+                            <circle cx="12" cy="10" r="2.5"/>
+                        </svg>
+
+                        <span>@property.Address</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <section class="details-card">
+
+                <div class="details-card-header">
+
+                    <div class="details-card-heading">
+                        <span class="details-card-icon">
+                            <svg class="details-svg" width="18" height="18" viewBox="0 0 24 24">
+                                <path d="M3 21V9l9-6 9 6v12M8 21v-7h8v7M3 10h18"/>
+                            </svg>
+                        </span>
+
+                        <div>
+                            <h2>Mülk Detayları</h2>
+                            <p>İlanın oda, metrekare, bina ve kat bilgileri.</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="details-card-body">
+
+                    <div class="details-metric-grid">
+
+                        <div class="details-metric">
+                            <span>Oda sayısı</span>
+                            <strong>@property.RoomCount</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Salon</span>
-                            <strong>@Model.LivingRoomCount Salon</strong>
+                        <div class="details-metric">
+                            <span>Salon sayısı</span>
+                            <strong>@property.LivingRoomCount</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Banyo</span>
-                            <strong>@Model.BathroomCount Banyo</strong>
+                        <div class="details-metric">
+                            <span>Banyo sayısı</span>
+                            <strong>@property.BathroomCount</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Brüt Alan</span>
-                            <strong>@Model.GrossSquareMeter m²</strong>
+                        <div class="details-metric">
+                            <span>Brüt alan</span>
+                            <strong>@property.GrossSquareMeter m²</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Net Alan</span>
-                            <strong>@Model.NetSquareMeter m²</strong>
+                        <div class="details-metric">
+                            <span>Net alan</span>
+                            <strong>@property.NetSquareMeter m²</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Bina Yaşı</span>
-                            <strong>@Model.BuildingAge</strong>
+                        <div class="details-metric">
+                            <span>Bina yaşı</span>
+                            <strong>@property.BuildingAge</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Bulunduğu Kat</span>
-                            <strong>@Model.FloorNumber</strong>
+                        <div class="details-metric">
+                            <span>Bulunduğu kat</span>
+                            <strong>@property.FloorNumber</strong>
                         </div>
 
-                        <div class="feature-box">
-                            <span>Toplam Kat</span>
-                            <strong>@Model.TotalFloor</strong>
+                        <div class="details-metric">
+                            <span>Toplam kat</span>
+                            <strong>@property.TotalFloor</strong>
+                        </div>
+
+                    </div>
+
+                    <div class="details-boolean-grid">
+
+                        <div class="details-boolean @(!property.IsFurnished ? "false" : null)">
+                            <span class="details-boolean-icon">✓</span>
+                            <span>@(property.IsFurnished ? "Mülk eşyalı" : "Mülk eşyasız")</span>
+                        </div>
+
+                        <div class="details-boolean @(!property.IsFeatured ? "false" : null)">
+                            <span class="details-boolean-icon">✓</span>
+                            <span>@(property.IsFeatured ? "Öne çıkan ilan" : "Öne çıkarılmamış")</span>
                         </div>
 
                     </div>
@@ -474,85 +245,134 @@
 
             </section>
 
-        </main>
+            <section class="details-card">
 
-        <aside class="review-side">
+                <div class="details-card-header">
 
-            <section class="review-card side-card">
+                    <div class="details-card-heading">
+                        <span class="details-card-icon">
+                            <svg class="details-svg" width="18" height="18" viewBox="0 0 24 24">
+                                <path d="m12 3 2.4 4.9L20 8.7l-4 3.9.9 5.5-4.9-2.6-4.9 2.6.9-5.5-4-3.9 5.6-.8L12 3Z"/>
+                            </svg>
+                        </span>
 
-                <h3>İlan Bilgileri</h3>
+                        <div>
+                            <h2>İlan Özellikleri</h2>
+                            <p>Danışman tarafından seçilen ilan özellikleri.</p>
+                        </div>
+                    </div>
 
-                <div class="info-row">
-                    <span>İlan No</span>
-                    <strong>#@Model.PropertyId</strong>
+                    <span class="details-card-count">@(property.Features?.Count ?? 0) özellik</span>
+
                 </div>
 
-                <div class="info-row">
-                    <span>İlan Türü</span>
-                    <strong>@listingType</strong>
-                </div>
+                <div class="details-card-body">
 
-                <div class="info-row">
-                    <span>Durum</span>
-                    <strong>@statusText</strong>
-                </div>
+                    @if (property.Features != null && property.Features.Any())
+                    {
+                        <div class="details-feature-list">
 
-                <div class="info-row">
-                    <span>Şehir</span>
-                    <strong>@Model.City</strong>
-                </div>
+                            @foreach (var feature in property.Features)
+                            {
+                                <span class="details-feature">@feature.Name</span>
+                            }
 
-                <div class="info-row">
-                    <span>İlçe</span>
-                    <strong>@Model.District</strong>
-                </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="details-feature-empty">Bu ilan için seçilmiş özellik bulunmuyor.</p>
+                    }
 
-                <div class="info-row">
-                    <span>Adres</span>
-                    <strong>@Model.Address</strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Eşyalı</span>
-                    <strong>@(Model.IsFurnished ? "Evet" : "Hayır")</strong>
-                </div>
-
-                <div class="info-row">
-                    <span>Oluşturulma</span>
-                    <strong>@Model.CreatedDate.ToString("dd.MM.yyyy")</strong>
                 </div>
 
             </section>
 
-            <section class="review-card side-card">
+        </main>
+
+        <aside class="details-sidebar">
+
+            <section class="details-side-card">
+
+                <h3>Kayıt Bilgileri</h3>
+
+                <div class="details-info-list">
+
+                    <div class="details-info-row">
+                        <span>İlan numarası</span>
+                        <strong>#@property.PropertyId</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>Danışman</span>
+                        <strong>#@property.AgentId</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>Kategori</span>
+                        <strong>#@property.CategoryId</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>İlan türü</span>
+                        <strong>@listingTypeText</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>Durum</span>
+                        <strong>@statusText</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>Şehir</span>
+                        <strong>@property.City</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>İlçe</span>
+                        <strong>@property.District</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>Oluşturulma</span>
+                        <strong>@property.CreatedDate.ToString("dd MMM yyyy")</strong>
+                    </div>
+
+                    <div class="details-info-row">
+                        <span>Son güncelleme</span>
+                        <strong>@(property.UpdatedDate.ToString("dd MMM yyyy") ?? "Güncellenmedi")</strong>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="details-side-card details-decision-card @(property.Status == 2 ? "pending" : null)">
 
                 <h3>Yayın Kararı</h3>
 
-                @if (Model.Status == 2)
+                @if (property.Status == 2)
                 {
-                    <p class="decision-text">
-                        İlan danışman tarafından onaya gönderildi.
-                        Bilgileri kontrol ederek yayın kararını verin.
-                    </p>
+                    <p class="details-decision-notice">İlan danışman tarafından onaya gönderildi. Bilgileri ve görselleri kontrol ederek yayın kararını verin.</p>
 
-                    <div class="decision-actions">
+                    <div class="details-decision-actions">
 
-                        <form asp-area="Admin" asp-controller="Property" asp-action="Approve" asp-route-id="@Model.PropertyId" method="post">
+                        <form asp-area="Admin" asp-controller="Property" asp-action="Approve" asp-route-id="@property.PropertyId" method="post">
                             @Html.AntiForgeryToken()
 
-                            <button type="submit" class="decision-btn approve-btn">
-                                <svg width="17" height="17" viewBox="0 0 24 24">
+                            <button type="submit" class="details-decision-button details-approve-button">
+                                <svg class="details-svg" width="15" height="15" viewBox="0 0 24 24">
                                     <path d="m5 12 4 4L19 6"/>
                                 </svg>
                                 İlanı Onayla
                             </button>
                         </form>
 
-                        <form asp-area="Admin" asp-controller="Property" asp-action="Reject" asp-route-id="@Model.PropertyId" method="post">
+                        <form asp-area="Admin" asp-controller="Property" asp-action="Reject" asp-route-id="@property.PropertyId" method="post">
                             @Html.AntiForgeryToken()
 
-                            <button type="submit" class="decision-btn reject-btn" onclick="return confirm('Bu ilanı reddetmek istediğinize emin misiniz?')">
-                                <svg width="17" height="17" viewBox="0 0 24 24">
+                            <button type="submit" class="details-decision-button details-reject-button" onclick="return confirm('Bu ilanı reddetmek istediğinize emin misiniz?')">
+                                <svg class="details-svg" width="15" height="15" viewBox="0 0 24 24">
                                     <path d="M6 6l12 12M18 6 6 18"/>
                                 </svg>
                                 İlanı Reddet
@@ -563,9 +383,7 @@
                 }
                 else
                 {
-                    <div class="decision-result">
-                        Bu ilan şu anda <strong>@statusText</strong> durumunda.
-                    </div>
+                    <div class="details-decision-result">Bu ilan şu anda <strong>@statusText</strong> durumunda olduğu için onay işlemi yapılamaz.</div>
                 }
 
             </section>

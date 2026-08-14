@@ -2,141 +2,73 @@
 
 @{
     Layout = "_AgentLayout";
+
+    var filterText = Context.Request.Query["text"].ToString();
+    var filterStatus = Context.Request.Query["IsStatus"].ToString();
+
+    var currentPage = Model.FirstOrDefault()?.CurrentPage ?? 1;
+    var totalPages = Model.FirstOrDefault()?.TotalPages ?? 1;
+
+    var startPage = Math.Max(1, currentPage - 2);
+    var endPage = Math.Min(totalPages, currentPage + 2);
 }
 
-<style>
-    .property-date {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        min-width: 145px;
-    }
-
-    .property-date-item {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        white-space: nowrap;
-    }
-
-    .property-date-label {
-        color: #8a9691;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    .property-date-value {
-        color: #394640;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .property-date-updated {
-        color: #2f6959;
-    }
-
-    .property-date-empty {
-        color: #a6afab;
-        font-size: 11px;
-    }
-
-    .property-date-dot {
-        width: 5px;
-        height: 5px;
-        flex-shrink: 0;
-        border-radius: 50%;
-        background: #173a31;
-    }
-
-    .property-date-dot.updated {
-        background: #5d917f;
-    }
-</style>
+<link rel="stylesheet" href="~/css/agent/propertylist.css" asp-append-version="true">
 
 <div class="page-heading">
     <div>
         <h1>İlan Yönetimi</h1>
         <p>İlanlarınızı görüntüleyin, düzenleyin ve yayın süreçlerini yönetin.</p>
     </div>
+</div>
 
-    <div class="page-heading-actions">
-        <a asp-area="Agent"
-           asp-controller="Property"
-           asp-action="Create"
-           class="panel-btn panel-btn-outline">
+<section class="property-list-panel">
+
+    <div class="property-list-toolbar">
+
+        <form asp-area="Agent" asp-controller="Property" asp-action="PropertyList" method="get" class="property-filter-form">
+
+            <label class="property-filter-search">
+                <svg class="icon" width="17" height="17" viewBox="0 0 24 24">
+                    <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4"/>
+                </svg>
+
+                <input type="search" name="text" value="@filterText" placeholder="İlan adı veya konum ara">
+            </label>
+
+            <select name="IsStatus" class="property-filter-status">
+                <option value="">Tüm durumlar</option>
+                <option value="1" selected="@(filterStatus == "1" ? "selected" : null)">Taslak</option>
+                <option value="2" selected="@(filterStatus == "2" ? "selected" : null)">Onay bekliyor</option>
+                <option value="3" selected="@(filterStatus == "3" ? "selected" : null)">Yayında</option>
+                <option value="4" selected="@(filterStatus == "4" ? "selected" : null)">Reddedildi</option>
+                <option value="5" selected="@(filterStatus == "5" ? "selected" : null)">Pasif</option>
+                <option value="6" selected="@(filterStatus == "6" ? "selected" : null)">Satıldı</option>
+                <option value="7" selected="@(filterStatus == "7" ? "selected" : null)">Kiralandı</option>
+            </select>
+
+            <button type="submit" class="property-filter-button">
+                <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                    <path d="M4 5h16M7 12h10M10 19h4"/>
+                </svg>
+                Filtrele
+            </button>
+
+            @if (!string.IsNullOrWhiteSpace(filterText) || !string.IsNullOrWhiteSpace(filterStatus))
+            {
+                <a asp-area="Agent" asp-controller="Property" asp-action="PropertyList" class="property-clear-button">Temizle</a>
+            }
+
+        </form>
+
+        <a asp-area="Agent" asp-controller="Property" asp-action="Create" class="property-create-button">
+            <svg class="icon" width="17" height="17" viewBox="0 0 24 24">
+                <path d="M12 5v14M5 12h14"/>
+            </svg>
             Yeni ilan ekle
         </a>
-    </div>
-</div>
-
-<div class="toolbar">
-
-    <div class="toolbar-group">
-
-        <label style="position:relative">
-
-            <svg class="icon"
-                 width="17"
-                 height="17"
-                 viewBox="0 0 24 24">
-
-                <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4"/>
-
-            </svg>
-
-            <input class="panel-input"
-                   data-filter-text="[data-property-row]"
-                   type="search"
-                   placeholder="İlan adı veya konum ara"
-                   style="padding-left:38px">
-
-        </label>
-
-        <select class="panel-select">
-            <option>Tüm durumlar</option>
-            <option>Taslak</option>
-            <option>Onay bekliyor</option>
-            <option>Yayında</option>
-            <option>Reddedildi</option>
-            <option>Pasif</option>
-            <option>Satıldı</option>
-            <option>Kiralandı</option>
-        </select>
-
-        <select class="panel-select">
-            <option>Tüm tipler</option>
-            <option>Satılık</option>
-            <option>Kiralık</option>
-        </select>
 
     </div>
-
-    <div class="toolbar-group">
-
-        <button class="panel-btn panel-btn-outline">
-
-            <svg class="icon"
-                 width="16"
-                 height="16"
-                 viewBox="0 0 24 24">
-
-                <path d="M4 5h16M7 12h10M10 19h4"/>
-
-            </svg>
-
-            Filtreler
-
-        </button>
-
-        <button class="panel-btn panel-btn-outline">
-            Dışa aktar
-        </button>
-
-    </div>
-
-</div>
-
-<section class="panel-card">
 
     <div class="panel-table-wrap">
 
@@ -155,211 +87,131 @@
 
             <tbody>
 
-            @foreach (var item in Model)
+            @if (Model.Count == 0)
             {
-                <tr data-property-row>
-
-                    <td>
-
-                        <div class="table-property">
-
-                            <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl)
-                                          ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
-                                          : $"http://localhost:5214{item.ImageUrl}")"
-                                 alt="@item.Title">
-
-                            <div>
-                                <strong>@item.Title</strong>
-                                <span>@item.District, @item.City</span>
-                            </div>
-
+                <tr>
+                    <td colspan="6" class="property-empty">
+                        <div class="property-empty-icon">
+                            <svg class="icon" width="27" height="27" viewBox="0 0 24 24">
+                                <path d="M3 10.5 12 3l9 7.5V21H3V10.5ZM9 21v-6h6v6"/>
+                            </svg>
                         </div>
 
+                        <strong>İlan bulunamadı</strong>
+                        <span>Arama kriterlerinizi değiştirerek tekrar deneyebilirsiniz.</span>
                     </td>
-
-                    <td>
-                        <strong>₺@item.Price.ToString("N")</strong>
-                    </td>
-
-                    <td>
-                        3
-                    </td>
-
-                    @if (item.Status == 1)
-                    {
-                        <td>
-                            <span class="status status-info">
-                                Taslak
-                            </span>
-                        </td>
-                    }
-                    else if (item.Status == 2)
-                    {
-                        <td>
-                            <span class="status status-warning">
-                                Onay Bekliyor
-                            </span>
-                        </td>
-                    }
-                    else if (item.Status == 3)
-                    {
-                        <td>
-                            <span class="status status-success">
-                                Yayında
-                            </span>
-                        </td>
-                    }
-                    else if (item.Status == 4)
-                    {
-                        <td>
-                            <span class="status status-danger">
-                                Reddedildi
-                            </span>
-                        </td>
-                    }
-                    else if (item.Status == 5)
-                    {
-                        <td>
-                            <span class="status status-secondary">
-                                Pasif
-                            </span>
-                        </td>
-                    }
-                    else if (item.Status == 6)
-                    {
-                        <td>
-                            <span class="status status-success">
-                                Satıldı
-                            </span>
-                        </td>
-                    }
-                    else if (item.Status == 7)
-                    {
-                        <td>
-                            <span class="status status-success">
-                                Kiralandı
-                            </span>
-                        </td>
-                    }
-
-                    <td>
-
-                        <div class="property-date">
-
-                            <div class="property-date-item">
-
-                                <span class="property-date-dot"></span>
-
-                                <span class="property-date-label">
-                                    Eklendi
-                                </span>
-
-                                <span class="property-date-value">
-                                    @item.CreatedDate.ToString("dd MMM yyyy")
-                                </span>
-
-                            </div>
-
-                            @if (item.UpdatedDate.HasValue)
-                            {
-                                <div class="property-date-item">
-
-                                    <span class="property-date-dot updated"></span>
-
-                                    <span class="property-date-label">
-                                        Güncellendi
-                                    </span>
-
-                                    <span class="property-date-value property-date-updated">
-                                        @item.UpdatedDate.Value.ToString("dd MMM yyyy")
-                                    </span>
-
-                                </div>
-                            }
-                            else
-                            {
-                                <span class="property-date-empty">
-                                    Henüz güncellenmedi
-                                </span>
-                            }
-
-                        </div>
-
-                    </td>
-
-                    <td>
-
-                        <div class="table-actions">
-
-                            @if (item.Status == 1 || item.Status == 4)
-                            {
-                                <form asp-area="Agent"
-                                      asp-controller="Property"
-                                      asp-action="SendForApproval"
-                                      asp-route-id="@item.PropertyId"
-                                      method="post">
-
-                                    @Html.AntiForgeryToken()
-
-                                    <button type="submit"
-                                            class="table-action"
-                                            title="Onaya Gönder">
-
-                                        <svg class="icon"
-                                             width="16"
-                                             height="16"
-                                             viewBox="0 0 24 24">
-
-                                            <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/>
-
-                                        </svg>
-
-                                    </button>
-
-                                </form>
-                            }
-
-                            <a asp-area="Agent"
-                               asp-controller="Property"
-                               asp-action="Update"
-                               asp-route-id="@item.PropertyId"
-                               class="table-action"
-                               title="Düzenle">
-
-                                <svg class="icon"
-                                     width="16"
-                                     height="16"
-                                     viewBox="0 0 24 24">
-
-                                    <path d="m4 20 4.5-1L19 8.5 15.5 5 5 15.5 4 20ZM13.5 7l3.5 3.5"/>
-
-                                </svg>
-
-                            </a>
-
-                            <a asp-area="Agent"
-                               asp-controller="Property"
-                               asp-action="Delete"
-                               asp-route-id="@item.PropertyId"
-                               class="table-action"
-                               title="Sil">
-
-                                <svg class="icon"
-                                     width="16"
-                                     height="16"
-                                     viewBox="0 0 24 24">
-
-                                    <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>
-
-                                </svg>
-
-                            </a>
-
-                        </div>
-
-                    </td>
-
                 </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr data-property-row>
+
+                        <td>
+                            <div class="table-property">
+                                <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg") : $"http://localhost:5214{item.ImageUrl}")" alt="@item.Title">
+
+                                <div>
+                                    <strong>@item.Title</strong>
+                                    <span>@item.District, @item.City</span>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <strong>₺@item.Price.ToString("N0")</strong>
+                        </td>
+
+                        <td>3</td>
+
+                        @if (item.Status == 1)
+                        {
+                            <td><span class="status status-info">Taslak</span></td>
+                        }
+                        else if (item.Status == 2)
+                        {
+                            <td><span class="status status-warning">Onay Bekliyor</span></td>
+                        }
+                        else if (item.Status == 3)
+                        {
+                            <td><span class="status status-success">Yayında</span></td>
+                        }
+                        else if (item.Status == 4)
+                        {
+                            <td><span class="status status-danger">Reddedildi</span></td>
+                        }
+                        else if (item.Status == 5)
+                        {
+                            <td><span class="status status-secondary">Pasif</span></td>
+                        }
+                        else if (item.Status == 6)
+                        {
+                            <td><span class="status status-success">Satıldı</span></td>
+                        }
+                        else if (item.Status == 7)
+                        {
+                            <td><span class="status status-success">Kiralandı</span></td>
+                        }
+
+                        <td>
+                            <div class="property-date">
+
+                                <div class="property-date-item">
+                                    <span class="property-date-dot"></span>
+                                    <span class="property-date-label">Eklendi</span>
+                                    <span class="property-date-value">@item.CreatedDate.ToString("dd MMM yyyy")</span>
+                                </div>
+
+                                @if (item.UpdatedDate.HasValue)
+                                {
+                                    <div class="property-date-item">
+                                        <span class="property-date-dot updated"></span>
+                                        <span class="property-date-label">Güncellendi</span>
+                                        <span class="property-date-value property-date-updated">@item.UpdatedDate.Value.ToString("dd MMM yyyy")</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="property-date-empty">Henüz güncellenmedi</span>
+                                }
+
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="table-actions">
+
+                                @if (item.Status == 1 || item.Status == 4)
+                                {
+                                    <form asp-area="Agent" asp-controller="Property" asp-action="SendForApproval" asp-route-id="@item.PropertyId" method="post">
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit" class="table-action table-action-approval" title="Onaya Gönder">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                                                <path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7Z"/>
+                                            </svg>
+                                        </button>
+                                    </form>
+                                }
+
+                                <a asp-area="Agent" asp-controller="Property" asp-action="Update" asp-route-id="@item.PropertyId" class="table-action" title="Düzenle">
+                                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                                        <path d="m4 20 4.5-1L19 8.5 15.5 5 5 15.5 4 20ZM13.5 7l3.5 3.5"/>
+                                    </svg>
+                                </a>
+
+                                <a asp-area="Agent" asp-controller="Property" asp-action="Delete" asp-route-id="@item.PropertyId" class="table-action table-action-delete" title="Sil">
+                                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24">
+                                        <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>
+                                    </svg>
+                                </a>
+
+                            </div>
+                        </td>
+
+                    </tr>
+                }
             }
 
             </tbody>
@@ -368,24 +220,26 @@
 
     </div>
 
+    @if (totalPages > 1)
+    {
+        <div class="property-pagination">
+
+            <span class="property-pagination-info">Sayfa @currentPage / @totalPages</span>
+
+            <div class="property-pagination-list">
+
+                <a asp-area="Agent" asp-controller="Property" asp-action="PropertyList" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-page="@(currentPage - 1)" class="property-page-link @(currentPage == 1 ? "disabled" : "")">‹</a>
+
+                @for (var pageNumber = startPage; pageNumber <= endPage; pageNumber++)
+                {
+                    <a asp-area="Agent" asp-controller="Property" asp-action="PropertyList" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-page="@pageNumber" class="property-page-link @(pageNumber == currentPage ? "active" : "")">@pageNumber</a>
+                }
+
+                <a asp-area="Agent" asp-controller="Property" asp-action="PropertyList" asp-route-text="@filterText" asp-route-IsStatus="@filterStatus" asp-route-page="@(currentPage + 1)" class="property-page-link @(currentPage == totalPages ? "disabled" : "")">›</a>
+
+            </div>
+
+        </div>
+    }
+
 </section>
-
-<div class="pagination">
-
-    <span>
-        1.284 ilandan 1–8 arası gösteriliyor
-    </span>
-
-    <div class="pagination-pages">
-
-        <button>‹</button>
-        <button class="active">1</button>
-        <button>2</button>
-        <button>3</button>
-        <button>…</button>
-        <button>161</button>
-        <button>›</button>
-
-    </div>
-
-</div>
