@@ -31,4 +31,6 @@ public class Agent
     public AppUser AppUser { get; set; } = null!;
     
     public ICollection<Property> Properties { get; set; } = new List<Property>();
+    
+    public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

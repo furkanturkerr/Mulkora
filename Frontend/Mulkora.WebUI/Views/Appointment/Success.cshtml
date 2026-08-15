@@ -1,0 +1,149 @@
+@{
+    ViewData["Title"] = "Randevu Oluşturuldu";
+
+    var propertyId = (int)ViewBag.PropertyId;
+
+    var appointmentDate =
+        TempData["AppointmentDate"]?.ToString();
+}
+
+<link rel="stylesheet"
+      href="~/css/appointment-success.css"
+      asp-append-version="true">
+
+<main class="appointment-success-page">
+    <section class="appointment-success-card">
+
+        <div class="appointment-success-visual">
+            <div class="appointment-success-pattern"></div>
+
+            <div class="appointment-success-icon">
+                <svg width="44"
+                     height="44"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                    <path d="m5 12 4 4L19 6"></path>
+                </svg>
+            </div>
+
+            <span class="appointment-success-status">
+                Talep oluşturuldu
+            </span>
+        </div>
+
+        <div class="appointment-success-content">
+
+            <span class="appointment-success-eyebrow">
+                Randevu talebiniz alındı
+            </span>
+
+            <h1>Randevunuz başarıyla oluşturuldu</h1>
+
+            <p class="appointment-success-description">
+                Seçtiğiniz tarih ve saat ilgili emlak
+                danışmanına iletildi. Danışman sizinle
+                iletişime geçerek randevu detaylarını
+                netleştirecektir.
+            </p>
+
+            @if (!string.IsNullOrWhiteSpace(appointmentDate))
+            {
+                <div class="appointment-date-card">
+                    <div class="appointment-date-icon">
+                        <svg width="22"
+                             height="22"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8">
+                            <path d="M6 2v4M18 2v4"></path>
+                            <rect x="3"
+                                  y="4"
+                                  width="18"
+                                  height="17"
+                                  rx="2"></rect>
+                            <path d="M3 9h18"></path>
+                            <path d="M8 13h2M14 13h2M8 17h2"></path>
+                        </svg>
+                    </div>
+
+                    <div>
+                        <span>Randevu tarihi ve saati</span>
+                        <strong>@appointmentDate</strong>
+                    </div>
+                </div>
+            }
+
+            <div class="appointment-next-steps">
+                <div class="appointment-next-step">
+                    <span>1</span>
+
+                    <div>
+                        <strong>Talebiniz iletildi</strong>
+                        <p>
+                            Randevu bilgileri danışmana
+                            gönderildi.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="appointment-next-step">
+                    <span>2</span>
+
+                    <div>
+                        <strong>Danışman iletişime geçecek</strong>
+                        <p>
+                            Tarih ve saat için sizinle
+                            iletişime geçilecek.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="appointment-success-actions">
+                <a asp-controller="Property"
+                   asp-action="Details"
+                   asp-route-id="@propertyId"
+                   class="appointment-success-primary">
+                    İlana geri dön
+
+                    <svg width="17"
+                         height="17"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2">
+                        <path d="m9 18 6-6-6-6"></path>
+                    </svg>
+                </a>
+
+                <a asp-controller="Property"
+                   asp-action="Index"
+                   class="appointment-success-secondary">
+                    Diğer ilanları incele
+                </a>
+            </div>
+
+            <div class="appointment-success-note">
+                <svg width="18"
+                     height="18"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8">
+                    <circle cx="12" cy="12" r="9"></circle>
+                    <path d="M12 11v5M12 8h.01"></path>
+                </svg>
+
+                <span>
+                    Randevuyla ilgili değişiklik yapmak
+                    isterseniz emlak danışmanınızla
+                    iletişime geçebilirsiniz.
+                </span>
+            </div>
+
+        </div>
+    </section>
+</main>

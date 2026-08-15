@@ -57,4 +57,6 @@ public class Property
     public List<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
     
     public ICollection<Feature> Features { get; set; } = new List<Feature>();
+    
+    public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 }

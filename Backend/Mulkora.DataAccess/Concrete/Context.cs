@@ -20,6 +20,28 @@ public class Context : IdentityDbContext<AppUser, AppRole, string>
             .WithOne(x => x.Agent)
             .HasForeignKey<Agent>(x => x.AppUserId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.Entity<Appointment>()
+            .HasOne(x => x.AppUser)
+            .WithMany(x => x.Appointments)
+            .HasForeignKey(x => x.AppUserId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<Appointment>()
+            .HasOne(x => x.Property)
+            .WithMany(x => x.Appointments)
+            .HasForeignKey(x => x.PropertyId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<Appointment>()
+            .HasOne(x => x.Agent)
+            .WithMany(x => x.Appointments)
+            .HasForeignKey(x => x.AgentId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.Entity<Property>()
+            .Property(x => x.Price)
+            .HasPrecision(18, 2);
     }
 
     public DbSet<Contact> Contacts { get; set; }
@@ -33,4 +55,6 @@ public class Context : IdentityDbContext<AppUser, AppRole, string>
     public DbSet<Category> Categories { get; set; }
     
     public DbSet<Feature> Features { get; set; }
+    
+    public DbSet<Appointment> Appointments { get; set; }
 }

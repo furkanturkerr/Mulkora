@@ -8,4 +8,4 @@ public class AppUser : IdentityUser
     public string Surname { get; set; }
     
     public Agent? Agent { get; set; }
-}
+    public List<Appointment> Appointments { get; set; } = new List<Appointment>();}

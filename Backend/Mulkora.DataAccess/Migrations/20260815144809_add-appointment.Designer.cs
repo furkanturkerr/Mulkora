@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mulkora.DataAccess.Concrete;
 
@@ -11,9 +12,11 @@ using Mulkora.DataAccess.Concrete;
 namespace Mulkora.DataAccess.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20260815144809_add-appointment")]
+    partial class addappointment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -311,8 +314,14 @@ namespace Mulkora.DataAccess.Migrations
                     b.Property<int>("AgentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("AgentId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("AppUserId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AppUserId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("AppointmentDate")
@@ -324,6 +333,9 @@ namespace Mulkora.DataAccess.Migrations
                     b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PropertyId1")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
@@ -331,9 +343,15 @@ namespace Mulkora.DataAccess.Migrations
 
                     b.HasIndex("AgentId");
 
+                    b.HasIndex("AgentId1");
+
                     b.HasIndex("AppUserId");
 
+                    b.HasIndex("AppUserId1");
+
                     b.HasIndex("PropertyId");
+
+                    b.HasIndex("PropertyId1");
 
                     b.ToTable("Appointments");
                 });
@@ -471,7 +489,6 @@ namespace Mulkora.DataAccess.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Price")
-                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("RoomCount")
@@ -604,22 +621,34 @@ namespace Mulkora.DataAccess.Migrations
             modelBuilder.Entity("Mulkora.Entity.Concrete.Appointment", b =>
                 {
                     b.HasOne("Mulkora.Entity.Concrete.Agent", "Agent")
-                        .WithMany("Appointments")
+                        .WithMany()
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Mulkora.Entity.Concrete.AppUser", "AppUser")
+                    b.HasOne("Mulkora.Entity.Concrete.Agent", null)
                         .WithMany("Appointments")
+                        .HasForeignKey("AgentId1");
+
+                    b.HasOne("Mulkora.Entity.Concrete.AppUser", "AppUser")
+                        .WithMany()
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Mulkora.Entity.Concrete.Property", "Property")
+                    b.HasOne("Mulkora.Entity.Concrete.AppUser", null)
                         .WithMany("Appointments")
+                        .HasForeignKey("AppUserId1");
+
+                    b.HasOne("Mulkora.Entity.Concrete.Property", "Property")
+                        .WithMany()
                         .HasForeignKey("PropertyId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.HasOne("Mulkora.Entity.Concrete.Property", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PropertyId1");
 
                     b.Navigation("Agent");
 

@@ -1,0 +1,240 @@
+@model Mulkora.Dto.AppointmentDtos.CreateAppointmentDto
+
+@{
+    ViewData["Title"] = "Randevu Oluştur";
+}
+
+<link rel="stylesheet"
+      href="~/css/appointment-create.css"
+      asp-append-version="true">
+
+<main class="booking-page">
+    <div class="booking-container">
+
+        <div class="booking-topbar">
+            <a asp-controller="Property"
+               asp-action="Details"
+               asp-route-id="@Model.PropertyId"
+               class="booking-back">
+                <svg width="17"
+                     height="17"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+                    <path d="m15 18-6-6 6-6"></path>
+                </svg>
+
+                İlana geri dön
+            </a>
+
+            <span class="booking-property-number">
+                İlan #@Model.PropertyId
+            </span>
+        </div>
+
+        <section class="booking-card">
+
+            <aside class="booking-introduction">
+                <div class="booking-introduction-pattern"></div>
+
+                <div class="booking-introduction-content">
+                    <span class="booking-label">
+                        Randevu talebi
+                    </span>
+
+                    <h1>İlanı yerinde görmek için randevu oluşturun</h1>
+
+                    <p>
+                        Size uygun tarih ve saati seçin.
+                        Randevu talebiniz ilanın emlak
+                        danışmanına iletilecektir.
+                    </p>
+
+                    <div class="booking-steps">
+
+                        <div class="booking-step">
+                            <span class="booking-step-number">1</span>
+
+                            <div>
+                                <strong>Tarih ve saat seçin</strong>
+
+                                <small>
+                                    Size uygun bir görüşme zamanı belirleyin.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="booking-step-line"></div>
+
+                        <div class="booking-step">
+                            <span class="booking-step-number">2</span>
+
+                            <div>
+                                <strong>Talebinizi gönderin</strong>
+
+                                <small>
+                                    Randevunuz ilgili danışmana iletilsin.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="booking-step-line"></div>
+
+                        <div class="booking-step">
+                            <span class="booking-step-number">3</span>
+
+                            <div>
+                                <strong>Danışmanla görüşün</strong>
+
+                                <small>
+                                    Danışman randevu detayları için
+                                    sizinle iletişime geçsin.
+                                </small>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </aside>
+
+            <div class="booking-form-area">
+                <div class="booking-form-heading">
+                    <span>Randevu bilgileri</span>
+
+                    <h2>Uygun olduğunuz zamanı seçin</h2>
+
+                    <p>
+                        Seçtiğiniz tarih geçmişte olmamalı ve
+                        danışmanın başka bir randevusuyla çakışmamalıdır.
+                    </p>
+                </div>
+
+                <form asp-controller="Appointment"
+                      asp-action="Index"
+                      method="post"
+                      class="booking-form">
+
+                    @Html.AntiForgeryToken()
+
+                    <input asp-for="PropertyId"
+                           type="hidden">
+
+                    <div asp-validation-summary="All"
+                         class="booking-validation-summary">
+                    </div>
+
+                    <div class="booking-field">
+                        <label asp-for="AppointmentDate">
+                            Randevu tarihi ve saati
+                        </label>
+
+                        <div class="booking-input-wrapper">
+                            <span class="booking-input-icon">
+                                <svg width="21"
+                                     height="21"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M6 2v4M18 2v4"></path>
+                                    <rect x="3"
+                                          y="4"
+                                          width="18"
+                                          height="17"
+                                          rx="2">
+                                    </rect>
+                                    <path d="M3 9h18"></path>
+                                </svg>
+                            </span>
+
+                            <input asp-for="AppointmentDate"
+                                   type="datetime-local"
+                                   min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+                        </div>
+
+                        <span asp-validation-for="AppointmentDate"
+                              class="booking-field-error">
+                        </span>
+                    </div>
+
+                    <div class="booking-info">
+                        <div class="booking-info-icon">
+                            <svg width="19"
+                                 height="19"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="1.8">
+                                <circle cx="12"
+                                        cy="12"
+                                        r="9">
+                                </circle>
+                                <path d="M12 11v5M12 8h.01"></path>
+                            </svg>
+                        </div>
+
+                        <div>
+                            <strong>Randevu hakkında</strong>
+
+                            <p>
+                                Talebiniz oluşturulduktan sonra
+                                danışman görüşme detaylarını netleştirmek
+                                için sizinle iletişime geçebilir.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="booking-actions">
+                        <a asp-controller="Property"
+                           asp-action="Details"
+                           asp-route-id="@Model.PropertyId"
+                           class="booking-cancel-button">
+                            Vazgeç
+                        </a>
+
+                        <button type="submit"
+                                class="booking-submit-button">
+                            <svg width="18"
+                                 height="18"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2">
+                                <path d="M6 2v4M18 2v4"></path>
+                                <rect x="3"
+                                      y="4"
+                                      width="18"
+                                      height="17"
+                                      rx="2">
+                                </rect>
+                                <path d="M3 9h18"></path>
+                                <path d="m9 15 2 2 4-4"></path>
+                            </svg>
+
+                            Randevu talebi oluştur
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </section>
+
+        <div class="booking-footer-note">
+            <svg width="16"
+                 height="16"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+                <path d="M12 3 4 7v5c0 5 3.4 8 8 9 4.6-1 8-4 8-9V7l-8-4Z"></path>
+                <path d="m9 12 2 2 4-4"></path>
+            </svg>
+
+            Randevu bilgileriniz yalnızca ilgili emlak
+            danışmanıyla paylaşılır.
+        </div>
+
+    </div>
+</main>

@@ -1,5 +1,6 @@
 using AutoMapper;
 using Mulkora.Dto.AgentDtos;
+using Mulkora.Dto.AppointmentDtos;
 using Mulkora.Dto.CategoryDtos;
 using Mulkora.Dto.ContactDtos;
 using Mulkora.Dto.FeatureDtos;
@@ -69,6 +70,8 @@ public class GeneralMapping : Profile
         CreateMap<PropertyImage, ResultPropertyImageDto>();
         CreateMap<CreatePropertyImagesDto, PropertyImage>();
         CreateMap<UpdatePropertyImageDto, PropertyImage>().ReverseMap();
+        
+        CreateMap<CreateAppointmentDto, Appointment>();
         
 
 

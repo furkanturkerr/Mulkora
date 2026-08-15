@@ -89,6 +89,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPropertyImageDal, EfPropertyImageDal>();
 builder.Services.AddScoped<IPropertyImageService, PropertyImageManager>();
 builder.Services.AddScoped<ImageFileService>();
+builder.Services.AddScoped<IAppointmentDal, EfAppointmentDal>();
+builder.Services.AddScoped<IAppointmentService, AppointmentManager>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");
