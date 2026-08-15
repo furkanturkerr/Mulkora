@@ -1,25 +1,158 @@
-@model Mulkora.Dto.CategoryDtos.UpdateCategoryDto?
+@model Mulkora.Dto.CategoryDtos.UpdateCategoryDto
 
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Kategori Güncelle";
 }
 
-<form method="post">
-    @Html.AntiForgeryToken()
-    
-    <input type="hidden" asp-for="CategoryId"/>
-    
-    <label>Kategori Adı</label>
-    <input type="text" asp-for="Name" class="form-control"/>
-    <br/>    
-    
-    <label>Durum</label>
-    <select asp-for="IsActive">
-        <option value="">Durum Seç</option>
-        <option value="true">Aktif</option>
-        <option value="false">Pasif</option>
-    </select>
-    
-    <br/>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
-</form>
+<link rel="stylesheet"
+      href="~/css/admin/category.css"
+      asp-append-version="true">
+
+<div class="category-form-page">
+
+    <div class="category-form-heading">
+
+        <div>
+            <h1>Kategori Güncelle</h1>
+
+            <p>
+                Kategori adını ve kullanılabilirlik
+                durumunu düzenleyin.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Category"
+           asp-action="Index"
+           class="category-back-button">
+
+            <svg viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+
+            Kategorilere Dön
+        </a>
+
+    </div>
+
+    <section class="category-form-card">
+
+        <div class="category-form-card-heading">
+
+            <div class="category-form-icon">
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="m4 20 4.5-1L19 8.5 15.5 5 5 15.5 4 20Z"></path>
+                    <path d="m13.5 7 3.5 3.5"></path>
+                </svg>
+            </div>
+
+            <div>
+                <h2>Kategori bilgileri</h2>
+
+                <p>
+                    Kategori #@Model.CategoryId bilgilerini güncelliyorsunuz.
+                </p>
+            </div>
+
+        </div>
+
+        <form asp-area="Admin"
+              asp-controller="Category"
+              asp-action="Update"
+              method="post"
+              class="category-form">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="CategoryId"
+                   type="hidden">
+
+            <div asp-validation-summary="All"
+                 class="category-validation-summary">
+            </div>
+
+            <div class="category-form-grid">
+
+                <div class="category-field">
+                    <label asp-for="Name">
+                        Kategori adı
+                    </label>
+
+                    <input asp-for="Name"
+                           type="text"
+                           placeholder="Kategori adını yazın">
+
+                    <span asp-validation-for="Name"
+                          class="category-field-error">
+                    </span>
+                </div>
+
+                <div class="category-field">
+                    <label asp-for="IsActive">
+                        Kategori durumu
+                    </label>
+
+                    <select asp-for="IsActive">
+                        <option value="">Durum seçin</option>
+                        <option value="true">Aktif</option>
+                        <option value="false">Pasif</option>
+                    </select>
+
+                    <span asp-validation-for="IsActive"
+                          class="category-field-error">
+                    </span>
+                </div>
+
+            </div>
+
+            <div class="category-form-information">
+
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <circle cx="12"
+                            cy="12"
+                            r="9">
+                    </circle>
+                    <path d="M12 11v5M12 8h.01"></path>
+                </svg>
+
+                <p>
+                    Kategoriyi pasif duruma almak mevcut
+                    ilanları silmez. Yalnızca yeni ilanlarda
+                    seçilmesini engeller.
+                </p>
+
+            </div>
+
+            <div class="category-form-actions">
+
+                <a asp-area="Admin"
+                   asp-controller="Category"
+                   asp-action="Index"
+                   class="category-cancel-button">
+                    Vazgeç
+                </a>
+
+                <button type="submit"
+                        class="category-save-button">
+
+                    <svg viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="M5 3h12l2 2v16H5V3Z"></path>
+                        <path d="M8 3v6h8V3"></path>
+                        <path d="M8 21v-7h8v7"></path>
+                    </svg>
+
+                    Değişiklikleri Kaydet
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+</div>

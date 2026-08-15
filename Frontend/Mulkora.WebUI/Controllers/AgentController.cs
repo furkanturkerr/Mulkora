@@ -23,7 +23,7 @@ public class AgentController : Controller
     [Route("Danismanlar/{id:int}")]
     public async Task<IActionResult> Details(int id)
     {
-        var value = await _agentService.TGetByIdAsync(id);
+        var value = await _agentService.GetAgentByIdAsync(id);
         return View(value);
     }
 }

@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.CategoryDtos;
 using Mulkora.WebUI.Services.Abstract;
@@ -5,6 +7,7 @@ using Mulkora.WebUI.Services.Abstract;
 namespace Mulkora.WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [AutoValidateAntiforgeryToken]
 
 public class CategoryController : Controller
@@ -32,28 +35,32 @@ public class CategoryController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateCategoryDto dto)
     {
-        await _categoryService.TInsertAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        await _categoryService.TInsertAsync(dto, token);
         return RedirectToAction(nameof(Index));   
     }
     
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var value = await _categoryService.TGetByIdAsync(id);
+        var token = User.FindFirstValue("access_token");
+        var value = await _categoryService.TGetByIdAsync(id, token);
         return View(value);
     }
     
     [HttpPost]
     public async Task<IActionResult> Update(UpdateCategoryDto dto)
     {
-        await _categoryService.TUpdateAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        await _categoryService.TUpdateAsync(dto, token);
         return RedirectToAction(nameof(Index));   
     }
     
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        await _categoryService.TDeleteAsync(id);
+        var token = User.FindFirstValue("access_token");
+        await _categoryService.TDeleteAsync(id, token);
         return RedirectToAction(nameof(Index));   
     }
 }

@@ -25,4 +25,20 @@ public class AppointmentService : GenericService<ResultAppointmentDto, CreateApp
 
         return await _client.SendAsync(request);
     }
+
+    public async Task<List<ResultAppointmentDto>> GetAppointmentsByUserIdAsync(string userId, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        var response = await _client.GetAsync($"{ApiRoute}/user");
+        
+        response.EnsureSuccessStatusCode();
+        
+        return await response.Content.ReadFromJsonAsync<List<ResultAppointmentDto>>() ?? new List<ResultAppointmentDto>();
+    }
+
+    public Task<List<ResultAppointmentDto>> GetAppointmentsByAgentUserIdAsync(string userId, string token)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.RoleDtos;
 using Mulkora.WebUI.Services.Abstract;
@@ -19,7 +20,8 @@ public class RoleController : Controller
     // GET
     public async Task<IActionResult> RoleList()
     {
-        var values = await _roleService.GetAllAsync();
+        var token = User.FindFirstValue("access_token");
+        var values = await _roleService.GetRoles(token);
         return View(values);
     }
     
@@ -31,27 +33,31 @@ public class RoleController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateRoleDto dto)
     {
-        await _roleService.TInsertAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        await _roleService.TInsertAsync(dto, token);
         return RedirectToAction(nameof(RoleList)); 
     }
 
     public async Task<IActionResult> Update(string id)
     {
-        var value = await _roleService.GetRoleByIdAsync(id);
+        var token = User.FindFirstValue("access_token");
+        var value = await _roleService.GetRoleByIdAsync(id, token);
         return View(value);   
     }
 
     [HttpPost]
     public async Task<IActionResult> Update(UpdateRoleDto dto)
     {
-        await _roleService.TUpdateAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        await _roleService.TUpdateAsync(dto, token);
         return RedirectToAction(nameof(RoleList));
     }
     
     [HttpPost]
     public async Task<IActionResult> Delete(string id)
     {
-        await _roleService.DeleteRoleAsync(id);
+        var token = User.FindFirstValue("access_token");
+        await _roleService.DeleteRoleAsync(id, token);
         return RedirectToAction(nameof(RoleList));
     }
 }

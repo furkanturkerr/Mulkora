@@ -1,0 +1,392 @@
+.users-page {
+    --admin-brand: #173a31;
+    --admin-brand-dark: #102d26;
+    --admin-accent: #d7a15f;
+    --admin-surface: #ffffff;
+    --admin-soft: #f7f6f1;
+    --admin-text: #17211d;
+    --admin-muted: #7a8680;
+    --admin-line: #dfe4e1;
+    --admin-danger: #b94a48;
+
+    width: 100%;
+    padding: 0 0 52px;
+    color: var(--admin-text);
+}
+
+.users-page *,
+.users-page *::before,
+.users-page *::after {
+    box-sizing: border-box;
+}
+
+.users-page a {
+    text-decoration: none;
+}
+
+.users-page button {
+    font: inherit;
+}
+
+.users-page svg,
+.users-page svg path,
+.users-page svg circle,
+.users-page svg rect {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.users-page svg {
+    display: block;
+    flex: 0 0 auto;
+}
+
+/* BAŞLIK */
+
+.users-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.users-heading h1 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 32px;
+    font-weight: 850;
+    line-height: 1.15;
+    letter-spacing: -1.1px;
+}
+
+.users-heading p {
+    margin: 9px 0 0;
+    color: var(--admin-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ANA KART */
+
+.users-card {
+    overflow: hidden;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-line);
+    border-radius: 16px;
+    box-shadow: 0 9px 26px rgba(22, 39, 33, 0.045);
+}
+
+.users-card-heading {
+    display: flex;
+    align-items: center;
+    min-height: 55px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.users-card-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.users-card-heading strong {
+    color: #3c4944;
+    font-size: 12px;
+}
+
+.users-card-heading span {
+    color: #98a19d;
+    font-size: 10px;
+}
+
+/* TABLO */
+
+.users-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    min-width: 830px;
+    border-collapse: collapse;
+}
+
+.users-table thead {
+    background: #f8f8f5;
+}
+
+.users-table th {
+    height: 39px;
+    padding: 0 16px;
+    color: #7f8b85;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.16em;
+    text-align: left;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.users-table td {
+    height: 74px;
+    padding: 12px 16px;
+    color: #3e4a45;
+    font-size: 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.users-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.users-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.users-table tbody tr:hover {
+    background: #fbfcfa;
+}
+
+/* KULLANICI */
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 210px;
+}
+
+.user-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    color: var(--admin-brand);
+    font-size: 12px;
+    font-weight: 850;
+    letter-spacing: 0.02em;
+    background: #e5efec;
+    border: 1px solid #d4e2dd;
+    border-radius: 13px;
+}
+
+.user-identity {
+    min-width: 0;
+}
+
+.user-identity strong {
+    display: block;
+    overflow: hidden;
+    color: var(--admin-text);
+    font-size: 12px;
+    font-weight: 820;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-identity span {
+    display: block;
+    margin-top: 4px;
+    color: #919b96;
+    font-size: 10px;
+}
+
+/* E-POSTA */
+
+.user-email {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 220px;
+}
+
+.user-email-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 31px;
+    width: 31px;
+    height: 31px;
+    color: #4f7569;
+    background: #f0f5f3;
+    border-radius: 9px;
+}
+
+.user-email-icon svg {
+    width: 15px;
+    height: 15px;
+}
+
+.user-email > span:last-child {
+    overflow: hidden;
+    color: #59655f;
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* DURUM */
+
+.user-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 0 10px;
+    font-size: 9px;
+    font-weight: 850;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.user-status-dot {
+    width: 6px;
+    height: 6px;
+    flex: 0 0 6px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.user-status-confirmed {
+    color: #24694a;
+    background: #e1f0e8;
+}
+
+.user-status-pending {
+    color: #9b6525;
+    background: #f7ead7;
+}
+
+/* İŞLEMLER */
+
+.users-actions-heading {
+    width: 220px;
+    text-align: right !important;
+}
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.user-action {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.user-action svg {
+    width: 15px;
+    height: 15px;
+}
+
+.user-action-role {
+    color: var(--admin-brand);
+    background: #f4f8f6;
+    border: 1px solid #a9c8bd;
+}
+
+.user-action-role:hover {
+    color: #ffffff;
+    background: var(--admin-brand);
+    border-color: var(--admin-brand);
+}
+
+.user-delete-form {
+    margin: 0;
+}
+
+.user-action-delete {
+    color: #c04442;
+    background: #fff8f8;
+    border: 1px solid #efb5b4;
+}
+
+.user-action-delete:hover {
+    color: #ffffff;
+    background: var(--admin-danger);
+    border-color: var(--admin-danger);
+}
+
+/* BOŞ DURUM */
+
+.users-empty {
+    display: grid;
+    min-height: 390px;
+    place-items: center;
+    align-content: center;
+    padding: 45px;
+    text-align: center;
+}
+
+.users-empty-icon {
+    display: grid;
+    width: 76px;
+    height: 76px;
+    place-items: center;
+    margin-bottom: 19px;
+    color: var(--admin-brand);
+    background: #e5ece8;
+    border-radius: 22px;
+}
+
+.users-empty-icon svg {
+    width: 31px;
+    height: 31px;
+}
+
+.users-empty h2 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 24px;
+}
+
+.users-empty p {
+    margin: 8px 0 0;
+    color: var(--admin-muted);
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+    .users-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .users-card-heading > div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .users-page {
+        padding-bottom: 40px;
+    }
+}

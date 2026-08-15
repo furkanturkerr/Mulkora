@@ -27,7 +27,7 @@ public class ContactController : Controller
             return View("Index", dto);
         
         dto.MessageDate = DateTime.Now;
-        await _contactService.TInsertAsync(dto);
+        await _contactService.SendMessageAsync(dto);
         TempData["SuccessMessage"] = "Mesajınız başarıyla gönderildi.";
         return RedirectToAction("Index", "Contact");
     }

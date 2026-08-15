@@ -1,0 +1,384 @@
+.roles-page {
+    --admin-brand: #173a31;
+    --admin-brand-dark: #102d26;
+    --admin-surface: #ffffff;
+    --admin-soft: #f7f6f1;
+    --admin-text: #17211d;
+    --admin-muted: #7a8680;
+    --admin-line: #dfe4e1;
+    --admin-danger: #b94a48;
+
+    width: 100%;
+    padding: 0 0 52px;
+    color: var(--admin-text);
+}
+
+.roles-page *,
+.roles-page *::before,
+.roles-page *::after {
+    box-sizing: border-box;
+}
+
+.roles-page a {
+    text-decoration: none;
+}
+
+.roles-page button {
+    font: inherit;
+}
+
+.roles-page svg,
+.roles-page svg path,
+.roles-page svg circle,
+.roles-page svg rect {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.roles-page svg {
+    display: block;
+    flex: 0 0 auto;
+}
+
+/* BAŞLIK */
+
+.roles-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.roles-heading h1 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 32px;
+    font-weight: 850;
+    line-height: 1.15;
+    letter-spacing: -1.1px;
+}
+
+.roles-heading p {
+    margin: 9px 0 0;
+    color: var(--admin-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* YENİ ROL BUTONU */
+
+.role-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 0 18px;
+    color: #ffffff;
+    background: var(--admin-brand);
+    border: 1px solid var(--admin-brand);
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(23, 58, 49, 0.16);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.role-add-button svg {
+    width: 17px;
+    height: 17px;
+}
+
+.role-add-button:hover {
+    color: #ffffff;
+    background: var(--admin-brand-dark);
+    border-color: var(--admin-brand-dark);
+    transform: translateY(-1px);
+}
+
+/* ANA KART */
+
+.roles-card {
+    overflow: hidden;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-line);
+    border-radius: 16px;
+    box-shadow: 0 9px 26px rgba(22, 39, 33, 0.045);
+}
+
+.roles-card-heading {
+    display: flex;
+    align-items: center;
+    min-height: 55px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.roles-card-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.roles-card-heading strong {
+    color: #3c4944;
+    font-size: 12px;
+}
+
+.roles-card-heading span {
+    color: #98a19d;
+    font-size: 10px;
+}
+
+/* TABLO */
+
+.roles-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.roles-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+}
+
+.roles-table thead {
+    background: #f8f8f5;
+}
+
+.roles-table th {
+    height: 39px;
+    padding: 0 16px;
+    color: #7f8b85;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.16em;
+    text-align: left;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.roles-table td {
+    height: 74px;
+    padding: 12px 16px;
+    color: #3e4a45;
+    font-size: 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.roles-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.roles-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.roles-table tbody tr:hover {
+    background: #fbfcfa;
+}
+
+/* ROL BİLGİSİ */
+
+.role-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 210px;
+}
+
+.role-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    color: var(--admin-brand);
+    background: #e5efec;
+    border: 1px solid #d4e2dd;
+    border-radius: 13px;
+}
+
+.role-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.role-identity {
+    min-width: 0;
+}
+
+.role-identity strong {
+    display: block;
+    overflow: hidden;
+    color: var(--admin-text);
+    font-size: 12px;
+    font-weight: 820;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.role-identity span {
+    display: block;
+    margin-top: 4px;
+    color: #919b96;
+    font-size: 10px;
+}
+
+/* ROL ID */
+
+.role-id-column {
+    width: 45%;
+}
+
+.role-id-value {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 10px;
+    color: #5f6c66;
+    font-family: monospace;
+    font-size: 10px;
+    background: var(--admin-soft);
+    border: 1px solid #e3e6e2;
+    border-radius: 8px;
+}
+
+/* İŞLEMLER */
+
+.role-actions-heading {
+    width: 130px;
+    text-align: right !important;
+}
+
+.role-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.role-delete-form {
+    margin: 0;
+}
+
+.role-action {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.role-action svg {
+    width: 15px;
+    height: 15px;
+}
+
+.role-action-edit {
+    color: var(--admin-brand);
+    background: #f4f8f6;
+    border: 1px solid #a9c8bd;
+}
+
+.role-action-edit:hover {
+    color: #ffffff;
+    background: var(--admin-brand);
+    border-color: var(--admin-brand);
+}
+
+.role-action-delete {
+    color: #c04442;
+    background: #fff8f8;
+    border: 1px solid #efb5b4;
+}
+
+.role-action-delete:hover {
+    color: #ffffff;
+    background: var(--admin-danger);
+    border-color: var(--admin-danger);
+}
+
+/* BOŞ DURUM */
+
+.roles-empty {
+    display: grid;
+    min-height: 390px;
+    place-items: center;
+    align-content: center;
+    padding: 45px;
+    text-align: center;
+}
+
+.roles-empty-icon {
+    display: grid;
+    width: 76px;
+    height: 76px;
+    place-items: center;
+    margin-bottom: 19px;
+    color: var(--admin-brand);
+    background: #e5ece8;
+    border-radius: 22px;
+}
+
+.roles-empty-icon svg {
+    width: 31px;
+    height: 31px;
+}
+
+.roles-empty h2 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 24px;
+}
+
+.roles-empty p {
+    margin: 8px 0 22px;
+    color: var(--admin-muted);
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+    .roles-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .role-add-button {
+        width: 100%;
+    }
+
+    .roles-card-heading > div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+    }
+}
+
+@media (max-width: 600px) {
+    .role-id-column {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .roles-page {
+        padding-bottom: 40px;
+    }
+}

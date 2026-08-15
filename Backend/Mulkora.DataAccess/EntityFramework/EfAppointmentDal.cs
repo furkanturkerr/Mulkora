@@ -56,4 +56,29 @@ public class EfAppointmentDal : IAppointmentDal
             throw;
         }
     }
+
+    public async Task<List<Appointment>> GetAppointmentsByUserIdAsync(
+        string userId)
+    {
+        return await _context.Appointments
+            .Where(x => x.AppUserId == userId)
+            .Include(x => x.Property)
+            .Include(x => x.Agent)
+            .ThenInclude(x => x.AppUser)
+            .OrderByDescending(x => x.AppointmentDate)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+    
+    public async Task<List<Appointment>> GetAppointmentsByAgentUserIdAsync(
+        string userId)
+    {
+        return await _context.Appointments
+            .Where(x => x.Agent.AppUserId == userId)
+            .Include(x => x.Property)
+            .Include(x => x.AppUser)
+            .OrderByDescending(x => x.AppointmentDate)
+            .AsNoTracking()
+            .ToListAsync();
+    }
 }

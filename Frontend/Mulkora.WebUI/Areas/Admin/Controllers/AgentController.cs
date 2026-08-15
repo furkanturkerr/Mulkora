@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.AgentDtos;
 using Mulkora.WebUI.Services.Abstract;
@@ -5,6 +7,7 @@ using Mulkora.WebUI.Services.Abstract;
 namespace Mulkora.WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [AutoValidateAntiforgeryToken]
 
 public class AgentController : Controller
@@ -19,7 +22,9 @@ public class AgentController : Controller
     // GET
     public async Task<IActionResult> AgentList(string? text, bool? isTrue)
     {
-        var values = await _agentService.GetFilterAgent(text, isTrue);
+        var token = User.FindFirstValue("access_token");
+        
+        var values = await _agentService.GetFilterAgent(text, isTrue, token!);
         ViewBag.Text = text;
         ViewBag.IsTrue = isTrue;
         return View(values);
@@ -34,7 +39,12 @@ public class AgentController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateAgentDto dto)
     {
-        var response = await _agentService.TInsertAsync(dto);
+        var token = User.FindFirstValue("access_token");
+
+        if (token == null)
+            return Unauthorized();
+        
+        var response = await _agentService.TInsertAsync(dto, token);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -43,20 +53,23 @@ public class AgentController : Controller
 
             return View(dto);
         }
+        
         return RedirectToAction(nameof(AgentList));
     } 
 
     [HttpGet]
     public async Task<IActionResult> Update(int id)
     {
-        var value = await _agentService.TGetByIdAsync(id);
+        var token = User.FindFirstValue("access_token");
+        var value = await _agentService.TGetByIdAsync(id, token);
         return View(value);
     }
 
     [HttpPost]
     public async Task<IActionResult> Update(UpdateAgentDto dto)
     {
-        var response = await _agentService.TUpdateAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        var response = await _agentService.TUpdateAsync(dto, token);
         
         if (!response.IsSuccessStatusCode)
         {
@@ -72,7 +85,8 @@ public class AgentController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        await _agentService.TDeleteAsync(id);
+        var token = User.FindFirstValue("access_token");
+        await _agentService.TDeleteAsync(id, token);
         return RedirectToAction(nameof(AgentList));
     }
 }

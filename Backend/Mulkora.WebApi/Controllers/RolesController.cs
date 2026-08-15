@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.RoleDtos;
@@ -6,6 +7,7 @@ namespace Mulkora.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class RolesController : ControllerBase
     {
         private readonly IRoleService _roleService;

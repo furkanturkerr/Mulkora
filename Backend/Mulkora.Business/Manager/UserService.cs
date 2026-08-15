@@ -26,17 +26,18 @@ public class UserService : IUserService
         return _mapper.Map<List<ResultUserDto>>(values);
     }
 
-    public Task<UpdateUserDto> TGetByIdAsync(int id)
+    public async Task<UpdateUserDto> TGetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var value = await _userManager.FindByIdAsync(id.ToString());
+        return _mapper.Map<UpdateUserDto>(value);
     }
 
     public Task TInsertAsync(CreateUserDto dto)
     {
         throw new NotImplementedException();
     }
-
-    public Task TUpdateAsync(UpdateUserDto dto)
+    
+    public async Task TUpdateAsync(UpdateUserDto dto)
     {
         throw new NotImplementedException();
     }
@@ -116,5 +117,11 @@ public class UserService : IUserService
             if (!addResult.Succeeded)
                 throw new Exception("Kullanıcı rolleri eklenemedi.");
         }
+    }
+
+    public async Task<ResultUserDto> GetUserByIdAsync(string id)
+    {
+        var value = await _userManager.FindByIdAsync(id);
+        return _mapper.Map<ResultUserDto>(value);
     }
 }

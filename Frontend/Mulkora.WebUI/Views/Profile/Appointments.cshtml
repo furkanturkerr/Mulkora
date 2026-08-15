@@ -1,0 +1,72 @@
+@model List<Mulkora.Dto.AppointmentDtos.ResultAppointmentDto>
+
+@{
+    Layout = "_Layout";
+}
+
+<section class="page-hero">
+    <div class="container">
+        <div class="page-hero-shell">
+            <div class="breadcrumbs">
+                <a asp-controller="Default" asp-action="Index">Ana Sayfa</a><span>/</span><span>Randevularım</span>
+            </div>
+            <div class="page-title">
+                <h1>Randevularım</h1>
+                <p>Oluşturduğunuz ev gösterim taleplerini ve durumlarını buradan yönetin.</p></div>
+        </div>
+    </div>
+</section>
+    <section class="section-sm">
+        <div class="container">
+            <div class="appointment-list">
+                
+                @foreach (var item in Model)
+                {
+                    
+                <article class="appointment-card">
+                    <img src="~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg" alt="">
+                    <div>
+                        
+                        @if (item.AppointmentDate.Date < DateTime.Now.Date)
+                        {
+                            <span class="status cancelled">Geçmiş Randevu</span>
+                        }
+
+                        <h3>@item.Title</h3>
+                        
+                        <div class="location">
+                            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                                <path
+                                    d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                            </svg>
+                            @item.PropertyAddress
+                        </div>
+                        
+                        <div class="appointment-info">
+                            <span>
+                                <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/>
+                                </svg> 
+                                @item.AppointmentDate.ToString("d")
+                            </span>
+                            <span>
+                                <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 2"/>
+                                </svg> 
+                                @item.AppointmentDate.ToString("t")
+                            </span>
+                            <span>
+                                <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/>
+                                </svg> 
+                                @item.AgentNameSurname</span>
+                        </div>
+                    </div>
+                    <div class="appointment-actions">
+                        <a class="btn btn-primary btn-sm" asp-controller="Property" asp-action="Details" asp-route-id="@item.PropertyId">İlanıGör</a>
+                    </div>
+                </article>
+                }
+            </div>
+        </div>
+    </section>

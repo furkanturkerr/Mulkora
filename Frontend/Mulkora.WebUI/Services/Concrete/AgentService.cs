@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Mulkora.Dto.AgentDtos;
 using Mulkora.WebUI.Services.Abstract;
 
@@ -8,23 +9,33 @@ public class AgentService : GenericService<ResultAgentDto, CreateAgentDto, Updat
     private readonly HttpClient _client;
     public AgentService(IHttpClientFactory httpClientFactory, HttpClient client) : base(httpClientFactory)
     {
-        _client = client;
+        _client = httpClientFactory.CreateClient("MulkoraApi");
     }
 
     protected override string ApiRoute => "api/Agents";
     public async Task<List<ResultAgentDto>> GetListAgentTrue()
     {
-        var response = await _client.GetAsync("http://localhost:5214/api/Agents/true");
+        var response = await _client.GetAsync($"{ApiRoute}/true");
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<List<ResultAgentDto>>() ?? [];
     }
 
-    public async Task<List<ResultAgentDto>> GetFilterAgent(string? text, bool? isTrue)
+    public async Task<List<ResultAgentDto>> GetFilterAgent(string? text, bool? isTrue, string token)
     {
-        var response = await _client.GetAsync($"http://localhost:5214/api/Agents/filter?text={text}&isTrue={isTrue}");
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            
+        var response = await _client.GetAsync($"{ApiRoute}/filter?text={text}&isTrue={isTrue}");
         response.EnsureSuccessStatusCode();
         
         return await response.Content.ReadFromJsonAsync<List<ResultAgentDto>>() ?? [];
+    }
+    
+    public async Task<UpdateAgentDto?> GetAgentByIdAsync(int id)
+    {
+        var response = await _client.GetAsync($"{ApiRoute}/agent/{id}");
+        response.EnsureSuccessStatusCode();
+        
+        return await response.Content.ReadFromJsonAsync<UpdateAgentDto>();
     }
 }

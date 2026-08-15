@@ -82,8 +82,10 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         return await _client.PutAsJsonAsync(ApiRoute, dto);
     }
 
-    public async Task<List<ResultPropertyDto>> GetFilterProperty(string? text, int? IsStatus, string? City, string? District, int? ListingType, int page, int pageSize)
+    public async Task<List<ResultPropertyDto>> GetFilterProperty(string? text, int? IsStatus, string? City, string? District, int? ListingType, int page, int pageSize,string token)
     {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
         var response = await _client.GetAsync( $"{ApiRoute}/filter?text={text}&IsStatus={IsStatus}&City={City}&District={District}&ListingType={ListingType}&page={page}&pageSize={pageSize}");
         
         response.EnsureSuccessStatusCode();

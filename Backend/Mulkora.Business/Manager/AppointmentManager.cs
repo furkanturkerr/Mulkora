@@ -63,4 +63,16 @@ public class AppointmentManager : IAppointmentService
             throw new Exception("Danışmanın seçilen tarih ve saatte başka bir randevusu bulunuyor.");
         }
     }
+
+    public async Task<List<ResultAppointmentDto>> TGetAppointmentsByUserIdAsync(string userId)
+    {
+        var appointments = await _appointmentDal.GetAppointmentsByUserIdAsync(userId);
+        return _mapper.Map<List<ResultAppointmentDto>>(appointments);
+    }
+
+    public async Task<List<ResultAppointmentDto>> TGetAppointmentsByAgentUserIdAsync(string userId)
+    {
+        var appointments = await _appointmentDal.GetAppointmentsByAgentUserIdAsync(userId);
+        return _mapper.Map<List<ResultAppointmentDto>>(appointments);   
+    }
 }

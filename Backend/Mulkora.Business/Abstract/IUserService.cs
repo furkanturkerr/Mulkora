@@ -6,4 +6,5 @@ public interface IUserService : IGenericService<ResultUserDto, CreateUserDto, Up
 {
     Task<RoleAssignDto> GetUserRolesAsync(string userId);
     Task UpdateUserRolesAsync(RoleAssignDto dto);
+    Task<ResultUserDto> GetUserByIdAsync(string id);
 }

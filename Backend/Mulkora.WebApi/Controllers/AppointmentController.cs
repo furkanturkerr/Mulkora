@@ -33,5 +33,35 @@ namespace Mulkora.WebApi.Controllers
 
             return Ok();
         }
+
+        [HttpGet("user")]
+        public async Task<IActionResult> GetByUserIdAsync()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized();
+            
+            var values = await _appointmentService.TGetAppointmentsByUserIdAsync(userId);
+            return Ok(values);
+        }
+
+        [HttpGet("agent")]
+        [Authorize(Roles = "Agent")]
+        public async Task<IActionResult> GetByAgentUserIdAsync()
+        {
+            var userId = User.FindFirstValue(
+                ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            var values =
+                await _appointmentService
+                    .TGetAppointmentsByAgentUserIdAsync(userId);
+
+            return Ok(values);
+        }
     }
 }

@@ -168,6 +168,12 @@ public class AgentManager : IAgentService
         return _mapper.Map<UpdateAgentDto>(value);
     }
 
+    public async Task<UpdateAgentDto> GetByUserIdAsync(int id)
+    {
+        var value = await _agentDal.GetByUserIdTrueAsync(id);
+        return _mapper.Map<UpdateAgentDto>(value);
+    }
+
     public async Task<IdentityResult> DeleteAgentAsync(int id)
     {
         var agent = await _agentDal.GetByIdAsync(id);

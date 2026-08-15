@@ -2,22 +2,174 @@
 
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Yeni Özellik Ekle";
 }
 
-<form method="post">
-    @Html.AntiForgeryToken()
-    
-    <label>Özellik Adı</label>
-    <input type="text" asp-for="Name" class="form-control"/>
-    <br/>    
-    
-    <label>Durum</label>
-    <select asp-for="IsActive">
-        <option value="">Durum Seç</option>
-        <option value="true">Aktif</option>
-        <option value="false">Pasif</option>
-    </select>
-    
-    <br/>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
-</form>
+<link rel="stylesheet"
+      href="~/css/admin/feature.css"
+      asp-append-version="true">
+
+<div class="feature-page">
+
+    <header class="feature-form-page-header">
+
+        <a asp-area="Admin"
+           asp-controller="Feature"
+           asp-action="Index"
+           class="feature-back-link">
+
+            <svg width="17"
+                 height="17"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+
+            Özelliklere dön
+        </a>
+
+        <h1>Yeni Özellik Ekle</h1>
+
+        <p>
+            İlanlarda kullanılabilecek yeni bir özellik oluşturun.
+        </p>
+
+    </header>
+
+    <section class="feature-form-card">
+
+        <div class="feature-form-card-header">
+
+            <div class="feature-form-header-icon">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8">
+
+                    <path d="m12 3 2.6 5.3
+                             5.9.9-4.3 4.2
+                             1 5.9-5.2-2.8
+                             -5.2 2.8 1-5.9
+                             -4.3-4.2 5.9-.9L12 3Z">
+                    </path>
+                </svg>
+            </div>
+
+            <div>
+                <strong>Özellik bilgileri</strong>
+
+                <span>
+                    Özelliğin adını ve kullanım durumunu belirleyin.
+                </span>
+            </div>
+
+        </div>
+
+        <form asp-area="Admin"
+              asp-controller="Feature"
+              asp-action="Create"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly"
+                 class="feature-validation-summary">
+            </div>
+
+            <div class="feature-form-body">
+
+                <div class="feature-form-grid">
+
+                    <div class="feature-form-group">
+                        <label asp-for="Name">
+                            Özellik adı
+                        </label>
+
+                        <input asp-for="Name"
+                               class="feature-input"
+                               placeholder="Örneğin: Özel bahçe">
+
+                        <span asp-validation-for="Name"
+                              class="feature-validation">
+                        </span>
+
+                        <small>
+                            Bu isim ilan ekleme ve güncelleme
+                            ekranlarında gösterilir.
+                        </small>
+                    </div>
+
+                    <div class="feature-form-group">
+                        <label asp-for="IsActive">
+                            Durum
+                        </label>
+
+                        <select asp-for="IsActive"
+                                class="feature-select">
+
+                            <option value="true">Aktif</option>
+                            <option value="false">Pasif</option>
+                        </select>
+
+                        <span asp-validation-for="IsActive"
+                              class="feature-validation">
+                        </span>
+
+                        <small>
+                            Pasif özellikler yeni ilanlarda
+                            kullanılamaz.
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <footer class="feature-form-footer">
+
+                <span>
+                    Kaydettiğiniz özellik ilan formlarında
+                    kullanılabilir.
+                </span>
+
+                <div class="feature-form-actions">
+
+                    <a asp-area="Admin"
+                       asp-controller="Feature"
+                       asp-action="Index"
+                       class="feature-secondary-button">
+
+                        Vazgeç
+                    </a>
+
+                    <button type="submit"
+                            class="feature-primary-button">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8">
+
+                            <path d="M12 5v14"></path>
+                            <path d="M5 12h14"></path>
+                        </svg>
+
+                        Özelliği Kaydet
+                    </button>
+
+                </div>
+
+            </footer>
+
+        </form>
+
+    </section>
+
+</div>

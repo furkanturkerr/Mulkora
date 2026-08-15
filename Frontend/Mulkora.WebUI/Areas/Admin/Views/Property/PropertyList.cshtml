@@ -209,11 +209,39 @@ var hasFilter = !string.IsNullOrWhiteSpace(filterText)
                                 </svg>
                             </a>
 
-                            <button type="button" class="admin-table-action admin-action-delete" title="Sil">
-                                <svg class="admin-svg" width="15" height="15" viewBox="0 0 24 24">
-                                    <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6M10 10v6M14 10v6"/>
-                                </svg>
-                            </button>
+                            <form asp-area="Admin"
+                                  asp-controller="Property"
+                                  asp-action="Delete"
+                                  asp-route-id="@item.PropertyId"
+                                  method="post"
+                                  class="admin-delete-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="admin-table-action admin-action-delete"
+                                        title="Sil"
+                                        onclick="return confirm(
+            'Bu ilanı silmek istediğinize emin misiniz?')">
+
+                                    <svg class="admin-svg"
+                                         width="15"
+                                         height="15"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.8">
+
+                                        <path d="M3 6h18"></path>
+                                        <path d="M8 6V4h8v2"></path>
+                                        <path d="m19 6-1 14H6L5 6"></path>
+                                        <path d="M10 10v6"></path>
+                                        <path d="M14 10v6"></path>
+                                    </svg>
+
+                                </button>
+
+                            </form>
 
                         </div>
                     </td>

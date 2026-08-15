@@ -1,25 +1,181 @@
-@model Mulkora.Dto.FeatureDtos.UpdateFeatureDto?
+@model Mulkora.Dto.FeatureDtos.UpdateFeatureDto
 
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Özellik Güncelle";
 }
 
-<form method="post">
-    @Html.AntiForgeryToken()
-    
-    <input type="hidden" asp-for="FeatureId"/>
-    
-    <label>Özellik Adı</label>
-    <input type="text" asp-for="Name" class="form-control"/>
-    <br/>    
-    
-    <label>Durum</label>
-    <select asp-for="IsActive">
-        <option value="">Durum Seç</option>
-        <option value="true">Aktif</option>
-        <option value="false">Pasif</option>
-    </select>
-    
-    <br/>
-    <button type="submit" class="btn btn-primary">Kaydet</button>
-</form>
+<link rel="stylesheet"
+      href="~/css/admin/feature.css"
+      asp-append-version="true">
+
+<div class="feature-page">
+
+    <header class="feature-form-page-header">
+
+        <a asp-area="Admin"
+           asp-controller="Feature"
+           asp-action="Index"
+           class="feature-back-link">
+
+            <svg width="17"
+                 height="17"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+                <path d="m15 18-6-6 6-6"></path>
+            </svg>
+
+            Özelliklere dön
+        </a>
+
+        <h1>Özelliği Güncelle</h1>
+
+        <p>
+            Özelliğin adını veya kullanım durumunu düzenleyin.
+        </p>
+
+    </header>
+
+    <section class="feature-form-card">
+
+        <div class="feature-form-card-header">
+
+            <div class="feature-form-header-icon">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.8">
+
+                    <path d="m4 20 4.5-1
+                             10.5-10.5L15.5 5
+                             5 15.5 4 20Z">
+                    </path>
+
+                    <path d="m13.5 7 3.5 3.5"></path>
+                </svg>
+            </div>
+
+            <div>
+                <strong>Özellik bilgileri</strong>
+
+                <span>
+                    Mevcut özellik bilgilerini güncelleyin.
+                </span>
+            </div>
+
+        </div>
+
+        <form asp-area="Admin"
+              asp-controller="Feature"
+              asp-action="Update"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <input asp-for="FeatureId"
+                   type="hidden">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="feature-validation-summary">
+            </div>
+
+            <div class="feature-form-body">
+
+                <div class="feature-form-grid">
+
+                    <div class="feature-form-group">
+                        <label asp-for="Name">
+                            Özellik adı
+                        </label>
+
+                        <input asp-for="Name"
+                               class="feature-input"
+                               placeholder="Özellik adını yazın">
+
+                        <span asp-validation-for="Name"
+                              class="feature-validation">
+                        </span>
+
+                        <small>
+                            Bu isim ilan formlarında ve ilan
+                            detaylarında gösterilir.
+                        </small>
+                    </div>
+
+                    <div class="feature-form-group">
+                        <label asp-for="IsActive">
+                            Durum
+                        </label>
+
+                        <select asp-for="IsActive"
+                                class="feature-select">
+
+                            <option value="true">Aktif</option>
+                            <option value="false">Pasif</option>
+                        </select>
+
+                        <span asp-validation-for="IsActive"
+                              class="feature-validation">
+                        </span>
+
+                        <small>
+                            Pasif duruma getirilen özellik yeni
+                            ilanlarda seçilemez.
+                        </small>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <footer class="feature-form-footer">
+
+                <span>
+                    Özellik numarası:
+                    <strong>#@Model.FeatureId</strong>
+                </span>
+
+                <div class="feature-form-actions">
+
+                    <a asp-area="Admin"
+                       asp-controller="Feature"
+                       asp-action="Index"
+                       class="feature-secondary-button">
+
+                        Vazgeç
+                    </a>
+
+                    <button type="submit"
+                            class="feature-primary-button">
+
+                        <svg width="17"
+                             height="17"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="1.8">
+
+                            <path d="M5 4h12l2 2v14H5V4Z">
+                            </path>
+
+                            <path d="M8 4v6h8V4"></path>
+                            <path d="M8 20v-6h8v6"></path>
+                        </svg>
+
+                        Değişiklikleri Kaydet
+                    </button>
+
+                </div>
+
+            </footer>
+
+        </form>
+
+    </section>
+
+</div>

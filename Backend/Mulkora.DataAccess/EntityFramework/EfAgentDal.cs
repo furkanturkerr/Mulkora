@@ -52,6 +52,15 @@ public class EfAgentDal : GenericRepository<Agent>, IAgentDal
         return value;
     }
 
+    public async Task<Agent> GetByUserIdTrueAsync(int id)
+    {
+        var value = await _context.Agents
+            .Where(x=>x.AgentId == id && x.IsActive == true && x.IsVerified == true)
+            .Include(x => x.AppUser)
+            .FirstOrDefaultAsync();
+        return value;
+    }
+
     public async Task<List<Agent>> GetFilterAgent(string? text, bool? isTrue)
     {
         var query = _context.Agents

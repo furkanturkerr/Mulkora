@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
@@ -31,6 +32,7 @@ namespace Mulkora.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateCategoryDto dto)
         {
             await _categoryService.TInsertAsync(dto);
@@ -38,6 +40,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(UpdateCategoryDto dto)
         {
             await _categoryService.TUpdateAsync(dto);
@@ -45,6 +48,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _categoryService.TDeleteAsync(id);

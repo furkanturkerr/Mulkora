@@ -1,214 +1,50 @@
 @model List<Mulkora.Dto.UserDtos.ResultUserDto>
 
 @{
-    Layout = "_AdminLayout";
-    ViewData["Title"] = "Kullanıcılar";
+Layout = "_AdminLayout";
+ViewData["Title"] = "Kullanıcı Yönetimi";
 }
 
-<style>
-    .users-page {
-        padding: 32px;
-    }
-
-    .users-header {
-        margin-bottom: 24px;
-    }
-
-    .users-header h1 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 700;
-        color: #111827;
-    }
-
-    .users-header p {
-        margin: 6px 0 0;
-        font-size: 14px;
-        color: #6b7280;
-    }
-
-    .users-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        overflow: hidden;
-    }
-
-    .users-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .users-table th {
-        padding: 14px 18px;
-        text-align: left;
-        background: #f9fafb;
-        border-bottom: 1px solid #e5e7eb;
-        color: #6b7280;
-        font-size: 12px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: .04em;
-    }
-
-    .users-table td {
-        padding: 16px 18px;
-        border-bottom: 1px solid #f1f1f1;
-        color: #374151;
-        font-size: 14px;
-        vertical-align: middle;
-    }
-
-    .users-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-    .users-table tbody tr:hover {
-        background: #fafafa;
-    }
-
-    .user-info {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .user-avatar {
-        width: 38px;
-        height: 38px;
-        border-radius: 10px;
-        background: #f3f4f6;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #374151;
-        font-size: 13px;
-        font-weight: 700;
-        flex-shrink: 0;
-    }
-
-    .user-info strong {
-        display: block;
-        color: #111827;
-        font-size: 14px;
-    }
-
-    .user-info span {
-        display: block;
-        margin-top: 3px;
-        color: #9ca3af;
-        font-size: 12px;
-    }
-
-    .status {
-        display: inline-flex;
-        align-items: center;
-        padding: 6px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .status-confirmed {
-        background: #ecfdf5;
-        color: #047857;
-    }
-
-    .status-pending {
-        background: #fff7ed;
-        color: #c2410c;
-    }
-
-    .user-actions {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-    }
-
-    .user-action {
-        height: 34px;
-        padding: 0 11px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-        border: 1px solid #e5e7eb;
-        border-radius: 8px;
-        background: #fff;
-        color: #4b5563;
-        font-size: 12px;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        transition: .2s;
-    }
-
-    .user-action:hover {
-        background: #f3f4f6;
-        color: #111827;
-    }
-
-    .user-action.role {
-        background: #111827;
-        border-color: #111827;
-        color: #fff;
-    }
-
-    .user-action.role:hover {
-        background: #1f2937;
-        color: #fff;
-    }
-
-    .user-action.delete:hover {
-        background: #fef2f2;
-        border-color: #fecaca;
-        color: #dc2626;
-    }
-
-    .delete-form {
-        margin: 0;
-    }
-
-    .empty-users {
-        padding: 50px 20px;
-        text-align: center;
-        color: #9ca3af;
-    }
-
-    @@media (max-width: 900px) {
-        .users-page {
-            padding: 20px;
-        }
-
-        .users-card {
-            overflow-x: auto;
-        }
-
-        .users-table {
-            min-width: 800px;
-        }
-    }
-</style>
-
+<link rel="stylesheet"
+      href="~/css/admin/user.css"
+      asp-append-version="true">
 
 <div class="users-page">
 
-    <div class="users-header">
-        <h1>Kullanıcı Yönetimi</h1>
-        <p>Sistemde kayıtlı kullanıcıları görüntüleyin ve yönetin.</p>
+    <div class="users-heading">
+        <div>
+            <h1>Kullanıcı Yönetimi</h1>
+
+            <p>
+                Sistemde kayıtlı kullanıcıları görüntüleyin,
+                rollerini düzenleyin ve hesaplarını yönetin.
+            </p>
+        </div>
     </div>
 
-    <div class="users-card">
+    <section class="users-card">
+
+        <div class="users-card-heading">
+            <div>
+                <strong>Kullanıcı listesi</strong>
+
+                <span>
+                    Sistemde toplam @(Model?.Count ?? 0) kullanıcı bulunuyor
+                </span>
+            </div>
+        </div>
 
         @if (Model != null && Model.Any())
         {
+        <div class="users-table-wrapper">
+
             <table class="users-table">
                 <thead>
                 <tr>
                     <th>Kullanıcı</th>
-                    <th>E-posta</th>
-                    <th>E-posta Durumu</th>
-                    <th style="width: 300px;">İşlemler</th>
+                    <th>E-posta adresi</th>
+                    <th>E-posta durumu</th>
+                    <th class="users-actions-heading">İşlemler</th>
                 </tr>
                 </thead>
 
@@ -216,90 +52,155 @@
 
                 @foreach (var item in Model)
                 {
-                    <tr>
+                var nameInitial =
+                string.IsNullOrWhiteSpace(item.Name)
+                ? "K"
+                : item.Name.Substring(0, 1).ToUpper();
 
-                        <td>
-                            <div class="user-info">
+                var surnameInitial =
+                string.IsNullOrWhiteSpace(item.Surname)
+                ? ""
+                : item.Surname.Substring(0, 1).ToUpper();
 
-                                <div class="user-avatar">
-                                    @item.Name.Substring(0, 1)@item.Surname.Substring(0, 1)
-                                </div>
+                <tr>
 
-                                <div>
-                                    <strong>@item.Name @item.Surname</strong>
-                                    <span>Kullanıcı</span>
-                                </div>
+                    <td>
+                        <div class="user-info">
 
+                            <div class="user-avatar">
+                                @nameInitial@surnameInitial
                             </div>
-                        </td>
 
-                        <td>
-                            @item.Email
-                        </td>
+                            <div class="user-identity">
+                                <strong>
+                                    @item.Name @item.Surname
+                                </strong>
 
-                        <td>
-                            @if (item.EmailConfirmed)
-                            {
-                                <span class="status status-confirmed">Doğrulandı</span>
-                            }
-                            else
-                            {
-                                <span class="status status-pending">Doğrulanmadı</span>
-                            }
-                        </td>
+                                <span>
+                                            Kayıtlı kullanıcı
+                                        </span>
+                            </div>
 
-                        <td>
-                            <div class="user-actions">
+                        </div>
+                    </td>
 
-                                <a asp-area="Admin"
-                                   asp-controller="User"
-                                   asp-action="RoleAssign"
-                                   asp-route-id="@item.Id"
-                                   class="user-action role">
-                                    Rol Ata
-                                </a>
-
-                                <form asp-area="Admin"
-                                      asp-controller="User"
-                                      asp-action="Delete"
-                                      asp-route-id="@item.Id"
-                                      method="post"
-                                      class="delete-form">
-
-                                    @Html.AntiForgeryToken()
-
-                                    <button type="submit"
-                                            class="user-action delete"
-                                            onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')">
-
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-                                            <path d="M3 6h18"/>
-                                            <path d="M8 6V4h8v2"/>
-                                            <path d="m19 6-1 14H6L5 6"/>
-                                            <path d="M10 10v6M14 10v6"/>
+                    <td>
+                        <div class="user-email">
+                                    <span class="user-email-icon">
+                                        <svg viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <rect x="3"
+                                                  y="5"
+                                                  width="18"
+                                                  height="14"
+                                                  rx="2">
+                                            </rect>
+                                            <path d="m3 7 9 6 9-6"></path>
                                         </svg>
+                                    </span>
 
-                                        Sil
-                                    </button>
+                            <span>@item.Email</span>
+                        </div>
+                    </td>
 
-                                </form>
+                    <td>
+                        @if (item.EmailConfirmed)
+                        {
+                        <span class="user-status user-status-confirmed">
+                                        <span class="user-status-dot"></span>
+                                        Doğrulandı
+                                    </span>
+                        }
+                        else
+                        {
+                        <span class="user-status user-status-pending">
+                                        <span class="user-status-dot"></span>
+                                        Doğrulanmadı
+                                    </span>
+                        }
+                    </td>
 
-                            </div>
-                        </td>
+                    <td>
+                        <div class="user-actions">
 
-                    </tr>
+                            <a asp-area="Admin"
+                               asp-controller="User"
+                               asp-action="RoleAssign"
+                               asp-route-id="@item.Id"
+                               class="user-action user-action-role">
+
+                                <svg viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <path d="M12 3 4 7v5c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V7l-8-4Z"></path>
+                                    <path d="M9 12h6"></path>
+                                    <path d="M12 9v6"></path>
+                                </svg>
+
+                                Rol Ata
+                            </a>
+
+                            <form asp-area="Admin"
+                                  asp-controller="User"
+                                  asp-action="Delete"
+                                  asp-route-id="@item.Id"
+                                  method="post"
+                                  class="user-delete-form">
+
+                                @Html.AntiForgeryToken()
+
+                                <button type="submit"
+                                        class="user-action user-action-delete"
+                                        onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?')">
+
+                                    <svg viewBox="0 0 24 24"
+                                         aria-hidden="true">
+                                        <path d="M3 6h18"></path>
+                                        <path d="M8 6V4h8v2"></path>
+                                        <path d="m19 6-1 14H6L5 6"></path>
+                                        <path d="M10 10v6M14 10v6"></path>
+                                    </svg>
+
+                                    Sil
+                                </button>
+
+                            </form>
+
+                        </div>
+                    </td>
+
+                </tr>
                 }
 
                 </tbody>
             </table>
+
+        </div>
         }
         else
         {
-            <div class="empty-users">
-                Sistemde kayıtlı kullanıcı bulunamadı.
+        <div class="users-empty">
+
+            <div class="users-empty-icon">
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9.5"
+                            cy="7"
+                            r="4">
+                    </circle>
+                    <path d="M18 8v6M15 11h6"></path>
+                </svg>
             </div>
+
+            <h2>Kullanıcı bulunamadı</h2>
+
+            <p>
+                Sistemde henüz kayıtlı kullanıcı bulunmuyor.
+            </p>
+
+        </div>
         }
 
-    </div>
+    </section>
 
 </div>

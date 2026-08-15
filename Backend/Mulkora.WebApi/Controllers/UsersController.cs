@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.UserDtos;
@@ -7,6 +7,7 @@ namespace Mulkora.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
@@ -38,5 +39,21 @@ namespace Mulkora.WebApi.Controllers
 
             return Ok();
         }
+        
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> Update(UpdateUserDto dto)
+        {
+            await _userService.TUpdateAsync(dto);
+            return Ok();      
+        }
+
+        [HttpGet("{id:guid}")]
+        [Authorize]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            var values = await _userService.GetUserByIdAsync(id);
+            return Ok(values);
+        } 
     }
 }

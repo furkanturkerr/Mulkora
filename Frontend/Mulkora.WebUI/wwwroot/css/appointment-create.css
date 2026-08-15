@@ -1,6 +1,6 @@
 .booking-page {
     min-height: calc(100vh - 90px);
-    padding: 60px 24px 90px;
+    padding: 100px 24px 90px;
     background:
             radial-gradient(
                     circle at 10% 10%,
@@ -444,7 +444,7 @@
 
 @media (max-width: 650px) {
     .booking-page {
-        padding: 30px 14px 60px;
+        padding: 70px 14px 60px;
     }
 
     .booking-topbar {

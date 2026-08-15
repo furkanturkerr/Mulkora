@@ -1,15 +1,16 @@
 .agents-page {
-    --agents-brand: #173a31;
-    --agents-brand-dark: #102d26;
-    --agents-accent: #d7a15f;
-    --agents-surface: #ffffff;
-    --agents-soft: #f7f5ef;
-    --agents-text: #17211d;
-    --agents-muted: #748079;
-    --agents-line: rgba(23, 33, 29, 0.11);
+    --admin-brand: #173a31;
+    --admin-brand-dark: #102d26;
+    --admin-accent: #d7a15f;
+    --admin-surface: #ffffff;
+    --admin-soft: #fafbf9;
+    --admin-text: #17211d;
+    --admin-muted: #7a8680;
+    --admin-line: #dfe4e1;
+
     width: 100%;
-    padding: 22px 8px 52px;
-    color: var(--agents-text);
+    padding: 0 0 52px;
+    color: var(--admin-text);
 }
 
 .agents-page *,
@@ -28,8 +29,6 @@
     font: inherit;
 }
 
-/* SVG İKONLAR */
-
 .agents-page svg,
 .agents-page svg path,
 .agents-page svg circle,
@@ -37,17 +36,16 @@
 .agents-page svg line,
 .agents-page svg polyline,
 .agents-page svg polygon {
-    fill: none !important;
-    stroke: currentColor !important;
-    stroke-width: 1.7 !important;
-    stroke-linecap: round !important;
-    stroke-linejoin: round !important;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .agents-page svg {
-    display: block !important;
+    display: block;
     flex: 0 0 auto;
-    overflow: visible;
 }
 
 /* BAŞLIK */
@@ -56,63 +54,56 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 28px;
-    margin-bottom: 18px;
-}
-
-.agents-eyebrow {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--agents-accent);
-    font-size: 11px;
-    font-weight: 850;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
+    gap: 24px;
+    margin-bottom: 24px;
 }
 
 .agents-heading h1 {
     margin: 0;
-    color: var(--agents-text);
-    font-size: clamp(28px, 2.6vw, 38px);
+    color: var(--admin-text);
+    font-size: 32px;
     font-weight: 850;
-    letter-spacing: -0.05em;
-    line-height: 1.1;
+    line-height: 1.15;
+    letter-spacing: -1.1px;
 }
 
 .agents-heading p {
-    margin: 6px 0 0;
-    color: var(--agents-muted);
+    margin: 9px 0 0;
+    color: var(--admin-muted);
     font-size: 13px;
+    line-height: 1.5;
 }
 
 /* DANIŞMAN EKLE */
 
 .agents-add-button {
     display: inline-flex;
-    min-height: 44px;
     align-items: center;
     justify-content: center;
     gap: 9px;
-    padding: 0 17px;
+    min-height: 44px;
+    padding: 0 18px;
     color: #ffffff;
-    background: var(--agents-brand);
+    background: var(--admin-brand);
+    border: 1px solid var(--admin-brand);
     border-radius: 12px;
-    box-shadow: 0 10px 24px rgba(23, 58, 49, 0.18);
-    font-size: 13px;
-    font-weight: 820;
+    box-shadow: 0 10px 24px rgba(23, 58, 49, 0.16);
+    font-size: 12px;
+    font-weight: 800;
     white-space: nowrap;
     transition: 0.2s ease;
 }
 
 .agents-add-button svg {
-    width: 18px;
-    height: 18px;
+    width: 17px;
+    height: 17px;
 }
 
 .agents-add-button:hover {
     color: #ffffff;
-    background: var(--agents-brand-dark);
-    transform: translateY(-2px);
+    background: var(--admin-brand-dark);
+    border-color: var(--admin-brand-dark);
+    transform: translateY(-1px);
 }
 
 /* FİLTRE */
@@ -120,14 +111,14 @@
 .agents-filter {
     display: grid;
     grid-template-columns: minmax(320px, 1fr) 220px auto;
-    align-items: end;
-    gap: 12px;
-    margin-bottom: 22px;
-    padding: 12px 14px;
-    background: var(--agents-surface);
-    border: 1px solid var(--agents-line);
-    border-radius: 16px;
-    box-shadow: 0 8px 22px rgba(22, 39, 33, 0.04);
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 0;
+    padding: 13px 14px;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-line);
+    border-radius: 16px 16px 0 0;
+    box-shadow: 0 8px 24px rgba(22, 39, 33, 0.04);
 }
 
 .agents-search {
@@ -138,60 +129,41 @@
     position: absolute;
     top: 50%;
     left: 15px;
-    width: 17px;
-    height: 17px;
-    color: #7d8882;
-    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    color: #78857f;
     pointer-events: none;
+    transform: translateY(-50%);
 }
 
-.agents-search input {
+.agents-search input,
+.agents-filter-item select {
     width: 100%;
-    height: 44px;
-    padding: 0 14px 0 42px;
+    height: 43px;
     outline: none;
-    color: var(--agents-text);
-    background: var(--agents-soft);
-    border: 1px solid transparent;
-    border-radius: 12px;
-    font-size: 13px;
+    color: var(--admin-text);
+    background: #fbfcfb;
+    border: 1px solid #d7dfdb;
+    border-radius: 11px;
+    font-size: 12px;
     transition: 0.2s ease;
 }
 
-.agents-search input:focus {
-    background: #ffffff;
-    border-color: rgba(23, 58, 49, 0.3);
-    box-shadow: 0 0 0 4px rgba(23, 58, 49, 0.06);
-}
-
-.agents-filter-item label {
-    display: block;
-    margin: 0 0 4px 3px;
-    color: var(--agents-muted);
-    font-size: 9px;
-    font-weight: 850;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
+.agents-search input {
+    padding: 0 14px 0 41px;
 }
 
 .agents-filter-item select {
-    width: 100%;
-    height: 44px;
     padding: 0 36px 0 13px;
-    outline: none;
-    color: var(--agents-text);
-    background: var(--agents-soft);
-    border: 1px solid transparent;
-    border-radius: 12px;
-    font-size: 13px;
-    font-weight: 700;
+    font-weight: 650;
     cursor: pointer;
 }
 
+.agents-search input:focus,
 .agents-filter-item select:focus {
     background: #ffffff;
-    border-color: rgba(23, 58, 49, 0.3);
-    box-shadow: 0 0 0 4px rgba(23, 58, 49, 0.06);
+    border-color: rgba(23, 58, 49, 0.45);
+    box-shadow: 0 0 0 4px rgba(23, 58, 49, 0.07);
 }
 
 .agents-filter-actions {
@@ -200,51 +172,82 @@
     gap: 7px;
 }
 
-.agents-filter-button {
+.agents-filter-button,
+.agents-clear-button {
     display: inline-flex;
-    height: 44px;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    padding: 0 16px;
-    color: #ffffff;
-    background: var(--agents-brand);
-    border: 0;
-    border-radius: 12px;
+    height: 43px;
+    padding: 0 15px;
+    border-radius: 11px;
     font-size: 12px;
-    font-weight: 820;
+    font-weight: 780;
+    white-space: nowrap;
+}
+
+.agents-filter-button {
+    gap: 7px;
+    color: #ffffff;
+    background: var(--admin-brand);
+    border: 1px solid var(--admin-brand);
     cursor: pointer;
     transition: 0.2s ease;
 }
 
 .agents-filter-button svg {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
 }
 
 .agents-filter-button:hover {
-    background: var(--agents-brand-dark);
+    background: var(--admin-brand-dark);
+    border-color: var(--admin-brand-dark);
 }
 
 .agents-clear-button {
-    display: inline-flex;
-    height: 44px;
-    align-items: center;
-    justify-content: center;
-    padding: 0 11px;
-    color: var(--agents-muted);
-    border-radius: 11px;
-    font-size: 12px;
-    font-weight: 750;
+    color: #69756f;
+    background: #ffffff;
+    border: 1px solid transparent;
     transition: 0.2s ease;
 }
 
 .agents-clear-button:hover {
-    color: var(--agents-brand);
-    background: var(--agents-soft);
+    color: var(--admin-brand);
+    background: #f3f6f4;
 }
 
-/* KART LİSTESİ */
+/* LİSTE ÜST BİLGİSİ */
+
+.agents-list-heading {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    margin-bottom: 20px;
+    padding: 0 16px;
+    background: #ffffff;
+    border-right: 1px solid var(--admin-line);
+    border-bottom: 1px solid var(--admin-line);
+    border-left: 1px solid var(--admin-line);
+    border-radius: 0 0 16px 16px;
+}
+
+.agents-list-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.agents-list-heading strong {
+    color: #3c4944;
+    font-size: 12px;
+}
+
+.agents-list-heading span {
+    color: #98a19d;
+    font-size: 10px;
+}
+
+/* KARTLAR */
 
 .agents-grid {
     display: grid;
@@ -259,10 +262,10 @@
     min-height: 400px;
     flex-direction: column;
     overflow: hidden;
-    background: var(--agents-surface);
-    border: 1px solid var(--agents-line);
-    border-radius: 23px;
-    box-shadow: 0 12px 35px rgba(22, 39, 33, 0.055);
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-line);
+    border-radius: 20px;
+    box-shadow: 0 12px 34px rgba(22, 39, 33, 0.05);
 }
 
 .agent-card::before {
@@ -272,10 +275,8 @@
     left: 0;
     height: 4px;
     content: "";
-    background: var(--agents-brand);
+    background: var(--admin-brand);
 }
-
-/* KART ÜST ALANI */
 
 .agent-card-header {
     display: flex;
@@ -293,13 +294,14 @@
 }
 
 .agent-profile img {
-    width: 68px;
-    height: 68px;
-    min-width: 68px;
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
     object-fit: cover;
+    background: #eef2ef;
     border: 3px solid #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(22, 39, 33, 0.14);
+    border-radius: 18px;
+    box-shadow: 0 7px 18px rgba(22, 39, 33, 0.13);
 }
 
 .agent-profile-info {
@@ -309,18 +311,19 @@
 .agent-profile-info h2 {
     margin: 0;
     overflow: hidden;
-    color: var(--agents-text);
+    color: var(--admin-text);
     font-size: 17px;
-    font-weight: 850;
+    font-weight: 830;
+    line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .agent-title {
     display: block;
-    margin-top: 3px;
+    margin-top: 4px;
     overflow: hidden;
-    color: var(--agents-muted);
+    color: var(--admin-muted);
     font-size: 11px;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -330,30 +333,27 @@
     display: flex;
     align-items: center;
     gap: 5px;
-    margin-top: 7px;
+    margin-top: 8px;
     overflow: hidden;
-    color: #5d6963;
-    font-size: 11px;
+    color: #63706a;
+    font-size: 10px;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .agent-location svg {
-    width: 14px;
-    height: 14px;
-    min-width: 14px;
+    width: 13px;
+    height: 13px;
 }
-
-/* DURUM */
 
 .agent-status {
     display: inline-flex;
-    min-height: 29px;
     align-items: center;
     gap: 6px;
+    min-height: 28px;
     padding: 0 10px;
     border-radius: 999px;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 850;
     white-space: nowrap;
 }
@@ -362,8 +362,8 @@
     width: 6px;
     height: 6px;
     flex: 0 0 6px;
-    border-radius: 50%;
     background: currentColor;
+    border-radius: 50%;
 }
 
 .agent-status-active {
@@ -381,28 +381,24 @@
     background: #ecefeb;
 }
 
-/* AÇIKLAMA */
-
 .agent-about {
     display: -webkit-box;
     min-height: 56px;
     margin: 0;
     padding: 0 22px;
     overflow: hidden;
-    color: #66716c;
-    font-size: 12px;
-    line-height: 1.55;
+    color: #68736e;
+    font-size: 11px;
+    line-height: 1.6;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
 }
-
-/* DETAYLAR */
 
 .agent-details {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 9px;
-    margin: 19px 22px 21px;
+    margin: 18px 22px 21px;
 }
 
 .agent-detail-item {
@@ -410,29 +406,28 @@
     min-width: 0;
     min-height: 62px;
     align-items: center;
-    gap: 11px;
-    padding: 11px;
-    background: var(--agents-soft);
-    border: 1px solid rgba(23, 33, 29, 0.06);
-    border-radius: 13px;
+    gap: 10px;
+    padding: 10px;
+    background: #f7f6f1;
+    border: 1px solid rgba(23, 33, 29, 0.07);
+    border-radius: 12px;
 }
 
 .agent-detail-icon {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--agents-brand);
+    width: 37px;
+    height: 37px;
+    min-width: 37px;
+    color: var(--admin-brand);
     background: #e5efec;
-    border-radius: 11px;
+    border-radius: 10px;
 }
 
 .agent-detail-icon svg {
-    width: 19px;
-    height: 19px;
-    min-width: 19px;
+    width: 18px;
+    height: 18px;
 }
 
 .agent-detail-content {
@@ -441,66 +436,62 @@
 
 .agent-detail-content span {
     display: block;
-    color: var(--agents-muted);
-    font-size: 9px;
-    line-height: 1.2;
+    color: var(--admin-muted);
+    font-size: 8px;
 }
 
 .agent-detail-content strong {
     display: block;
     margin-top: 3px;
     overflow: hidden;
-    color: var(--agents-text);
-    font-size: 11px;
+    color: var(--admin-text);
+    font-size: 10px;
     font-weight: 800;
-    line-height: 1.2;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-
-/* KART ALT BUTONLARI */
 
 .agent-card-footer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 9px;
     margin-top: auto;
-    padding: 16px 22px 22px;
-    border-top: 1px solid var(--agents-line);
+    padding: 15px 22px 21px;
+    border-top: 1px solid var(--admin-line);
 }
 
 .agent-action {
     appearance: none;
     display: inline-flex;
-    width: 100%;
-    min-height: 43px;
     align-items: center;
     justify-content: center;
     gap: 8px;
+    width: 100%;
+    min-height: 42px;
     margin: 0;
     padding: 0 13px;
-    border-radius: 12px;
-    font-family: inherit;
+    border-radius: 11px;
+    font: inherit;
     font-size: 11px;
-    font-weight: 820;
-    line-height: 1;
+    font-weight: 800;
     cursor: pointer;
+    transition: 0.2s ease;
 }
 
 .agent-action svg {
-    width: 16px;
-    height: 16px;
+    width: 15px;
+    height: 15px;
 }
 
 .agent-action-edit {
-    color: var(--agents-brand);
+    color: var(--admin-brand);
     background: #e5ece8;
     border: 1px solid transparent;
 }
 
 .agent-action-edit:hover {
     color: #ffffff;
-    background: var(--agents-brand);
+    background: var(--admin-brand);
 }
 
 .agent-delete-form {
@@ -519,7 +510,7 @@
     background: #b94a48;
 }
 
-/* BOŞ LİSTE */
+/* BOŞ DURUM */
 
 .agents-empty {
     display: grid;
@@ -529,42 +520,42 @@
     padding: 45px;
     text-align: center;
     background: #ffffff;
-    border: 1px solid var(--agents-line);
-    border-radius: 24px;
+    border: 1px solid var(--admin-line);
+    border-radius: 20px;
 }
 
 .agents-empty-icon {
-    width: 78px;
-    height: 78px;
     display: grid;
+    width: 76px;
+    height: 76px;
     place-items: center;
-    margin-bottom: 20px;
-    color: var(--agents-brand);
+    margin-bottom: 19px;
+    color: var(--admin-brand);
     background: #e5ece8;
-    border-radius: 24px;
+    border-radius: 22px;
 }
 
 .agents-empty-icon svg {
-    width: 32px;
-    height: 32px;
+    width: 31px;
+    height: 31px;
 }
 
 .agents-empty h2 {
     margin: 0;
-    font-size: 25px;
+    font-size: 24px;
 }
 
 .agents-empty p {
     margin: 8px 0 22px;
-    color: var(--agents-muted);
+    color: var(--admin-muted);
     font-size: 13px;
 }
 
 /* TABLET */
 
-@media (max-width: 1100px) {
+@media (max-width: 1150px) {
     .agents-filter {
-        grid-template-columns: minmax(260px, 1fr) 200px;
+        grid-template-columns: minmax(260px, 1fr) 190px;
     }
 
     .agents-filter-actions {
@@ -595,13 +586,19 @@
     }
 
     .agents-filter {
-        padding: 11px;
+        border-radius: 16px 16px 0 0;
     }
 
     .agents-filter-actions {
         grid-column: auto;
         display: grid;
         grid-template-columns: 1fr auto;
+    }
+
+    .agents-list-heading > div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
     }
 
     .agent-card-header {
@@ -625,7 +622,7 @@
 
 @media (max-width: 480px) {
     .agents-page {
-        padding: 18px 0 42px;
+        padding-bottom: 40px;
     }
 
     .agent-card-footer {

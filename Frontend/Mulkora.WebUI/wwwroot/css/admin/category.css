@@ -1,0 +1,639 @@
+.categories-page,
+.category-form-page {
+    --admin-brand: #173a31;
+    --admin-brand-dark: #102d26;
+    --admin-surface: #ffffff;
+    --admin-soft: #f7f6f1;
+    --admin-text: #17211d;
+    --admin-muted: #7a8680;
+    --admin-line: #dfe4e1;
+    --admin-danger: #b94a48;
+
+    width: 100%;
+    padding: 0 0 52px;
+    color: var(--admin-text);
+}
+
+.categories-page *,
+.categories-page *::before,
+.categories-page *::after,
+.category-form-page *,
+.category-form-page *::before,
+.category-form-page *::after {
+    box-sizing: border-box;
+}
+
+.categories-page a,
+.category-form-page a {
+    text-decoration: none;
+}
+
+.categories-page button,
+.categories-page input,
+.categories-page select,
+.category-form-page button,
+.category-form-page input,
+.category-form-page select {
+    font: inherit;
+}
+
+.categories-page svg,
+.category-form-page svg,
+.categories-page svg path,
+.categories-page svg circle,
+.categories-page svg rect,
+.category-form-page svg path,
+.category-form-page svg circle,
+.category-form-page svg rect {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.categories-page svg,
+.category-form-page svg {
+    display: block;
+    flex: 0 0 auto;
+}
+
+/* SAYFA BAŞLIKLARI */
+
+.categories-heading,
+.category-form-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.categories-heading h1,
+.category-form-heading h1 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 32px;
+    font-weight: 850;
+    line-height: 1.15;
+    letter-spacing: -1.1px;
+}
+
+.categories-heading p,
+.category-form-heading p {
+    margin: 9px 0 0;
+    color: var(--admin-muted);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* ANA BUTONLAR */
+
+.category-add-button,
+.category-save-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 0 18px;
+    color: #ffffff;
+    background: var(--admin-brand);
+    border: 1px solid var(--admin-brand);
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(23, 58, 49, 0.15);
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.category-add-button svg,
+.category-save-button svg {
+    width: 17px;
+    height: 17px;
+}
+
+.category-add-button:hover,
+.category-save-button:hover {
+    color: #ffffff;
+    background: var(--admin-brand-dark);
+    border-color: var(--admin-brand-dark);
+    transform: translateY(-1px);
+}
+
+/* LİSTE KARTI */
+
+.categories-card {
+    overflow: hidden;
+    background: var(--admin-surface);
+    border: 1px solid var(--admin-line);
+    border-radius: 16px;
+    box-shadow: 0 9px 26px rgba(22, 39, 33, 0.045);
+}
+
+.categories-card-heading {
+    display: flex;
+    align-items: center;
+    min-height: 55px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.categories-card-heading > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.categories-card-heading strong {
+    color: #3c4944;
+    font-size: 12px;
+}
+
+.categories-card-heading span {
+    color: #98a19d;
+    font-size: 10px;
+}
+
+/* TABLO */
+
+.categories-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.categories-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+}
+
+.categories-table thead {
+    background: #f8f8f5;
+}
+
+.categories-table th {
+    height: 39px;
+    padding: 0 16px;
+    color: #7f8b85;
+    font-size: 9px;
+    font-weight: 850;
+    letter-spacing: 0.16em;
+    text-align: left;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.categories-table td {
+    height: 74px;
+    padding: 12px 16px;
+    color: #3e4a45;
+    font-size: 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.categories-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.categories-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.categories-table tbody tr:hover {
+    background: #fbfcfa;
+}
+
+/* KATEGORİ BİLGİSİ */
+
+.category-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 210px;
+}
+
+.category-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    color: var(--admin-brand);
+    background: #e5efec;
+    border: 1px solid #d4e2dd;
+    border-radius: 13px;
+}
+
+.category-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.category-identity strong {
+    display: block;
+    color: var(--admin-text);
+    font-size: 12px;
+    font-weight: 820;
+}
+
+.category-identity span {
+    display: block;
+    margin-top: 4px;
+    color: #919b96;
+    font-size: 10px;
+}
+
+.category-id-column {
+    width: 28%;
+}
+
+.category-id-value {
+    display: inline-flex;
+    align-items: center;
+    min-height: 30px;
+    padding: 0 10px;
+    color: #5f6c66;
+    font-size: 10px;
+    font-weight: 750;
+    background: var(--admin-soft);
+    border: 1px solid #e3e6e2;
+    border-radius: 8px;
+}
+
+/* DURUM */
+
+.category-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    padding: 0 10px;
+    font-size: 9px;
+    font-weight: 850;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.category-status-dot {
+    width: 6px;
+    height: 6px;
+    flex: 0 0 6px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+.category-status-active {
+    color: #24694a;
+    background: #e1f0e8;
+}
+
+.category-status-passive {
+    color: #68736e;
+    background: #ecefeb;
+}
+
+/* LİSTE İŞLEMLERİ */
+
+.category-actions-heading {
+    width: 130px;
+    text-align: right !important;
+}
+
+.category-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 7px;
+}
+
+.category-delete-form {
+    margin: 0;
+}
+
+.category-action {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.category-action svg {
+    width: 15px;
+    height: 15px;
+}
+
+.category-action-edit {
+    color: var(--admin-brand);
+    background: #f4f8f6;
+    border: 1px solid #a9c8bd;
+}
+
+.category-action-edit:hover {
+    color: #ffffff;
+    background: var(--admin-brand);
+    border-color: var(--admin-brand);
+}
+
+.category-action-delete {
+    color: #c04442;
+    background: #fff8f8;
+    border: 1px solid #efb5b4;
+}
+
+.category-action-delete:hover {
+    color: #ffffff;
+    background: var(--admin-danger);
+    border-color: var(--admin-danger);
+}
+
+/* FORM KARTI */
+
+.category-form-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid var(--admin-line);
+    border-radius: 16px;
+    box-shadow: 0 9px 26px rgba(22, 39, 33, 0.045);
+}
+
+.category-form-card-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 78px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--admin-line);
+}
+
+.category-form-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    color: var(--admin-brand);
+    background: #e5efec;
+    border-radius: 13px;
+}
+
+.category-form-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+.category-form-card-heading h2 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 15px;
+    font-weight: 820;
+}
+
+.category-form-card-heading p {
+    margin: 5px 0 0;
+    color: var(--admin-muted);
+    font-size: 11px;
+}
+
+/* FORM */
+
+.category-form {
+    padding: 25px 24px 22px;
+}
+
+.category-validation-summary {
+    margin-bottom: 20px;
+    padding: 14px 16px;
+    color: #a23d3b;
+    font-size: 12px;
+    background: #fff3f3;
+    border: 1px solid #efc2c1;
+    border-radius: 11px;
+}
+
+.category-validation-summary:empty,
+.category-validation-summary.validation-summary-valid {
+    display: none;
+}
+
+.category-validation-summary ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.category-form-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: 18px;
+}
+
+.category-field label {
+    display: block;
+    margin-bottom: 8px;
+    color: #3d4b45;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.category-field input,
+.category-field select {
+    width: 100%;
+    height: 48px;
+    padding: 0 14px;
+    outline: none;
+    color: var(--admin-text);
+    background: #fbfcfb;
+    border: 1px solid #d7dfdb;
+    border-radius: 11px;
+    font-size: 12px;
+    transition: 0.2s ease;
+}
+
+.category-field select {
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+.category-field input:focus,
+.category-field select:focus {
+    background: #ffffff;
+    border-color: rgba(23, 58, 49, 0.45);
+    box-shadow: 0 0 0 4px rgba(23, 58, 49, 0.07);
+}
+
+.category-field-error {
+    display: block;
+    margin-top: 7px;
+    color: #bd4141;
+    font-size: 10px;
+}
+
+/* BİLGİLENDİRME */
+
+.category-form-information {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 20px;
+    padding: 14px 15px;
+    color: #5e7069;
+    background: #f2f7f5;
+    border: 1px solid #dce9e4;
+    border-radius: 11px;
+}
+
+.category-form-information svg {
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    color: #397461;
+}
+
+.category-form-information p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+/* FORM BUTONLARI */
+
+.category-form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--admin-line);
+}
+
+.category-cancel-button,
+.category-back-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 0 15px;
+    color: #64716b;
+    background: #ffffff;
+    border: 1px solid #d7dedb;
+    border-radius: 11px;
+    font-size: 11px;
+    font-weight: 750;
+    transition: 0.2s ease;
+}
+
+.category-back-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.category-cancel-button:hover,
+.category-back-button:hover {
+    color: var(--admin-brand);
+    border-color: #9db8af;
+}
+
+/* BOŞ DURUM */
+
+.categories-empty {
+    display: grid;
+    min-height: 390px;
+    place-items: center;
+    align-content: center;
+    padding: 45px;
+    text-align: center;
+}
+
+.categories-empty-icon {
+    display: grid;
+    width: 76px;
+    height: 76px;
+    place-items: center;
+    margin-bottom: 19px;
+    color: var(--admin-brand);
+    background: #e5ece8;
+    border-radius: 22px;
+}
+
+.categories-empty-icon svg {
+    width: 31px;
+    height: 31px;
+}
+
+.categories-empty h2 {
+    margin: 0;
+    color: var(--admin-text);
+    font-size: 24px;
+}
+
+.categories-empty p {
+    margin: 8px 0 22px;
+    color: var(--admin-muted);
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 760px) {
+    .categories-heading,
+    .category-form-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .category-add-button,
+    .category-back-button {
+        width: 100%;
+    }
+
+    .categories-card-heading > div {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .category-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .category-id-column {
+        display: none;
+    }
+
+    .category-form {
+        padding: 22px 17px 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .categories-page,
+    .category-form-page {
+        padding-bottom: 40px;
+    }
+
+    .category-form-actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .category-cancel-button,
+    .category-save-button {
+        width: 100%;
+    }
+}

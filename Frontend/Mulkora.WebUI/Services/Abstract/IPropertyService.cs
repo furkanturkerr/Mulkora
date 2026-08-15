@@ -11,7 +11,7 @@ public interface IPropertyService : IGenericService<ResultPropertyDto, CreatePro
     Task RejectAsync(int id, string token);
     Task<GetByIdPropertyDto> GetByIdAsync(int id);
     Task<HttpResponseMessage> UpdatePropertyAsync(UpdatePropertyDto dto, string token);
-    Task<List<ResultPropertyDto>> GetFilterProperty(string? text, int? IsStatus, string? City, string? District, int? ListingType, int page, int pageSize);
+    Task<List<ResultPropertyDto>> GetFilterProperty(string? text, int? IsStatus, string? City, string? District, int? ListingType, int page, int pageSize, string token);
     Task<List<ResultPropertyDto>> GetFilterPropertyAll(string? city, string? district, int? listingType, int? maxPrice, int? minPrice, int? categoryId, int? roomCount, int page, int pageSize);
     Task<GetByIdPropertyDto?> GetPublishedByIdAsync(int id);
 }

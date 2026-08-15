@@ -2,40 +2,206 @@
 
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Kategori Yönetimi";
 }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+      href="~/css/admin/category.css"
+      asp-append-version="true">
 
+<div class="categories-page">
 
+    <div class="categories-heading">
 
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>Kategori ID</th>
-        <th>Kategori Adı</th>
-        <th>Durum</th>
-        <th>Güncelle</th>
-        <th>Sil</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var category in Model)
-    {
-        <tr>
-            <td>@category.CategoryId</td>
-            <td>@category.Name</td>
-            <td>@category.IsActive</td>
-            <th><a href="~/Admin/Category/Update/@category.CategoryId" class="btn btn-dark">Güncelle</a></th>
-            <th>
-                <form method="post" action="~/Admin/Category/Delete/@category.CategoryId">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">Sil</button>
-                </form>
-            </th>
-        </tr>
-    }
-    </tbody>
-</table>
+        <div>
+            <h1>Kategori Yönetimi</h1>
 
-<br/>
-<a href="~/Admin/Category/Create" class="btn btn-dark">Yeni Kategori Ekle</a>
+            <p>
+                İlanlarda kullanılan kategorileri
+                görüntüleyin ve yönetin.
+            </p>
+        </div>
+
+        <a asp-area="Admin"
+           asp-controller="Category"
+           asp-action="Create"
+           class="category-add-button">
+
+            <svg viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="M12 5v14"></path>
+                <path d="M5 12h14"></path>
+            </svg>
+
+            Yeni Kategori Ekle
+        </a>
+
+    </div>
+
+    <section class="categories-card">
+
+        <div class="categories-card-heading">
+
+            <div>
+                <strong>Kategori listesi</strong>
+
+                <span>
+                    Sistemde toplam @(Model?.Count ?? 0) kategori bulunuyor
+                </span>
+            </div>
+
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="categories-table-wrapper">
+
+                <table class="categories-table">
+
+                    <thead>
+                    <tr>
+                        <th>Kategori</th>
+                        <th class="category-id-column">Kategori ID</th>
+                        <th>Durum</th>
+                        <th class="category-actions-heading">İşlemler</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    @foreach (var category in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <div class="category-info">
+
+                                    <div class="category-icon">
+                                        <svg viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <path d="M4 4h6v6H4V4Z"></path>
+                                            <path d="M14 4h6v6h-6V4Z"></path>
+                                            <path d="M4 14h6v6H4v-6Z"></path>
+                                            <path d="M14 14h6v6h-6v-6Z"></path>
+                                        </svg>
+                                    </div>
+
+                                    <div class="category-identity">
+                                        <strong>@category.Name</strong>
+                                        <span>İlan kategorisi</span>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td class="category-id-column">
+                                <span class="category-id-value">
+                                    #@category.CategoryId
+                                </span>
+                            </td>
+
+                            <td>
+                                @if (category.IsActive)
+                                {
+                                    <span class="category-status category-status-active">
+                                        <span class="category-status-dot"></span>
+                                        Aktif
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="category-status category-status-passive">
+                                        <span class="category-status-dot"></span>
+                                        Pasif
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="category-actions">
+
+                                    <a asp-area="Admin"
+                                       asp-controller="Category"
+                                       asp-action="Update"
+                                       asp-route-id="@category.CategoryId"
+                                       class="category-action category-action-edit"
+                                       title="Kategoriyi düzenle">
+
+                                        <svg viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <path d="m4 20 4.5-1L19 8.5 15.5 5 5 15.5 4 20Z"></path>
+                                            <path d="m13.5 7 3.5 3.5"></path>
+                                        </svg>
+
+                                    </a>
+
+                                    <form asp-area="Admin"
+                                          asp-controller="Category"
+                                          asp-action="Delete"
+                                          asp-route-id="@category.CategoryId"
+                                          method="post"
+                                          class="category-delete-form">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="category-action category-action-delete"
+                                                title="Kategoriyi sil"
+                                                onclick="return confirm('Bu kategoriyi silmek istediğinize emin misiniz?')">
+
+                                            <svg viewBox="0 0 24 24"
+                                                 aria-hidden="true">
+                                                <path d="M3 6h18"></path>
+                                                <path d="M8 6V4h8v2"></path>
+                                                <path d="m19 6-1 14H6L5 6"></path>
+                                                <path d="M10 10v6M14 10v6"></path>
+                                            </svg>
+
+                                        </button>
+
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="categories-empty">
+
+                <div class="categories-empty-icon">
+                    <svg viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="M4 4h6v6H4V4Z"></path>
+                        <path d="M14 4h6v6h-6V4Z"></path>
+                        <path d="M4 14h6v6H4v-6Z"></path>
+                        <path d="M17 14v6M14 17h6"></path>
+                    </svg>
+                </div>
+
+                <h2>Henüz kategori bulunmuyor</h2>
+
+                <p>
+                    İlanlarda kullanılacak ilk kategoriyi oluşturun.
+                </p>
+
+                <a asp-area="Admin"
+                   asp-controller="Category"
+                   asp-action="Create"
+                   class="category-add-button">
+                    Yeni Kategori Ekle
+                </a>
+
+            </div>
+        }
+
+    </section>
+
+</div>

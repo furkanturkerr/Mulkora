@@ -2,40 +2,249 @@
 
 @{
     Layout = "_AdminLayout";
+    ViewData["Title"] = "Özellik Yönetimi";
+
+    var featureCount = Model?.Count ?? 0;
 }
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet"
+      href="~/css/admin/feature.css"
+      asp-append-version="true">
 
+<div class="feature-page">
 
+    <header class="feature-page-header">
+        <div>
+            <h1>Özellik Yönetimi</h1>
 
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th>Özellik ID</th>
-        <th>Özellik Adı</th>
-        <th>Durum</th>
-        <th>Güncelle</th>
-        <th>Sil</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var Feature in Model)
-    {
-        <tr>
-            <td>@Feature.FeatureId</td>
-            <td>@Feature.Name</td>
-            <td>@Feature.IsActive</td>
-            <th><a href="~/Admin/Feature/Update/@Feature.FeatureId" class="btn btn-dark">Güncelle</a></th>
-            <th>
-                <form method="post" action="~/Admin/Feature/Delete/@Feature.FeatureId">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">Sil</button>
-                </form>
-            </th>
-        </tr>
-    }
-    </tbody>
-</table>
+            <p>
+                İlanlarda kullanılabilecek özellikleri
+                görüntüleyin ve yönetin.
+            </p>
+        </div>
 
-<br/>
-<a href="~/Admin/Feature/Create" class="btn btn-dark">Yeni Özellik Ekle</a>
+        <a asp-area="Admin"
+           asp-controller="Feature"
+           asp-action="Create"
+           class="feature-primary-button">
+
+            <svg width="18"
+                 height="18"
+                 viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="1.8">
+
+                <path d="M12 5v14"></path>
+                <path d="M5 12h14"></path>
+            </svg>
+
+            Yeni Özellik Ekle
+        </a>
+    </header>
+
+    <section class="feature-card">
+
+        <div class="feature-card-header">
+            <div>
+                <strong>Özellik listesi</strong>
+
+                <span>
+                    Sistemde toplam
+                    <b>@featureCount</b>
+                    özellik bulunuyor
+                </span>
+            </div>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="feature-table-wrapper">
+
+                <table class="feature-table">
+
+                    <thead>
+                    <tr>
+                        <th>Özellik</th>
+                        <th>Özellik ID</th>
+                        <th>Durum</th>
+                        <th class="feature-actions-title">
+                            İşlemler
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    @foreach (var feature in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <div class="feature-info">
+
+                                    <div class="feature-info-icon">
+                                        <svg width="18"
+                                             height="18"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="1.8">
+
+                                            <path d="m12 3 2.6 5.3
+                                                     5.9.9-4.3 4.2
+                                                     1 5.9-5.2-2.8
+                                                     -5.2 2.8 1-5.9
+                                                     -4.3-4.2 5.9-.9L12 3Z">
+                                            </path>
+                                        </svg>
+                                    </div>
+
+                                    <div>
+                                        <strong>@feature.Name</strong>
+
+                                        <span>
+                                            İlan özelliği
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="feature-id">
+                                    #@feature.FeatureId
+                                </span>
+                            </td>
+
+                            <td>
+                                @if (feature.IsActive)
+                                {
+                                    <span class="feature-status active">
+                                        <span></span>
+                                        Aktif
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="feature-status passive">
+                                        <span></span>
+                                        Pasif
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="feature-actions">
+
+                                    <a asp-area="Admin"
+                                       asp-controller="Feature"
+                                       asp-action="Update"
+                                       asp-route-id="@feature.FeatureId"
+                                       class="feature-action edit"
+                                       title="Özelliği düzenle">
+
+                                        <svg width="16"
+                                             height="16"
+                                             viewBox="0 0 24 24"
+                                             fill="none"
+                                             stroke="currentColor"
+                                             stroke-width="1.8">
+
+                                            <path d="m4 20 4.5-1
+                                                     10.5-10.5L15.5 5
+                                                     5 15.5 4 20Z">
+                                            </path>
+
+                                            <path d="m13.5 7 3.5 3.5">
+                                            </path>
+                                        </svg>
+
+                                        Düzenle
+                                    </a>
+
+                                    <form asp-area="Admin"
+                                          asp-controller="Feature"
+                                          asp-action="Delete"
+                                          asp-route-id="@feature.FeatureId"
+                                          method="post"
+                                          class="feature-delete-form">
+
+                                        @Html.AntiForgeryToken()
+
+                                        <button type="submit"
+                                                class="feature-action delete"
+                                                onclick="return confirm(
+                                                'Bu özelliği silmek istediğinize emin misiniz?')">
+
+                                            <svg width="16"
+                                                 height="16"
+                                                 viewBox="0 0 24 24"
+                                                 fill="none"
+                                                 stroke="currentColor"
+                                                 stroke-width="1.8">
+
+                                                <path d="M3 6h18"></path>
+                                                <path d="M8 6V4h8v2"></path>
+                                                <path d="m19 6-1 14H6L5 6">
+                                                </path>
+                                                <path d="M10 10v6"></path>
+                                                <path d="M14 10v6"></path>
+                                            </svg>
+
+                                            Sil
+                                        </button>
+                                    </form>
+
+                                </div>
+                            </td>
+
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="feature-empty">
+
+                <div class="feature-empty-icon">
+                    <svg width="30"
+                         height="30"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.7">
+
+                        <path d="m12 3 2.6 5.3
+                                 5.9.9-4.3 4.2
+                                 1 5.9-5.2-2.8
+                                 -5.2 2.8 1-5.9
+                                 -4.3-4.2 5.9-.9L12 3Z">
+                        </path>
+                    </svg>
+                </div>
+
+                <h2>Henüz özellik bulunmuyor</h2>
+
+                <p>
+                    İlanlarda kullanılacak ilk özelliği oluşturun.
+                </p>
+
+                <a asp-area="Admin"
+                   asp-controller="Feature"
+                   asp-action="Create"
+                   class="feature-primary-button">
+
+                    Yeni Özellik Ekle
+                </a>
+
+            </div>
+        }
+
+    </section>
+
+</div>

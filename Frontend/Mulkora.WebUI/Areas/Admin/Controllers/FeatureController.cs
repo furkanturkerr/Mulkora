@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Dto.FeatureDtos;
 using Mulkora.WebUI.Services.Abstract;
@@ -5,6 +7,7 @@ using Mulkora.WebUI.Services.Abstract;
 namespace Mulkora.WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [AutoValidateAntiforgeryToken]
 
 public class FeatureController : Controller
@@ -31,27 +34,31 @@ public class FeatureController : Controller
     [HttpPost]
     public async Task<IActionResult> Create(CreateFeatureDto dto)
     {
-        await _featureService.TInsertAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        await _featureService.TInsertAsync(dto, token);
         return RedirectToAction(nameof(Index));  
     }
 
     public async Task<IActionResult> Update(int id)
     {
-        var value = await _featureService.TGetByIdAsync(id);
+        var token = User.FindFirstValue("access_token");
+        var value = await _featureService.TGetByIdAsync(id, token);
         return View(value);
     }
 
-    [HttpPut]
+    [HttpPost]
     public async Task<IActionResult> Update(UpdateFeatureDto dto)
     {
-        await _featureService.TUpdateAsync(dto);
+        var token = User.FindFirstValue("access_token");
+        await _featureService.TUpdateAsync(dto, token);
         return RedirectToAction(nameof(Index)); 
     }
 
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        await _featureService.TDeleteAsync(id);
+        var token = User.FindFirstValue("access_token");
+        await _featureService.TDeleteAsync(id, token);
         return RedirectToAction(nameof(Index));
     }
 }

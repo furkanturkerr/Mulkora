@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
@@ -17,6 +18,7 @@ namespace Mulkora.WebApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Get(int page)
         {
             var values = await _contactService.GetFullListAsync(page);
@@ -31,6 +33,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _contactService.TDeleteAsync(id);

@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Mulkora.WebUI.Services.Abstract;
 
 namespace Mulkora.WebUI.Services.Concrete;
@@ -21,26 +22,31 @@ public abstract class GenericService<TResultDto, TCreateDto, TUpdateDto> : IGene
         return await response.Content.ReadFromJsonAsync<List<TResultDto>>() ?? [];
     }
 
-    public async Task<TUpdateDto?> TGetByIdAsync(int id)
+    public async Task<TUpdateDto?> TGetByIdAsync(int id, string token)
     {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
         var response = await _client.GetAsync($"{ApiRoute}/{id}");
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<TUpdateDto>();
     }
 
-    public async Task<HttpResponseMessage> TInsertAsync(TCreateDto dto)
+    public async Task<HttpResponseMessage> TInsertAsync(TCreateDto dto, string token)
     {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return await _client.PostAsJsonAsync(ApiRoute, dto);
     }
 
-    public async Task<HttpResponseMessage> TUpdateAsync(TUpdateDto dto)
+    public async Task<HttpResponseMessage> TUpdateAsync(TUpdateDto dto, string token)
     {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return await _client.PutAsJsonAsync(ApiRoute, dto);
     }
 
-    public async Task<HttpResponseMessage> TDeleteAsync(int id)
+    public async Task<HttpResponseMessage> TDeleteAsync(int id, string token)
     {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return await _client.DeleteAsync($"{ApiRoute}/{id}");
     }
 }

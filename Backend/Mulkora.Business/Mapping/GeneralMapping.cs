@@ -72,6 +72,10 @@ public class GeneralMapping : Profile
         CreateMap<UpdatePropertyImageDto, PropertyImage>().ReverseMap();
         
         CreateMap<CreateAppointmentDto, Appointment>();
+        CreateMap<Appointment, ResultAppointmentDto>()
+            .ForMember(x=>x.AgentNameSurname, option => option.MapFrom(source => source.Agent.AppUser.Name + " " + source.Agent.AppUser.Surname))
+            .ForMember(x=>x.PropertyAddress, option => option.MapFrom(source => source.Property.City + " " + source.Property.District))
+            .ForMember(x=>x.Title, option => option.MapFrom(source => source.Property.Title));
         
 
 

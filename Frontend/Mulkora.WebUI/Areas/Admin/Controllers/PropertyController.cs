@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Mulkora.Dto.PropertyDtos;
@@ -9,6 +10,7 @@ using Mulkora.WebUI.Services.Abstract;
 namespace Mulkora.WebUI.Areas.Admin.Controllers;
 
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [AutoValidateAntiforgeryToken]
 
 public class PropertyController : Controller
@@ -30,8 +32,9 @@ public class PropertyController : Controller
     // GET
     public async Task<IActionResult> PropertyList(string? text, int? IsStatus, string? City, string? District, int? ListingType, int page = 1)
     {
+        var token = User.FindFirstValue("access_token");
         const int pageSize = 8;
-        var values = await _propertyService.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize);
+        var values = await _propertyService.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize, token);
         return View(values);
     }
     
@@ -112,7 +115,8 @@ public class PropertyController : Controller
     [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
-        await _propertyService.TDeleteAsync(id);
+        var token = User.FindFirstValue("access_token");
+        await _propertyService.TDeleteAsync(id, token);
         return RedirectToAction(nameof(PropertyList));  
     }
 

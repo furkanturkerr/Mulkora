@@ -19,6 +19,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get()
         {
             var values = await _propertyService.TGetListAsync();
@@ -26,6 +27,7 @@ namespace Mulkora.WebApi.Controllers
         }
 
         [HttpGet("filter")]
+        [Authorize]
         public async Task<IActionResult> GetFilter(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType, int page = 1, int pageSize = 8)
         {
             var values = await _propertyService.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize);
@@ -34,6 +36,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpGet("filterAll")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice,
             int? categoryId, int? roomCount, int page = 1, int pageSize = 8)
         {
@@ -108,7 +111,8 @@ namespace Mulkora.WebApi.Controllers
             return Ok();      
         }
         
-        [HttpDelete]
+        [HttpDelete("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             await _propertyService.TDeleteAsync(id);
@@ -116,6 +120,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpPatch("{id}/send-for-approval")]
+        [Authorize(Roles = "Agent")]
         public async Task<IActionResult> SendForApproval(int id)
         {
             var agentIdClaim = User.FindFirstValue("AgentId");

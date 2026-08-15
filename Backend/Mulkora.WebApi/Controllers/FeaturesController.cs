@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.FeatureDtos;
@@ -31,6 +32,7 @@ namespace Mulkora.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CreateFeatureDto dto)
         {
             await _featureService.TInsertAsync(dto);
@@ -38,6 +40,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(UpdateFeatureDto dto)
         {
             await _featureService.TUpdateAsync(dto);
@@ -45,6 +48,7 @@ namespace Mulkora.WebApi.Controllers
         }
         
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _featureService.TDeleteAsync(id);
