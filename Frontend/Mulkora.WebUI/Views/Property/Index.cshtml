@@ -1,0 +1,260 @@
+@model Mulkora.WebUI.Models.PublicPropertyListViewModel
+
+@{
+    Layout = "_Layout";
+
+    var startPage = Math.Max(1, Model.CurrentPage - 2);
+    var endPage = Math.Min(Model.TotalPages, Model.CurrentPage + 2);
+}
+
+<section class="page-hero">
+    <div class="container">
+        <div class="page-hero-shell">
+            <div class="breadcrumbs">
+                <a asp-controller="Default" asp-action="Index">Ana Sayfa</a>
+                <span>/</span>
+                <span>İlanlar</span>
+            </div>
+
+            <div class="page-title">
+                <h1>Satılık ve kiralık ilanlar</h1>
+                <p>Bütçenize, konumunuza ve yaşam tarzınıza uygun güncel portföyleri karşılaştırın.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-sm">
+    <div class="container">
+        <div class="listing-layout">
+
+            <form asp-controller="Property" asp-action="Index" method="get" class="filter-panel">
+                <div class="filter-head">
+                    <h3>Filtreler</h3>
+
+                    <button class="round-btn" data-close-filter type="button" aria-label="Filtreleri kapat">
+                        <svg class="icon" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M6 6l12 12M18 6 6 18"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="filter-group">
+                    <label class="title">İlan türü</label>
+
+                    <div class="check-list">
+                        <label class="check">
+                            <input type="radio" name="listingType" value="" checked="@(Model.ListingType == null ? "checked" : null)">
+                            Tümü
+                        </label>
+
+                        <label class="check">
+                            <input type="radio" name="listingType" value="1" checked="@(Model.ListingType == 1 ? "checked" : null)">
+                            Satılık
+                        </label>
+
+                        <label class="check">
+                            <input type="radio" name="listingType" value="2" checked="@(Model.ListingType == 2 ? "checked" : null)">
+                            Kiralık
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label asp-for="City" class="title">Şehir</label>
+                    <input asp-for="City" class="input" placeholder="Örn: İstanbul">
+                </div>
+
+                <div class="filter-group">
+                    <label asp-for="District" class="title">İlçe</label>
+                    <input asp-for="District" class="input" placeholder="Örn: Beşiktaş">
+                </div>
+
+                <div class="filter-group">
+                    <label asp-for="CategoryId" class="title">Emlak tipi</label>
+
+                    <select asp-for="CategoryId" asp-items="Model.Categories" class="select">
+                        <option value="">Tüm emlak tipleri</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label class="title">Fiyat aralığı</label>
+
+                    <div class="range-row">
+                        <input asp-for="MinPrice" class="input" type="number" min="0" placeholder="Minimum">
+                        <input asp-for="MaxPrice" class="input" type="number" min="0" placeholder="Maksimum">
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label asp-for="RoomCount" class="title">Oda sayısı</label>
+
+                    <select asp-for="RoomCount" class="select">
+                        <option value="">Tümü</option>
+                        <option value="1">1 oda</option>
+                        <option value="2">2 oda</option>
+                        <option value="3">3 oda</option>
+                        <option value="4">4 oda</option>
+                        <option value="5">5 oda</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">Filtreleri Uygula</button>
+
+                <a asp-controller="Property" asp-action="Index" class="btn btn-outline btn-block">Filtreleri Temizle</a>
+            </form>
+
+            <div class="filter-overlay"></div>
+
+            <div>
+                <div class="listing-toolbar">
+                    <div>
+                        <strong>Bu sayfada @Model.Properties.Count ilan</strong>
+                        <div class="muted" style="font-size:13px">Aramanıza uygun yayınlanmış ilanlar</div>
+                    </div>
+
+                    <div class="toolbar-actions">
+                        <button class="btn btn-outline btn-sm mobile-filter" data-open-filter type="button">
+                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M4 5h16l-6 7v6l-4 2v-8L4 5Z"/>
+                            </svg>
+
+                            Filtre
+                        </button>
+                    </div>
+                </div>
+
+                @if (Model.Properties.Count == 0)
+                {
+                    <div class="empty-state">
+                        <h3>İlan bulunamadı</h3>
+                        <p>Seçtiğiniz filtrelere uygun yayınlanmış bir ilan bulunmuyor.</p>
+                        <a asp-controller="Property" asp-action="Index" class="btn btn-primary">Filtreleri Temizle</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="property-grid">
+                        @foreach (var item in Model.Properties)
+                        {
+                            var listingTypeValue = Convert.ToInt32(item.ListingType);
+
+                            var imageUrl = string.IsNullOrWhiteSpace(item.ImageUrl)
+                                ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
+                                : item.ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                    ? item.ImageUrl
+                                    : $"{Model.ApiBaseUrl}{item.ImageUrl}";
+
+                            <article class="property-card" data-property-card>
+                                <a asp-controller="Property" asp-action="Details" asp-route-id="@item.PropertyId" aria-label="@item.Title">
+                                    <div class="property-media">
+                                        <img src="@imageUrl" alt="@item.Title">
+
+                                        <div class="property-tags">
+                                            @if (item.IsFeatured)
+                                            {
+                                                <span class="badge accent">Öne Çıkan</span>
+                                            }
+
+                                            <span class="badge">@(listingTypeValue == 1 ? "Satılık" : "Kiralık")</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="property-body">
+                                        <div class="property-price">₺@item.Price.ToString("N0")@(listingTypeValue == 2 ? " / ay" : "")</div>
+
+                                        <h3>@item.Title</h3>
+
+                                        <div class="location">
+                                            <svg class="icon" width="15" height="15" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                                            </svg>
+
+                                            @item.District, @item.City
+                                        </div>
+
+                                        <p class="card-description">@item.Description</p>
+
+                                        <div class="specs">
+                                            <span class="spec">
+                                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"/>
+                                                </svg>
+
+                                                @item.RoomCount+@item.LivingRoomCount
+                                            </span>
+
+                                            <span class="spec">
+                                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"/>
+                                                </svg>
+
+                                                @item.GrossSquareMeter m²
+                                            </span>
+
+                                            <span class="spec">
+                                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"/>
+                                                </svg>
+
+                                                @item.BathroomCount Banyo
+                                            </span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </article>
+                        }
+                    </div>
+                }
+
+                @if (Model.TotalPages > 1)
+                {
+                    <nav class="pagination" aria-label="Sayfalama">
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <a asp-action="Index" asp-route-page="@(Model.CurrentPage - 1)" asp-route-city="@Model.City" asp-route-district="@Model.District" asp-route-listingType="@Model.ListingType" asp-route-maxPrice="@Model.MaxPrice" asp-route-minPrice="@Model.MinPrice" asp-route-categoryId="@Model.CategoryId" asp-route-roomCount="@Model.RoomCount" aria-label="Önceki sayfa">‹</a>
+                        }
+
+                        @if (startPage > 1)
+                        {
+                            <a asp-action="Index" asp-route-page="1" asp-route-city="@Model.City" asp-route-district="@Model.District" asp-route-listingType="@Model.ListingType" asp-route-maxPrice="@Model.MaxPrice" asp-route-minPrice="@Model.MinPrice" asp-route-categoryId="@Model.CategoryId" asp-route-roomCount="@Model.RoomCount">1</a>
+
+                            @if (startPage > 2)
+                            {
+                                <span>...</span>
+                            }
+                        }
+
+                        @for (var pageNumber = startPage; pageNumber <= endPage; pageNumber++)
+                        {
+                            if (pageNumber == Model.CurrentPage)
+                            {
+                                <span class="active">@pageNumber</span>
+                            }
+                            else
+                            {
+                                <a asp-action="Index" asp-route-page="@pageNumber" asp-route-city="@Model.City" asp-route-district="@Model.District" asp-route-listingType="@Model.ListingType" asp-route-maxPrice="@Model.MaxPrice" asp-route-minPrice="@Model.MinPrice" asp-route-categoryId="@Model.CategoryId" asp-route-roomCount="@Model.RoomCount">@pageNumber</a>
+                            }
+                        }
+
+                        @if (endPage < Model.TotalPages)
+                        {
+                            @if (endPage < Model.TotalPages - 1)
+                            {
+                                <span>...</span>
+                            }
+
+                            <a asp-action="Index" asp-route-page="@Model.TotalPages" asp-route-city="@Model.City" asp-route-district="@Model.District" asp-route-listingType="@Model.ListingType" asp-route-maxPrice="@Model.MaxPrice" asp-route-minPrice="@Model.MinPrice" asp-route-categoryId="@Model.CategoryId" asp-route-roomCount="@Model.RoomCount">@Model.TotalPages</a>
+                        }
+
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <a asp-action="Index" asp-route-page="@(Model.CurrentPage + 1)" asp-route-city="@Model.City" asp-route-district="@Model.District" asp-route-listingType="@Model.ListingType" asp-route-maxPrice="@Model.MaxPrice" asp-route-minPrice="@Model.MinPrice" asp-route-categoryId="@Model.CategoryId" asp-route-roomCount="@Model.RoomCount" aria-label="Sonraki sayfa">›</a>
+                        }
+                    </nav>
+                }
+            </div>
+        </div>
+    </div>
+</section>

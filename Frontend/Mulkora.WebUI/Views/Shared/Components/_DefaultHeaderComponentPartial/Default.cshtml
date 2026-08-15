@@ -11,7 +11,7 @@
             </a>
             <div class="nav-menu">
                 <a asp-controller="Default" asp-action="Index" class="@(currentController == "Default" ? "active" : "")" >Ana Sayfa</a>
-                <a asp-controller="Default" asp-action="Index">İlanlar</a>
+                <a asp-controller="Property" asp-action="Index" class="@(currentController == "Property" ? "active" : "")">İlanlar</a>
                 <a asp-controller="Agent" asp-action="Index" class="@(currentController == "Agent" ? "active" : "")">Danışmanlar</a>
                 <a asp-controller="About" asp-action="Index" class="@(currentController == "About" ? "active" : "")">Hakkımızda</a>
                 <a asp-controller="Contact" asp-action="Index" class="@(currentController == "Contact" ? "active" : "")">İletişim</a>

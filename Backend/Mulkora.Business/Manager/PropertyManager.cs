@@ -135,6 +135,42 @@ public class PropertyManager : IPropertyService
 
         return values;
     }
+    
+    public async Task<GetByIdPropertyDto?> GetPublishedByIdAsync(int id)
+    {
+        var property = await _propertyDal.GetPublishedByIdWithFeaturesAsync(id);
+
+        if (property == null)
+        {
+            return null;
+        }
+
+        return _mapper.Map<GetByIdPropertyDto>(property);
+    }
+
+    public async Task<List<ResultPropertyDto>> GetFilterPropertyAll(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice,
+        int? categoryId, int? roomCount, int page, int pageSize)
+    {
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 8;
+
+        var totalCount = await _propertyDal.GetFilterPropertyAllCount(city, district, listingType, maxPrice, minPrice, categoryId, roomCount);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        if (totalPages > 0 && page > totalPages)
+            page = totalPages;
+
+        var properties = await _propertyDal.GetFilterPropertyAll(city, district, listingType, maxPrice, minPrice, categoryId, roomCount, page, pageSize);
+        var values = _mapper.Map<List<ResultPropertyDto>>(properties);
+
+        foreach (var value in values)
+        {
+            value.CurrentPage = page;
+            value.TotalPages = totalPages;
+        }
+
+        return values;
+    }
 
     public async Task TDeleteAsync(int id)
     {

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Headers;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.WebUI.Services.Abstract;
@@ -88,5 +89,35 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<List<ResultPropertyDto>>() ?? [];
+    }
+
+    public async Task<List<ResultPropertyDto>> GetFilterPropertyAll(string? city, string? district, int? listingType, int? maxPrice, int? minPrice,
+        int? categoryId, int? roomCount, int page, int pageSize)
+    {
+        var response = await _client.GetAsync(
+            $"http://localhost:5214/api/Properties/filterAll?city={city}&district={district}&listingType={listingType}&maxPrice={maxPrice}&minPrice={minPrice}&categoryId={categoryId}&roomCount={roomCount}&page={page}&pageSize={pageSize}");
+
+        response.EnsureSuccessStatusCode();
+        
+        return await response.Content.ReadFromJsonAsync<List<ResultPropertyDto>>() ?? [];
+    }
+    
+    public async Task<GetByIdPropertyDto?> GetPublishedByIdAsync(int id)
+    {
+        var response = await _client.GetAsync($"{ApiRoute}/published/{id}");
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+
+            throw new Exception($"API Hatası: {(int)response.StatusCode} - {errorMessage}");
+        }
+
+        return await response.Content.ReadFromJsonAsync<GetByIdPropertyDto>();
     }
 }

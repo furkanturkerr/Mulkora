@@ -76,4 +76,13 @@ public class PropertyImagesController : ControllerBase
 
         return NoContent();
     }
+    
+    [AllowAnonymous]
+    [HttpGet("public/property/{propertyId:int}")]
+    public async Task<IActionResult> GetPublicImagesByPropertyId(int propertyId)
+    {
+        var images = await _propertyImageService.TGetPublicImagesByPropertyIdAsync(propertyId);
+
+        return Ok(images);
+    }
 }

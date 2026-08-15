@@ -61,4 +61,18 @@ public class PropertyImageService : GenericService<ResultPropertyImageDto, Creat
 
         response.EnsureSuccessStatusCode();
     }
+    
+    public async Task<List<ResultPropertyImageDto>> GetPublicImagesByPropertyIdAsync(int propertyId)
+    {
+        var response = await _client.GetAsync($"{ApiRoute}/public/property/{propertyId}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorMessage = await response.Content.ReadAsStringAsync();
+
+            throw new Exception($"API Hatası: {(int)response.StatusCode} - {errorMessage}");
+        }
+
+        return await response.Content.ReadFromJsonAsync<List<ResultPropertyImageDto>>() ?? new List<ResultPropertyImageDto>();
+    }
 }

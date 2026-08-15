@@ -13,9 +13,9 @@ public interface IPropertyService : IGenericService<ResultPropertyDto, CreatePro
     Task TMarkAsSoldAsync(int id, int agentId);
     Task TMarkAsRentedAsync(int id, int agentId);
     Task<GetByIdPropertyDto> GetByIdAsync(int id);
-    
     Task<int> TAddAsync(CreatePropertyDto dto);
     Task TUpdateAsync(UpdatePropertyDto dto);
     Task<List<ResultPropertyDto>> GetFilterProperty(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType, int page, int pageSize);
-    
+    Task<List<ResultPropertyDto>> GetFilterPropertyAll(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice, int? categoryId, int? roomCount, int page, int pageSize);
+    Task<GetByIdPropertyDto?> GetPublishedByIdAsync(int id);
 }

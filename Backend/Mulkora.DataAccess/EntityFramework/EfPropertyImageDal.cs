@@ -3,6 +3,7 @@ using Mulkora.DataAccess.Abstract;
 using Mulkora.DataAccess.Concrete;
 using Mulkora.DataAccess.Repository;
 using Mulkora.Entity.Concrete;
+using Mulkora.Entity.Enums;
 
 namespace Mulkora.DataAccess.EntityFramework;
 
@@ -37,5 +38,15 @@ public class EfPropertyImageDal : GenericRepository<PropertyImage>, IPropertyIma
         return await _context.PropertyImages
             .Include(x => x.Property)
             .FirstOrDefaultAsync(x => x.PropertyImageId == imageId);
+    }
+    
+    public async Task<List<PropertyImage>> GetPublicImagesByPropertyIdAsync(int propertyId)
+    {
+        return await _context.PropertyImages
+            .Where(x => x.PropertyId == propertyId && x.Property.Status == PropertyStatus.Published)
+            .OrderBy(x => x.DisplayOrder)
+            .ThenBy(x => x.PropertyImageId)
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

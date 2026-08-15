@@ -81,4 +81,11 @@ public class PropertyImageManager : IPropertyImageService
 
         return imageUrl;
     }
+    
+    public async Task<List<ResultPropertyImageDto>> TGetPublicImagesByPropertyIdAsync(int propertyId)
+    {
+        var images = await _propertyImageDal.GetPublicImagesByPropertyIdAsync(propertyId);
+
+        return _mapper.Map<List<ResultPropertyImageDto>>(images);
+    }
 }

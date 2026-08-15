@@ -85,9 +85,12 @@ public class EfPropertyDal : GenericRepository<Property>, IPropertyDal
         return await _context.Properties
             .Where(x => x.PropertyId == id)
             .Include(x => x.Features)
+            .Include(x => x.PropertyImages)
+            .Include(x => x.Agent)
+            .ThenInclude(x => x.AppUser)
             .FirstOrDefaultAsync();
     }
-    
+
     public async Task<List<Property>> GetFilterProperty(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType, int page, int pageSize)
     {
         var skip = (page - 1) * pageSize;
@@ -108,6 +111,21 @@ public class EfPropertyDal : GenericRepository<Property>, IPropertyDal
         var query = CreateFilterQuery(text, IsStatus, City, District, ListingType);
 
         return await query.CountAsync();
+    }
+
+    public async Task<List<Property>> GetFilterPropertyAll(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice,
+        int? categoryId, int? roomCount, int page, int pageSize)
+    {
+        var skip = (page - 1) * pageSize;
+        return await CreateFilterQueryAll(city, district, listingType, maxPrice, minPrice, categoryId, roomCount)
+            .Include(x => x.PropertyImages)
+            .Include(x => x.Agent)
+            .ThenInclude(x => x.AppUser)
+            .Include(x => x.Category)
+            .OrderByDescending(x => x.CreatedDate)
+            .Skip(skip)
+            .Take(pageSize)
+            .ToListAsync();
     }
     
     private IQueryable<Property> CreateFilterQuery(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType)
@@ -140,5 +158,48 @@ public class EfPropertyDal : GenericRepository<Property>, IPropertyDal
         }
 
         return query;
+    }
+
+    public async Task<int> GetFilterPropertyAllCount(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice, int? categoryId, int? roomCount)
+    {
+        return await CreateFilterQueryAll(city, district, listingType, maxPrice, minPrice, categoryId, roomCount).CountAsync();
+    }
+
+    private IQueryable<Property> CreateFilterQueryAll(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice, int? categoryId, int? roomCount)
+    {
+        var query = _context.Properties.Where(x => x.Status == PropertyStatus.Published).AsNoTracking();
+
+        if (!string.IsNullOrWhiteSpace(city))
+            query = query.Where(x => x.City == city);
+
+        if (!string.IsNullOrWhiteSpace(district))
+            query = query.Where(x => x.District == district);
+
+        if (listingType.HasValue)
+            query = query.Where(x => x.ListingType == listingType.Value);
+
+        if (maxPrice.HasValue)
+            query = query.Where(x => x.Price <= maxPrice.Value);
+
+        if (minPrice.HasValue)
+            query = query.Where(x => x.Price >= minPrice.Value);
+
+        if (categoryId.HasValue)
+            query = query.Where(x => x.CategoryId == categoryId.Value);
+
+        if (roomCount.HasValue)
+            query = query.Where(x => x.RoomCount == roomCount.Value);
+
+        return query;
+    }
+    
+    public async Task<Property?> GetPublishedByIdWithFeaturesAsync(int id)
+    {
+        return await _context.Properties
+            .Include(x => x.Features)
+            .Include(x => x.Agent)
+            .ThenInclude(x => x.AppUser)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(x => x.PropertyId == id && x.Status == PropertyStatus.Published);
     }
 }

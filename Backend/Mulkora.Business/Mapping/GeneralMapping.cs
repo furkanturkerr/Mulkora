@@ -57,9 +57,12 @@ public class GeneralMapping : Profile
             .ForMember(
                 destination => destination.Features,
                 options => options.Ignore());
-
-        CreateMap<Property, GetByIdPropertyDto>();
         //ıgnore : Yani normal alanları map et, ilişkiyi ayrıca kur.
+        
+        CreateMap<Property, GetByIdPropertyDto>()
+            .ForMember(destination => destination.AgentName, options => options.MapFrom(source => source.Agent.AppUser.Name + " " + source.Agent.AppUser.Surname))
+            .ForMember(destination => destination.AgentTitle, options => options.MapFrom(source => source.Agent.Title))
+            .ForMember(destination => destination.AgentImageUrl, options => options.MapFrom(source => source.Agent.ImageUrl));
         
         CreateMap<AppUser, ResultUserDto>();
         

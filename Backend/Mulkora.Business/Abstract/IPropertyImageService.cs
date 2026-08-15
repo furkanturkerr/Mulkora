@@ -11,4 +11,6 @@ public interface IPropertyImageService
     Task<List<UpdatePropertyImageDto>> TGetImagesByPropertyIdAsync(int propertyId);
     
     Task<string> TDeleteImageAsync(int imageId, int agentId);
+    
+    Task<List<ResultPropertyImageDto>> TGetPublicImagesByPropertyIdAsync(int propertyId);
 }

@@ -48,6 +48,12 @@ public class GetByIdPropertyDto
     public DateTime UpdatedDate { get; set; }
 
     public int AgentId { get; set; }
+
+    public string AgentName { get; set; } = string.Empty;
+
+    public string AgentTitle { get; set; } = string.Empty;
+
+    public string AgentImageUrl { get; set; } = string.Empty;
     
     public int CategoryId { get; set; }
     

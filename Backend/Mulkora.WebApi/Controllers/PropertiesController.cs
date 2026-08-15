@@ -33,6 +33,28 @@ namespace Mulkora.WebApi.Controllers
             return Ok(values);
         }
         
+        [HttpGet("filterAll")]
+        public async Task<IActionResult> GetAll(string? city, string? district, ListingType? listingType, int? maxPrice, int? minPrice,
+            int? categoryId, int? roomCount, int page = 1, int pageSize = 8)
+        {
+            var values = await _propertyService.GetFilterPropertyAll(city, district, listingType, maxPrice, minPrice, categoryId, roomCount, page, pageSize);
+            return Ok(values);
+        }
+        
+        [AllowAnonymous]
+        [HttpGet("published/{id:int}")]
+        public async Task<IActionResult> GetPublishedById(int id)
+        {
+            var property = await _propertyService.GetPublishedByIdAsync(id);
+
+            if (property == null)
+            {
+                return NotFound("Yayında olan ilan bulunamadı.");
+            }
+
+            return Ok(property);
+        }
+        
         [Authorize(Roles = "Agent")]
         [HttpGet("my-properties")]
         public async Task<IActionResult> GetMyProperties(string? text, PropertyStatus? IsStatus)
