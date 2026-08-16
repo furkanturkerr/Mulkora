@@ -14,6 +14,10 @@ Anasayfa
 <img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/property-detail-map.png" />
 <img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/property-filter.png" />
 
+ilan randevu alma
+<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/appointment-create.png" />
+<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/appointment-success.png" />
+
 Agent
 <img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/agent.png" />
 <img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/agent-detail.png" />
@@ -60,5 +64,6 @@ Admin kısmı
 <img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/admin/role-rolelist.png" />
 
 Hata sayfaları
-<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/admin/category.png" />
-<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/admin/category.png" />
+<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/error-401.png" />
+<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/error-403.png" />
+<img src="https://github.com/furkanturkerr/Mulkora/blob/main/Frontend/Mulkora.WebUI/wwwroot/m%C3%BClkora-images/error-4040.png" />
