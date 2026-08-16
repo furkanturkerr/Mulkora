@@ -180,7 +180,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="wwwroot\mülkora\.DS_Store" />
+      <Content Include="wwwroot\mülkora-images\.DS_Store" />
     </ItemGroup>
 
 </Project>
