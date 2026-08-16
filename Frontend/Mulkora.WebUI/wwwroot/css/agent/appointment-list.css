@@ -1,0 +1,655 @@
+.agent-appointment-page,
+.agent-appointment-page * {
+    box-sizing: border-box;
+}
+
+.agent-appointment-page {
+    width: 100%;
+    padding: 34px 32px 50px;
+    color: #1b2824;
+}
+
+/* Başlık */
+
+.agent-appointment-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 25px;
+}
+
+.agent-appointment-eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #c89046;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+}
+
+.agent-appointment-header h1 {
+    margin: 0;
+    color: #17231f;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+}
+
+.agent-appointment-header p {
+    margin: 9px 0 0;
+    color: #7f8d87;
+    font-size: 13px;
+    line-height: 1.65;
+}
+
+.agent-appointment-today {
+    min-width: 154px;
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 0 16px;
+    background: #ffffff;
+    border: 1px solid #dce4e0;
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(25, 51, 43, 0.05);
+}
+
+.agent-appointment-today svg {
+    width: 20px;
+    height: 20px;
+    flex: 0 0 20px;
+    fill: none;
+    stroke: #2e6858;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.agent-appointment-today div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.agent-appointment-today span {
+    color: #97a19d;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.agent-appointment-today strong {
+    color: #275346;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* Bildirim */
+
+.agent-appointment-alert {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 12px;
+}
+
+.agent-appointment-alert svg {
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.agent-alert-success {
+    color: #176348;
+    background: #e5f4ee;
+    border: 1px solid #b5ddce;
+}
+
+.agent-alert-error {
+    color: #b43d3d;
+    background: #fff0f0;
+    border: 1px solid #efbcbc;
+}
+
+/* İstatistikler */
+
+.agent-appointment-stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.agent-appointment-stat {
+    min-height: 99px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #dce4e0;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(24, 49, 42, 0.045);
+}
+
+.agent-stat-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 48px;
+    border-radius: 14px;
+}
+
+.agent-stat-icon svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.agent-stat-total {
+    color: #286651;
+    background: #e8f3ef;
+}
+
+.agent-stat-upcoming {
+    color: #a96915;
+    background: #faecd6;
+}
+
+.agent-stat-past {
+    color: #71807b;
+    background: #edf1ef;
+}
+
+.agent-stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.agent-stat-content span {
+    color: #899590;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.agent-stat-content strong {
+    color: #1b2925;
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* Liste kartı */
+
+.agent-appointment-card {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dce3df;
+    border-radius: 18px;
+    box-shadow: 0 14px 40px rgba(24, 48, 40, 0.055);
+}
+
+.agent-appointment-card-header {
+    min-height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 0 21px;
+    border-bottom: 1px solid #e2e7e4;
+}
+
+.agent-appointment-card-header > div:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.agent-appointment-card-header strong {
+    color: #30413b;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.agent-appointment-card-header span {
+    color: #99a39f;
+    font-size: 10px;
+}
+
+.agent-appointment-card-badge {
+    padding: 8px 12px;
+    color: #29634f;
+    font-size: 10px;
+    font-weight: 800;
+    background: #e9f4ef;
+    border-radius: 999px;
+}
+
+/* Tablo */
+
+.agent-appointment-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.agent-appointment-table {
+    width: 100%;
+    min-width: 1040px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.agent-appointment-table th {
+    padding: 15px 19px;
+    color: #778882;
+    font-size: 8px;
+    font-weight: 800;
+    text-align: left;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: #fafbf9;
+    border-bottom: 1px solid #dfe5e2;
+}
+
+.agent-appointment-table th:nth-child(1) {
+    width: 29%;
+}
+
+.agent-appointment-table th:nth-child(2) {
+    width: 17%;
+}
+
+.agent-appointment-table th:nth-child(3) {
+    width: 20%;
+}
+
+.agent-appointment-table th:nth-child(4) {
+    width: 14%;
+}
+
+.agent-appointment-table th:nth-child(5) {
+    width: 20%;
+}
+
+.agent-table-action-title {
+    text-align: right !important;
+}
+
+.agent-appointment-table td {
+    height: 82px;
+    padding: 13px 19px;
+    color: #2f3e39;
+    font-size: 12px;
+    vertical-align: middle;
+    border-bottom: 1px solid #e3e8e5;
+}
+
+.agent-appointment-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.agent-appointment-table tbody tr {
+    transition: background-color 0.18s ease;
+}
+
+.agent-appointment-table tbody tr:hover {
+    background: #fbfcfb;
+}
+
+/* İlan */
+
+.agent-property-cell {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.agent-property-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 44px;
+    color: #286554;
+    background: #edf5f2;
+    border: 1px solid #d7e5df;
+    border-radius: 12px;
+}
+
+.agent-property-icon svg {
+    width: 19px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.agent-property-information {
+    min-width: 0;
+}
+
+.agent-property-information strong {
+    display: block;
+    overflow: hidden;
+    color: #1e2b27;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.agent-property-information span {
+    display: block;
+    overflow: hidden;
+    margin-top: 5px;
+    color: #929c98;
+    font-size: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* Tarih */
+
+.agent-appointment-date {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.agent-appointment-date strong {
+    color: #27342f;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.agent-appointment-date span {
+    color: #98a19d;
+    font-size: 9px;
+}
+
+/* Danışman */
+
+.agent-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.agent-name-dot {
+    width: 10px;
+    height: 10px;
+    display: block;
+    flex: 0 0 10px;
+    background: #67aa92;
+    border: 4px solid #e3f1ec;
+    border-radius: 50%;
+    box-sizing: content-box;
+}
+
+.agent-name-cell div {
+    min-width: 0;
+}
+
+.agent-name-cell strong {
+    display: block;
+    overflow: hidden;
+    color: #293833;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.agent-name-cell small {
+    display: block;
+    margin-top: 4px;
+    color: #99a39f;
+    font-size: 9px;
+}
+
+/* Durumlar */
+
+.agent-appointment-status {
+    width: fit-content;
+    min-height: 29px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 11px;
+    font-size: 9px;
+    font-weight: 800;
+    border-radius: 999px;
+}
+
+.agent-appointment-status > span {
+    width: 6px;
+    height: 6px;
+    display: block;
+    border-radius: 50%;
+}
+
+.agent-status-approved {
+    color: #176348;
+    background: #e3f2ec;
+}
+
+.agent-status-approved > span {
+    background: #3b9272;
+}
+
+.agent-status-rejected {
+    color: #b73e3e;
+    background: #fde9e9;
+}
+
+.agent-status-rejected > span {
+    background: #d85252;
+}
+
+.agent-status-past {
+    color: #687771;
+    background: #edf1ef;
+}
+
+.agent-status-past > span {
+    background: #8c9995;
+}
+
+/* İşlem butonları */
+
+.agent-appointment-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.agent-appointment-actions form {
+    margin: 0;
+}
+
+.agent-appointment-button {
+    min-width: 96px;
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 0 14px;
+    font: inherit;
+    font-size: 10px;
+    font-weight: 800;
+    background: #ffffff;
+    border-radius: 10px;
+    cursor: pointer;
+    transition:
+            color 0.18s ease,
+            background-color 0.18s ease,
+            border-color 0.18s ease,
+            transform 0.18s ease;
+}
+
+.agent-appointment-button svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.agent-appointment-button:hover {
+    transform: translateY(-1px);
+}
+
+.agent-approve-button {
+    color: #21664f;
+    border: 1px solid #8bc5af;
+}
+
+.agent-approve-button:hover {
+    color: #ffffff;
+    background: #21664f;
+    border-color: #21664f;
+}
+
+.agent-reject-button {
+    color: #cf3e3e;
+    border: 1px solid #efaaaa;
+}
+
+.agent-reject-button:hover {
+    color: #ffffff;
+    background: #cf3e3e;
+    border-color: #cf3e3e;
+}
+
+.agent-action-unavailable {
+    display: block;
+    color: #99a49f;
+    font-size: 10px;
+    font-weight: 600;
+    text-align: right;
+}
+
+/* Boş liste */
+
+.agent-appointment-empty {
+    min-height: 370px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.agent-appointment-empty-icon {
+    width: 68px;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 19px;
+    color: #286453;
+    background: #e9f2ef;
+    border-radius: 20px;
+}
+
+.agent-appointment-empty-icon svg {
+    width: 29px;
+    height: 29px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.agent-appointment-empty h2 {
+    margin: 0;
+    color: #1d2a26;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.agent-appointment-empty p {
+    max-width: 420px;
+    margin: 10px 0 0;
+    color: #87938e;
+    font-size: 12px;
+    line-height: 1.65;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+    .agent-appointment-page {
+        padding: 28px 22px 42px;
+    }
+
+    .agent-appointment-stats {
+        grid-template-columns: repeat(3, minmax(190px, 1fr));
+        overflow-x: auto;
+    }
+}
+
+@media (max-width: 760px) {
+    .agent-appointment-page {
+        padding: 22px 15px 35px;
+    }
+
+    .agent-appointment-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .agent-appointment-header h1 {
+        font-size: 28px;
+    }
+
+    .agent-appointment-today {
+        width: 100%;
+    }
+
+    .agent-appointment-stats {
+        grid-template-columns: 1fr;
+        overflow: visible;
+    }
+
+    .agent-appointment-stat {
+        min-height: 88px;
+    }
+
+    .agent-appointment-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 17px;
+    }
+
+    .agent-appointment-card-header > div:first-child {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

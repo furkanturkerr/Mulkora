@@ -16,6 +16,8 @@ public class GetByIdPropertyDto
     public string City { get; set; }
 
     public string District { get; set; }
+    
+    public bool? AiIsApproved { get; set; }
 
     public string Address { get; set; }
 

@@ -70,15 +70,34 @@ public class EfAppointmentDal : IAppointmentDal
             .ToListAsync();
     }
     
-    public async Task<List<Appointment>> GetAppointmentsByAgentUserIdAsync(
-        string userId)
+    public async Task<List<Appointment>> GetAppointmentsByAgentUserIdAsync(string userId)
     {
         return await _context.Appointments
             .Where(x => x.Agent.AppUserId == userId)
             .Include(x => x.Property)
-            .Include(x => x.AppUser)
+            .Include(x => x.Agent)
+            .ThenInclude(x => x.AppUser)
             .OrderByDescending(x => x.AppointmentDate)
             .AsNoTracking()
             .ToListAsync();
+    }
+
+    public async Task ApproveAsync(int id, int agentId)
+    {
+        var value = await _context.Appointments
+            .FirstOrDefaultAsync(x =>
+                x.AppointmentId == id &&
+                x.AgentId == agentId);
+
+        if (value == null)
+        {
+            throw new Exception(
+                "Randevu bulunamadı veya bu randevu size ait değil.");
+        }
+
+        value.IsStatus = !value.IsStatus;
+        value.UpdatedDate = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync();
     }
 }

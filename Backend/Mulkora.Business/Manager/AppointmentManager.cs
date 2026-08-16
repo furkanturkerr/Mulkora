@@ -75,4 +75,9 @@ public class AppointmentManager : IAppointmentService
         var appointments = await _appointmentDal.GetAppointmentsByAgentUserIdAsync(userId);
         return _mapper.Map<List<ResultAppointmentDto>>(appointments);   
     }
+
+    public async Task ApproveAsync(int id, int agentId)
+    {
+        await _appointmentDal.ApproveAsync(id, agentId);
+    }
 }

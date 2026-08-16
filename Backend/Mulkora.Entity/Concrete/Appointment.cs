@@ -17,6 +17,8 @@ public class Appointment
     public DateTime? UpdatedDate { get; set; }
 
     public AppUser AppUser { get; set; } = null!;
+    
+    public bool IsStatus { get; set; }
 
     public Property Property { get; set; } = null!;
 

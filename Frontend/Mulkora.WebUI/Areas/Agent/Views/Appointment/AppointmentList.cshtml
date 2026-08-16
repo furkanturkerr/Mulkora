@@ -1,0 +1,370 @@
+@model List<Mulkora.Dto.AppointmentDtos.ResultAppointmentDto>
+
+@{
+    Layout = "_AgentLayout";
+    ViewData["Title"] = "Randevularım";
+
+    var now = DateTime.Now;
+    var totalCount = Model?.Count ?? 0;
+
+    var upcomingCount = Model?
+        .Count(x => x.AppointmentDate >= now) ?? 0;
+
+    var pastCount = Model?
+        .Count(x => x.AppointmentDate < now) ?? 0;
+}
+
+<link rel="stylesheet"
+      href="~/css/agent/appointment-list.css"
+      asp-append-version="true">
+
+<div class="agent-appointment-page">
+
+    <header class="agent-appointment-header">
+
+        <div>
+            <span class="agent-appointment-eyebrow">
+                RANDEVU YÖNETİMİ
+            </span>
+
+            <h1>Randevularım</h1>
+
+            <p>
+                İlanlarınız için oluşturulan randevu taleplerini
+                görüntüleyin ve yönetin.
+            </p>
+        </div>
+
+        <div class="agent-appointment-today">
+            <svg viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"></path>
+                <path d="M7 2v4M17 2v4M3 9h18"></path>
+            </svg>
+
+            <div>
+                <span>Bugün</span>
+
+                <strong>
+                    @(now.ToString("dd.MM.yyyy"))
+                </strong>
+            </div>
+        </div>
+
+    </header>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="agent-appointment-alert agent-alert-success">
+            <svg viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="m5 12 4 4L19 6"></path>
+            </svg>
+
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="agent-appointment-alert agent-alert-error">
+            <svg viewBox="0 0 24 24"
+                 aria-hidden="true">
+                <path d="M12 8v5M12 17h.01"></path>
+                <circle cx="12"
+                        cy="12"
+                        r="9">
+                </circle>
+            </svg>
+
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <section class="agent-appointment-stats">
+
+        <article class="agent-appointment-stat">
+
+            <div class="agent-stat-icon agent-stat-total">
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"></path>
+                    <path d="M7 2v4M17 2v4M3 9h18"></path>
+                </svg>
+            </div>
+
+            <div class="agent-stat-content">
+                <span>Toplam randevu</span>
+                <strong>@totalCount</strong>
+            </div>
+
+        </article>
+
+        <article class="agent-appointment-stat">
+
+            <div class="agent-stat-icon agent-stat-upcoming">
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <circle cx="12"
+                            cy="12"
+                            r="9">
+                    </circle>
+
+                    <path d="M12 7v5l3 2"></path>
+                </svg>
+            </div>
+
+            <div class="agent-stat-content">
+                <span>Yaklaşan randevu</span>
+                <strong>@upcomingCount</strong>
+            </div>
+
+        </article>
+
+        <article class="agent-appointment-stat">
+
+            <div class="agent-stat-icon agent-stat-past">
+                <svg viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="m5 12 4 4L19 6"></path>
+                </svg>
+            </div>
+
+            <div class="agent-stat-content">
+                <span>Geçmiş randevu</span>
+                <strong>@pastCount</strong>
+            </div>
+
+        </article>
+
+    </section>
+
+    <section class="agent-appointment-card">
+
+        <header class="agent-appointment-card-header">
+
+            <div>
+                <strong>Randevu listesi</strong>
+
+                <span>
+                    Toplam @totalCount kayıt bulunuyor
+                </span>
+            </div>
+
+            <div class="agent-appointment-card-badge">
+                @upcomingCount yaklaşan randevu
+            </div>
+
+        </header>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="agent-appointment-table-wrapper">
+
+                <table class="agent-appointment-table">
+
+                    <thead>
+                    <tr>
+                        <th>İlan</th>
+                        <th>Randevu tarihi</th>
+                        <th>Danışman</th>
+                        <th>Durum</th>
+
+                        <th class="agent-table-action-title">
+                            İşlem
+                        </th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    @foreach (var appointment in Model
+                        .OrderBy(x => x.AppointmentDate))
+                    {
+                        var isPast =
+                            appointment.AppointmentDate < now;
+
+                        <tr>
+
+                            <td>
+                                <div class="agent-property-cell">
+
+                                    <div class="agent-property-icon">
+                                        <svg viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <path d="m3 11 9-7 9 7"></path>
+                                            <path d="M5 10v10h14V10"></path>
+                                            <path d="M9 20v-6h6v6"></path>
+                                        </svg>
+                                    </div>
+
+                                    <div class="agent-property-information">
+                                        <strong>
+                                            @appointment.Title
+                                        </strong>
+
+                                        <span>
+                                            @appointment.PropertyAddress
+                                        </span>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="agent-appointment-date">
+                                    <strong>
+                                        @(appointment.AppointmentDate
+                                            .ToString("dd.MM.yyyy"))
+                                    </strong>
+
+                                    <span>
+                                        Saat
+                                        @(appointment.AppointmentDate
+                                            .ToString("HH:mm"))
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="agent-name-cell">
+
+                                    <span class="agent-name-dot"></span>
+
+                                    <div>
+                                        <strong>
+                                            @appointment.AgentNameSurname
+                                        </strong>
+
+                                        <small>
+                                            Emlak danışmanı
+                                        </small>
+                                    </div>
+
+                                </div>
+                            </td>
+
+                            <td>
+                                @if (isPast)
+                                {
+                                    <span class="agent-appointment-status agent-status-past">
+                                        <span></span>
+                                        Geçmiş
+                                    </span>
+                                }
+                                else if (appointment.IsStatus)
+                                {
+                                    <span class="agent-appointment-status agent-status-approved">
+                                        <span></span>
+                                        Onaylandı
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="agent-appointment-status agent-status-rejected">
+                                        <span></span>
+                                        Reddedildi
+                                    </span>
+                                }
+                            </td>
+
+                            <td>
+                                @if (isPast)
+                                {
+                                    <span class="agent-action-unavailable">
+                                        İşlem yapılamaz
+                                    </span>
+                                }
+                                else if (appointment.IsStatus)
+                                {
+                                    <div class="agent-appointment-actions">
+
+                                        <form asp-area="Agent"
+                                              asp-controller="Appointment"
+                                              asp-action="Approve"
+                                              asp-route-id="@appointment.AppointmentId"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="agent-appointment-button agent-reject-button"
+                                                    onclick="return confirm('Bu randevuyu reddetmek istediğinize emin misiniz?')">
+
+                                                <svg viewBox="0 0 24 24"
+                                                     aria-hidden="true">
+                                                    <path d="m6 6 12 12M18 6 6 18"></path>
+                                                </svg>
+
+                                                Reddet
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="agent-appointment-actions">
+
+                                        <form asp-area="Agent"
+                                              asp-controller="Appointment"
+                                              asp-action="Approve"
+                                              asp-route-id="@appointment.AppointmentId"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="agent-appointment-button agent-approve-button"
+                                                    onclick="return confirm('Bu randevuyu onaylamak istediğinize emin misiniz?')">
+
+                                                <svg viewBox="0 0 24 24"
+                                                     aria-hidden="true">
+                                                    <path d="m5 12 4 4L19 6"></path>
+                                                </svg>
+
+                                                Onayla
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        }
+        else
+        {
+            <div class="agent-appointment-empty">
+
+                <div class="agent-appointment-empty-icon">
+                    <svg viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Z"></path>
+                        <path d="M7 2v4M17 2v4M3 9h18"></path>
+                        <path d="M8 14h8"></path>
+                    </svg>
+                </div>
+
+                <h2>Henüz randevu bulunmuyor</h2>
+
+                <p>
+                    İlanlarınız için oluşturulan randevu talepleri
+                    burada görüntülenecektir.
+                </p>
+
+            </div>
+        }
+
+    </section>
+
+</div>

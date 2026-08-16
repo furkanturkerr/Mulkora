@@ -1,0 +1,730 @@
+.member-appointment-page,
+.member-appointment-page * {
+    box-sizing: border-box;
+}
+
+.member-appointment-page {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+
+    /*
+     * Site menüsü sabit olduğu için içerik menünün
+     * altında kalmaması adına üstten güvenli boşluk.
+     */
+    padding: 120px 0 80px;
+
+    color: #17231f;
+}
+
+/* Hero */
+
+.member-appointment-hero {
+    position: relative;
+    overflow: hidden;
+    min-height: 270px;
+    padding: 42px 55px;
+    color: #ffffff;
+    background: #173f35;
+    border-radius: 30px;
+    box-shadow: 0 24px 55px rgba(20, 55, 46, 0.14);
+}
+
+.member-hero-circle {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.member-circle-one {
+    width: 400px;
+    height: 400px;
+    right: -120px;
+    top: -165px;
+}
+
+.member-circle-two {
+    width: 275px;
+    height: 275px;
+    right: 70px;
+    top: -110px;
+    background: rgba(255, 255, 255, 0.025);
+}
+
+.member-appointment-breadcrumb {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 31px;
+    font-size: 12px;
+}
+
+.member-appointment-breadcrumb a {
+    color: rgba(255, 255, 255, 0.62);
+    text-decoration: none;
+}
+
+.member-appointment-breadcrumb a:hover {
+    color: #ffffff;
+}
+
+.member-appointment-breadcrumb span {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.member-appointment-breadcrumb strong {
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 600;
+}
+
+.member-appointment-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.member-appointment-eyebrow {
+    display: block;
+    margin-bottom: 11px;
+    color: #e3b466;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.member-appointment-hero h1 {
+    margin: 0;
+    font-size: 47px;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -2px;
+}
+
+.member-appointment-hero p {
+    max-width: 670px;
+    margin: 15px 0 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.member-appointment-hero-date {
+    min-width: 155px;
+    min-height: 62px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 17px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+}
+
+.member-appointment-hero-date svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: #e4b467;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.member-appointment-hero-date div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.member-appointment-hero-date span {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 9px;
+}
+
+.member-appointment-hero-date strong {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+/* Özet kartları */
+
+.member-appointment-summary {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+}
+
+.member-summary-card {
+    min-height: 94px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px;
+    background: #ffffff;
+    border: 1px solid #dfe5e2;
+    border-radius: 17px;
+    box-shadow: 0 12px 30px rgba(24, 48, 40, 0.045);
+}
+
+.member-summary-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 45px;
+    border-radius: 13px;
+}
+
+.member-summary-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.summary-total {
+    color: #286653;
+    background: #e7f2ed;
+}
+
+.summary-upcoming {
+    color: #a96a16;
+    background: #faecd6;
+}
+
+.summary-approved {
+    color: #287454;
+    background: #e3f3eb;
+}
+
+.summary-past {
+    color: #75827d;
+    background: #edf1ef;
+}
+
+.member-summary-card > div:last-child {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.member-summary-card span {
+    color: #89948f;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.member-summary-card strong {
+    color: #1a2924;
+    font-size: 22px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* İçerik */
+
+.member-appointment-content {
+    overflow: hidden;
+    background: #ffffff;
+    border: 1px solid #dfe5e2;
+    border-radius: 24px;
+    box-shadow: 0 18px 45px rgba(24, 48, 40, 0.055);
+}
+
+.member-appointment-content-header {
+    min-height: 115px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 25px 30px;
+    border-bottom: 1px solid #e4e8e6;
+}
+
+.member-content-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #bf8740;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1.7px;
+}
+
+.member-appointment-content-header h2 {
+    margin: 0;
+    color: #1b2824;
+    font-size: 21px;
+    font-weight: 800;
+}
+
+.member-appointment-content-header p {
+    margin: 7px 0 0;
+    color: #8a9691;
+    font-size: 11px;
+}
+
+.member-property-list-button {
+    min-height: 43px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 15px;
+    color: #265f4e;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    background: #eef5f2;
+    border: 1px solid #d8e5df;
+    border-radius: 11px;
+    transition: 0.2s ease;
+}
+
+.member-property-list-button svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.member-property-list-button:hover {
+    color: #ffffff;
+    background: #173f35;
+    border-color: #173f35;
+}
+
+/* Randevu kartı */
+
+.member-appointment-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.member-appointment-card {
+    display: grid;
+    grid-template-columns: 145px minmax(0, 1fr) 125px;
+    align-items: center;
+    gap: 25px;
+    min-height: 188px;
+    padding: 24px 28px;
+    border-bottom: 1px solid #e5e9e7;
+    transition: background-color 0.2s ease;
+}
+
+.member-appointment-card:last-child {
+    border-bottom: none;
+}
+
+.member-appointment-card:hover {
+    background: #fcfdfc;
+}
+
+.member-property-image {
+    position: relative;
+    width: 145px;
+    height: 135px;
+    overflow: hidden;
+    background: #eef3f0;
+    border-radius: 17px;
+}
+
+.member-property-image img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.member-appointment-status {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    min-height: 27px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    font-size: 9px;
+    font-weight: 800;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(20, 40, 34, 0.1);
+}
+
+.member-appointment-status > span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.member-status-approved {
+    color: #176348;
+    background: #e4f4ed;
+}
+
+.member-status-approved > span {
+    background: #37916f;
+}
+
+.member-status-rejected {
+    color: #b93f3f;
+    background: #fde8e8;
+}
+
+.member-status-rejected > span {
+    background: #d94d4d;
+}
+
+.member-status-past {
+    color: #65746e;
+    background: #edf1ef;
+}
+
+.member-status-past > span {
+    background: #8b9994;
+}
+
+/* Bilgiler */
+
+.member-appointment-information {
+    min-width: 0;
+}
+
+.member-property-number {
+    display: block;
+    margin-bottom: 5px;
+    color: #a0aaa5;
+    font-size: 9px;
+    font-weight: 700;
+}
+
+.member-appointment-information h3 {
+    margin: 0;
+    color: #192622;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+.member-property-location {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 9px;
+    color: #77837e;
+    font-size: 11px;
+}
+
+.member-property-location svg {
+    width: 15px;
+    height: 15px;
+    flex: 0 0 15px;
+    fill: none;
+    stroke: #497467;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.member-appointment-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-top: 21px;
+}
+
+.member-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.member-meta-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 34px;
+    color: #2e6858;
+    background: #edf4f1;
+    border-radius: 10px;
+}
+
+.member-meta-icon svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.member-meta-item div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.member-meta-item small {
+    color: #98a29e;
+    font-size: 8px;
+}
+
+.member-meta-item strong {
+    color: #34413d;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* Sağ taraf */
+
+.member-appointment-side {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.member-date-box {
+    min-width: 67px;
+    padding: 9px 10px;
+    text-align: center;
+    background: #f4f6f4;
+    border: 1px solid #e3e8e5;
+    border-radius: 11px;
+}
+
+.member-date-box strong {
+    display: block;
+    color: #1d4d40;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.member-date-box span {
+    display: block;
+    margin-top: 2px;
+    color: #88938f;
+    font-size: 8px;
+}
+
+.member-detail-button {
+    min-width: 115px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 15px;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    background: #173f35;
+    border: 1px solid #173f35;
+    border-radius: 11px;
+    box-shadow: 0 10px 24px rgba(23, 63, 53, 0.16);
+    transition: 0.2s ease;
+}
+
+.member-detail-button svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.member-detail-button:hover {
+    color: #ffffff;
+    background: #23594a;
+    border-color: #23594a;
+    transform: translateY(-1px);
+}
+
+/* Boş liste */
+
+.member-appointment-empty {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 50px 20px;
+    text-align: center;
+}
+
+.member-empty-icon {
+    width: 74px;
+    height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: #286453;
+    background: #e9f3ef;
+    border-radius: 21px;
+}
+
+.member-empty-icon svg {
+    width: 31px;
+    height: 31px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.member-appointment-empty h2 {
+    margin: 0;
+    color: #1c2925;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.member-appointment-empty p {
+    max-width: 440px;
+    margin: 11px 0 22px;
+    color: #85918c;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.member-empty-button {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 18px;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    text-decoration: none;
+    background: #173f35;
+    border-radius: 11px;
+}
+
+/* Tablet */
+
+@media (max-width: 1000px) {
+    .member-appointment-page {
+        padding-top: 110px;
+    }
+
+    .member-appointment-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .member-appointment-card {
+        grid-template-columns: 130px minmax(0, 1fr);
+    }
+
+    .member-property-image {
+        width: 130px;
+        height: 125px;
+    }
+
+    .member-appointment-side {
+        grid-column: 1 / -1;
+        align-items: center;
+        flex-direction: row;
+        justify-content: flex-end;
+    }
+}
+
+/* Mobil */
+
+@media (max-width: 700px) {
+    .member-appointment-page {
+        width: min(100% - 24px, 1180px);
+        padding: 95px 0 55px;
+    }
+
+    .member-appointment-hero {
+        min-height: auto;
+        padding: 30px 24px;
+        border-radius: 22px;
+    }
+
+    .member-appointment-breadcrumb {
+        margin-bottom: 25px;
+    }
+
+    .member-appointment-hero-content {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .member-appointment-hero h1 {
+        font-size: 36px;
+    }
+
+    .member-appointment-hero-date {
+        width: 100%;
+    }
+
+    .member-appointment-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .member-appointment-content-header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 22px;
+    }
+
+    .member-property-list-button {
+        width: 100%;
+    }
+
+    .member-appointment-card {
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .member-property-image {
+        width: 100%;
+        height: 210px;
+    }
+
+    .member-appointment-meta {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .member-appointment-side {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .member-date-box {
+        width: 100%;
+    }
+
+    .member-detail-button {
+        width: 100%;
+    }
+}

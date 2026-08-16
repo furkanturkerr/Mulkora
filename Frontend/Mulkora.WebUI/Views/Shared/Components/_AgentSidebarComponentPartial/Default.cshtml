@@ -55,15 +55,15 @@
 
         <div class="nav-group">
             <div class="nav-label">RANDEVULAR</div>
-            <a href="appointments.html">
-                    <span class="nav-icon">
-                        <svg class="icon" width="18" height="18"
-                             viewBox="0 0 24 24">
-                            <path
-                                d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Zm2-2v4m10-4v4M3 9h18"/></svg></span>Randevular
-                <span
-                    class="nav-count">5</span></a>
-        
+            <a asp-area="Agent" asp-controller="Appointment" asp-action="AppointmentList">
+                <span class="nav-icon">
+                    <svg class="icon" width="18" height="18"
+                         viewBox="0 0 24 24">
+                        <path d="M5 4h14a2 2 0 0 1 2 2v14H3V6a2 2 0 0 1 2-2Zm2-2v4m10-4v4M3 9h18"/>
+                    </svg>
+                </span>
+                Randevular
+            </a>
         </div>
         <div class="nav-group">
             <div class="nav-label">İLETİŞİM</div>
@@ -71,8 +71,7 @@
                     <span class="nav-icon">
                         <svg class="icon" width="18" height="18"
                              viewBox="0 0 24 24"><path d="M4 5h16v12H8l-4 4V5Z"/></svg></span>Mesajlar
-                <span
-                    class="nav-count">2</span></a></div>
+                    </a></div>
         <div class="nav-group">
             <div class="nav-label">HESAP</div>
             <a href="profile.html">

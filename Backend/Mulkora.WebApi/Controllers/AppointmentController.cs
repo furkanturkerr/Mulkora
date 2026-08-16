@@ -63,5 +63,19 @@ namespace Mulkora.WebApi.Controllers
 
             return Ok(values);
         }
+        
+        [HttpPatch("{id:int}/approve")]
+        [Authorize(Roles = "Agent")]
+        public async Task<IActionResult> Approve(int id)
+        {
+            var agentIdClaim = User.FindFirstValue("AgentId");
+            if (!int.TryParse(agentIdClaim, out var agentId))
+            {
+                return Unauthorized();
+            }
+            
+            await _appointmentService.ApproveAsync(id, agentId);
+            return Ok();
+        }
     }
 }

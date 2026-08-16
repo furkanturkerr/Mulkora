@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Mulkora.Business.Abstract;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.Entity.Enums;
+using Mulkora.WebApi.Services.OpenAIServices;
 
 namespace Mulkora.WebApi.Controllers
 {
@@ -12,10 +13,12 @@ namespace Mulkora.WebApi.Controllers
     public class PropertiesController : ControllerBase
     {
         private readonly IPropertyService _propertyService;
+        private readonly IOpenAIService _openAIService;
 
-        public PropertiesController(IPropertyService propertyService)
+        public PropertiesController(IPropertyService propertyService, IOpenAIService openAıService)
         {
             _propertyService = propertyService;
+            _openAIService = openAıService;
         }
         
         [HttpGet]
@@ -73,6 +76,16 @@ namespace Mulkora.WebApi.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var value = await _propertyService.GetByIdAsync(id);
+
+            try
+            {
+                value.AiIsApproved = await _openAIService.CheckPropertyAsync(value);
+            }
+            catch
+            {
+                value.AiIsApproved = null;
+            }
+            
             return Ok(value);
         }
         

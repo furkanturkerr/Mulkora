@@ -15,6 +15,7 @@ using Mulkora.Entity.Concrete;
 using Mulkora.WebApi.Identity;
 using Mulkora.WebApi.Middlewares;
 using Mulkora.WebApi.Services;
+using Mulkora.WebApi.Services.OpenAIServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +92,7 @@ builder.Services.AddScoped<IPropertyImageService, PropertyImageManager>();
 builder.Services.AddScoped<ImageFileService>();
 builder.Services.AddScoped<IAppointmentDal, EfAppointmentDal>();
 builder.Services.AddScoped<IAppointmentService, AppointmentManager>();
+builder.Services.AddScoped<IOpenAIService, OpenAIService>();
 
 var jwtKey = builder.Configuration["JwtSettings:Key"]
              ?? throw new InvalidOperationException("JWT anahtarı bulunamadı.");

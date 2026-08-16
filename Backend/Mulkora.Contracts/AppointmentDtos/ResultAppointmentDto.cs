@@ -15,4 +15,6 @@ public class ResultAppointmentDto
     public int AgentId { get; set; }
     
     public string AgentNameSurname{ get; set; } = string.Empty;
+    
+    public bool IsStatus { get; set; }
 }
