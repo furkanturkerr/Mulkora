@@ -138,8 +138,16 @@ var hasFilter = !string.IsNullOrWhiteSpace(filterText)
                     <td>
                         <div class="admin-property-information">
 
-                            <img src="@(string.IsNullOrWhiteSpace(item.ImageUrl) ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg") : $"http://localhost:5214{item.ImageUrl}")" alt="@item.Title" class="admin-property-image">
-
+                            <img src="@(
+                                      string.IsNullOrWhiteSpace(item.ImageUrl)
+                                          ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
+                                          : item.ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                              ? item.ImageUrl
+                                              : $"http://localhost:5214{item.ImageUrl}"
+                                      )"
+                                 alt="@item.Title"
+                                 class="admin-property-image">
+                            
                             <div class="admin-property-content">
                                 <strong>@item.Title</strong>
                                 <span>@item.District, @item.City</span>

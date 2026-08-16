@@ -122,4 +122,22 @@ public class PropertyService : GenericService<ResultPropertyDto, CreatePropertyD
 
         return await response.Content.ReadFromJsonAsync<GetByIdPropertyDto>();
     }
+    
+    public async Task<HttpResponseMessage> MarkAsSoldAsync(int id, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"{ApiRoute}/{id}/mark-as-sold");
+        
+        return await _client.SendAsync(request);      
+    }
+
+    public async Task<HttpResponseMessage> MarkAsRentedAsync(int id, string token)
+    {
+        _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"{ApiRoute}/{id}/mark-as-rented");
+        
+        return await _client.SendAsync(request);     
+    }
 }

@@ -1,0 +1,163 @@
+<section class="hero">
+    <div class="container">
+        <div class="hero-shell">
+
+            <div class="hero-copy">
+                <span class="hero-kicker">Doğrulanmış ilanlar · Kolay randevu</span>
+
+                <h1>
+                    Evi aramak değil,
+                    <em>doğru evi bulmak.</em>
+                </h1>
+
+                <p class="hero-lead">
+                    Satılık ve kiralık portföyleri keşfedin,
+                    danışmanla size uygun saatte ev gösterim randevusu oluşturun.
+                </p>
+
+                <div class="hero-stats">
+                    <div>
+                        <strong>1.250+</strong>
+                        <span>Aktif ilan</span>
+                    </div>
+
+                    <div>
+                        <strong>180+</strong>
+                        <span>Uzman danışman</span>
+                    </div>
+
+                    <div>
+                        <strong>4.9/5</strong>
+                        <span>Memnuniyet</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <div>
+                        <small>Öne çıkan ilan</small>
+                        <strong>Modern Bahçe Villası</strong>
+                    </div>
+
+                    <div class="price">
+                        <small>Satış fiyatı</small>
+                        <strong>₺18.750.000</strong>
+                    </div>
+                </div>
+            </div>
+
+
+            <form class="search-box"
+                  asp-controller="Property"
+                  asp-action="Index"
+                  method="get">
+
+                <input type="hidden"
+                       id="listingType"
+                       name="listingType"
+                       value="1" />
+
+                <div class="search-tabs">
+
+                    <button class="search-tab active"
+                            data-type="1"
+                            type="button">
+                        Satılık
+                    </button>
+
+                    <button class="search-tab"
+                            data-type="2"
+                            type="button">
+                        Kiralık
+                    </button>
+
+                </div>
+
+                <div class="search-grid">
+
+                    <div class="field">
+                        <label>Konum</label>
+
+                        <input name="city"
+                               placeholder="İl ara" />
+                    </div>
+
+
+                    <div class="field">
+                        <label>Emlak tipi</label>
+
+                        <select name="categoryId">
+                            <option value="">Tümü</option>
+                            <option value="1">Daire</option>
+                            <option value="2">Villa</option>
+                            <option value="3">Rezidans</option>
+                            <option value="4">Arsa</option>
+                        </select>
+                    </div>
+
+
+                    <div class="field">
+                        <label>Oda</label>
+
+                        <select name="roomCount">
+                            <option value="">Tümü</option>
+                            <option value="1">1+1</option>
+                            <option value="2">2+1</option>
+                            <option value="3">3+1</option>
+                            <option value="4">4+1</option>
+                        </select>
+                    </div>
+
+
+                    <div class="field">
+                        <label>Maksimum fiyat</label>
+
+                        <select name="maxPrice">
+                            <option value="">Farketmez</option>
+                            <option value="5000000">₺5.000.000</option>
+                            <option value="10000000">₺10.000.000</option>
+                            <option value="20000000">₺20.000.000</option>
+                        </select>
+                    </div>
+
+
+                    <button class="search-submit"
+                            type="submit"
+                            aria-label="İlan ara">
+
+                        <svg class="icon"
+                             width="21"
+                             height="21"
+                             viewBox="0 0 24 24"
+                             aria-hidden="true">
+
+                            <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4" />
+
+                        </svg>
+                    </button>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll(".search-tab").forEach(tab => {
+
+        tab.addEventListener("click", function () {
+
+            document
+                .querySelectorAll(".search-tab")
+                .forEach(x => x.classList.remove("active"));
+
+            this.classList.add("active");
+
+            document.getElementById("listingType").value =
+                this.dataset.type;
+        });
+
+    });
+</script>

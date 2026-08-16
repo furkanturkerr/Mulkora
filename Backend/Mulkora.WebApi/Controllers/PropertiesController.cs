@@ -188,5 +188,37 @@ namespace Mulkora.WebApi.Controllers
             await _propertyService.TRejectAsync(id);
             return Ok();
         }
+        
+        [Authorize(Roles = "Agent")]
+        [HttpPatch("{id:int}/mark-as-sold")]
+        public async Task<IActionResult> MarkAsSold(int id)
+        {
+            var agentIdClaim = User.FindFirstValue("AgentId");
+
+            if (!int.TryParse(agentIdClaim, out var agentId))
+            {
+                return Unauthorized();
+            }
+
+            await _propertyService.TMarkAsSoldAsync(id, agentId);
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = "Agent")]
+        [HttpPatch("{id:int}/mark-as-rented")]
+        public async Task<IActionResult> MarkAsRented(int id)
+        {
+            var agentIdClaim = User.FindFirstValue("AgentId");
+
+            if (!int.TryParse(agentIdClaim, out var agentId))
+            {
+                return Unauthorized();
+            }
+
+            await _propertyService.TMarkAsRentedAsync(id, agentId);
+
+            return NoContent();
+        }
     }
 }

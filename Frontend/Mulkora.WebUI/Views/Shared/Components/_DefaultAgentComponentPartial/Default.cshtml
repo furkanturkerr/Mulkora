@@ -1,0 +1,227 @@
+@model List<Mulkora.Dto.AgentDtos.ResultAgentDto>
+
+@{
+    var fallbackAgentImage = Url.Content(
+        "~/Mulkora_Full_Theme_With_Panels/assets/images/agents/agent-01.svg"
+    );
+}
+
+<link rel="stylesheet" href="~/css/uiagent.css"/>
+
+<section class="section surface">
+    <div class="container">
+
+        <div class="section-title reveal">
+
+            <div>
+                <span class="eyebrow">
+                    Uzman danışmanlar
+                </span>
+
+                <h2>
+                    Bölgesini gerçekten bilen kişilerle ilerleyin.
+                </h2>
+
+                <p>
+                    Deneyimli ve aktif emlak danışmanlarımızla
+                    doğru mülke daha güvenli ulaşın.
+                </p>
+            </div>
+
+            <a asp-controller="Agent"
+               asp-action="Index"
+               class="text-link">
+
+                Tüm danışmanlar
+
+                <svg class="icon"
+                     width="17"
+                     height="17"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M5 12h14M14 7l5 5-5 5"></path>
+                </svg>
+            </a>
+
+        </div>
+
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="agent-grid">
+
+                @foreach (var agent in Model.Take(4))
+                {
+                    var agentName =
+                        $"{agent.Name} {agent.Surname}".Trim();
+
+                    if (string.IsNullOrWhiteSpace(agentName))
+                    {
+                        agentName = $"Danışman #{agent.AgentId}";
+                    }
+
+                    var agentTitle =
+                        string.IsNullOrWhiteSpace(agent.Title)
+                            ? "Emlak danışmanı"
+                            : agent.Title;
+
+                    var location =
+                        string.Join(
+                            ", ",
+                            new[]
+                            {
+                                agent.District,
+                                agent.City
+                            }.Where(x =>
+                                !string.IsNullOrWhiteSpace(x))
+                        );
+
+                    if (string.IsNullOrWhiteSpace(location))
+                    {
+                        location = "Konum belirtilmedi";
+                    }
+
+                    var agentImageUrl = fallbackAgentImage;
+
+                    if (!string.IsNullOrWhiteSpace(agent.ImageUrl))
+                    {
+                        agentImageUrl = agent.ImageUrl.StartsWith(
+                            "http",
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                            ? agent.ImageUrl
+                            : $"http://localhost:5214/{agent.ImageUrl.TrimStart('/')}";
+                    }
+
+                    <article class="agent-card reveal">
+
+                        <a asp-controller="Agent"
+                           asp-action="Details"
+                           asp-route-id="@agent.AgentId"
+                           aria-label="@agentName danışman profili">
+
+                            <div class="agent-photo">
+
+                                <img src="@agentImageUrl"
+                                     alt="@agentName"
+                                     loading="lazy"
+                                     decoding="async"
+                                     onerror="this.onerror=null;this.src='@fallbackAgentImage';">
+
+                                @if (agent.IsVerified)
+                                {
+                                    <span class="agent-verified-badge">
+                                        <svg class="icon"
+                                             width="14"
+                                             height="14"
+                                             viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Z"></path>
+                                            <path d="m9 12 2 2 4-4"></path>
+                                        </svg>
+
+                                        Doğrulanmış
+                                    </span>
+                                }
+
+                            </div>
+
+                            <div class="agent-body">
+
+                                <h3>@agentName</h3>
+
+                                <div class="agent-title">
+                                    @agentTitle
+                                </div>
+
+                                <div class="agent-meta">
+
+                                    <svg class="icon"
+                                         width="15"
+                                         height="15"
+                                         viewBox="0 0 24 24"
+                                         aria-hidden="true">
+                                        <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
+                                    </svg>
+
+                                    @location
+                                </div>
+
+                                <div class="agent-card-footer">
+
+                                    <div class="agent-experience">
+
+                                        <svg class="icon"
+                                             width="16"
+                                             height="16"
+                                             viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <circle cx="12"
+                                                    cy="12"
+                                                    r="9"></circle>
+                                            <path d="M12 7v5l3 2"></path>
+                                        </svg>
+
+                                        @if (agent.ExperienceYear > 0)
+                                        {
+                                            <span>
+                                                @agent.ExperienceYear yıl deneyim
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                Emlak danışmanı
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                    <span class="agent-profile-link">
+                                        Profili gör
+
+                                        <svg class="icon"
+                                             width="15"
+                                             height="15"
+                                             viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <path d="M5 12h14M14 7l5 5-5 5"></path>
+                                        </svg>
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    </article>
+                }
+
+            </div>
+        }
+        else
+        {
+            <div class="agent-list-empty">
+
+                <svg class="icon"
+                     width="30"
+                     height="30"
+                     viewBox="0 0 24 24"
+                     aria-hidden="true">
+                    <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"></path>
+                </svg>
+
+                <strong>
+                    Aktif danışman bulunmuyor
+                </strong>
+
+                <span>
+                    Danışmanlarımız aktif olduğunda burada
+                    görüntülenecektir.
+                </span>
+
+            </div>
+        }
+
+    </div>
+</section>

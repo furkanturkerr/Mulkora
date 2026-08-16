@@ -190,4 +190,64 @@ public class PropertyController : Controller
 
         return RedirectToAction(nameof(Update), new { id = propertyId });
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> Deletes(int id)
+    {
+        var token = User.FindFirstValue("access_token");
+        await _propertyService.TDeleteAsync(id, token);
+        return RedirectToAction(nameof(PropertyList));  
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> MarkAsSold(int id)
+    {
+        var token = User.FindFirstValue("access_token");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return Unauthorized();
+        }
+
+        var response = await _propertyService.MarkAsSoldAsync(id, token);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            TempData["ErrorMessage"] =
+                await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            TempData["SuccessMessage"] =
+                "İlan satıldı olarak işaretlendi.";
+        }
+
+        return RedirectToAction(nameof(PropertyList));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> MarkAsRented(int id)
+    {
+        var token = User.FindFirstValue("access_token");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return Unauthorized();
+        }
+
+        var response = await _propertyService.MarkAsRentedAsync(id, token);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            TempData["ErrorMessage"] =
+                await response.Content.ReadAsStringAsync();
+        }
+        else
+        {
+            TempData["SuccessMessage"] =
+                "İlan kiralandı olarak işaretlendi.";
+        }
+
+        return RedirectToAction(nameof(PropertyList));
+    }
 }

@@ -179,4 +179,8 @@
       <_ContentIncludedByDefault Remove="Views\Home\Privacy.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="wwwroot\mülkora\.DS_Store" />
+    </ItemGroup>
+
 </Project>

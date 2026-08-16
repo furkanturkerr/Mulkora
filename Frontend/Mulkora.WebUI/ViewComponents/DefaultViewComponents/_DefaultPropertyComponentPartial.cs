@@ -7,15 +7,26 @@ public class _DefaultPropertyComponentPartial : ViewComponent
 {
     private readonly IPropertyService _propertyService;
 
-    public _DefaultPropertyComponentPartial(IPropertyService propertyService)
+    public _DefaultPropertyComponentPartial(
+        IPropertyService propertyService)
     {
         _propertyService = propertyService;
     }
 
     public async Task<IViewComponentResult> InvokeAsync()
     {
-        var value = await _propertyService.GetAllAsync();
-        value.Take(5);
-        return View(value);
+        var values = await _propertyService.GetFilterPropertyAll(
+            city: null,
+            district: null,
+            listingType: null,
+            maxPrice: null,
+            minPrice: null,
+            categoryId: null,
+            roomCount: null,
+            page: 1,
+            pageSize: 3
+        );
+
+        return View(values);
     }
 }

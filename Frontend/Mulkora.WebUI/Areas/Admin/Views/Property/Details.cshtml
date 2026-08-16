@@ -110,8 +110,14 @@
                             @foreach (var image in Model.PropertyImages.OrderBy(x => x.DisplayOrder))
                             {
                                 <div class="details-gallery-item">
-                                    <img src="@($"http://localhost:5214{image.ImageUrl}")" alt="@property.Title">
-                                    <span class="details-image-order">@image.DisplayOrder</span>
+                                    <img src="@(
+                                              string.IsNullOrWhiteSpace(image.ImageUrl)
+                                                  ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
+                                                  : image.ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                                      ? image.ImageUrl
+                                                      : $"http://localhost:5214{image.ImageUrl}"
+                                              )"
+                                         alt="@property.Title">                                    <span class="details-image-order">@image.DisplayOrder</span>
                                 </div>
                             }
 

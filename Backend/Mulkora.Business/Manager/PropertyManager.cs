@@ -234,11 +234,75 @@ public class PropertyManager : IPropertyService
 
     public async Task TMarkAsSoldAsync(int id, int agentId)
     {
-        throw new NotImplementedException();
+        var property = await _propertyDal.GetByIdAsync(id);
+
+        if (property == null)
+        {
+            throw new Exception("İlan bulunamadı.");
+        }
+
+        if (property.AgentId != agentId)
+        {
+            throw new UnauthorizedAccessException(
+                "Bu ilan üzerinde işlem yapamazsınız."
+            );
+        }
+
+        if (property.Status != PropertyStatus.Published)
+        {
+            throw new Exception(
+                "Sadece yayındaki ilanlar satıldı olarak işaretlenebilir."
+            );
+        }
+
+        // ListingType 1 = Satılık
+        if (Convert.ToInt32(property.ListingType) != 1)
+        {
+            throw new Exception(
+                "Kiralık bir ilan satıldı olarak işaretlenemez."
+            );
+        }
+
+        property.Status = PropertyStatus.Sold;
+        property.UpdatedDate = DateTime.UtcNow;
+
+        await _propertyDal.UpdateAsync(property);
     }
 
     public async Task TMarkAsRentedAsync(int id, int agentId)
     {
-        throw new NotImplementedException();
+        var property = await _propertyDal.GetByIdAsync(id);
+
+        if (property == null)
+        {
+            throw new Exception("İlan bulunamadı.");
+        }
+
+        if (property.AgentId != agentId)
+        {
+            throw new UnauthorizedAccessException(
+                "Bu ilan üzerinde işlem yapamazsınız."
+            );
+        }
+
+        if (property.Status != PropertyStatus.Published)
+        {
+            throw new Exception(
+                "Sadece yayındaki ilanlar kiralandı olarak işaretlenebilir."
+            );
+        }
+
+        // ListingType 2 = Kiralık
+        if (Convert.ToInt32(property.ListingType) != 2)
+        {
+            throw new Exception(
+                "Satılık bir ilan kiralandı olarak işaretlenemez."
+            );
+        }
+
+        property.Status = PropertyStatus.Rented;
+        property.UpdatedDate = DateTime.UtcNow;
+
+        await _propertyDal.UpdateAsync(property);
     }
 }

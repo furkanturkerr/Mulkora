@@ -6,9 +6,11 @@
 
     var firstImage = Model.PropertyImages?.OrderBy(x => x.DisplayOrder).FirstOrDefault();
 
-    var previewImageUrl = firstImage == null
+    var previewImageUrl = firstImage == null || string.IsNullOrWhiteSpace(firstImage.ImageUrl)
         ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
-        : $"http://localhost:5214{firstImage.ImageUrl}";
+        : firstImage.ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+            ? firstImage.ImageUrl
+            : $"http://localhost:5214{firstImage.ImageUrl}";
 
     var hasExistingImage = Model.PropertyImages != null && Model.PropertyImages.Any();
 }
@@ -217,7 +219,14 @@
                                 @foreach (var image in Model.PropertyImages.OrderBy(x => x.DisplayOrder))
                                 {
                                     <div class="property-image-item">
-                                        <img src="@($"http://localhost:5214{image.ImageUrl}")" alt="İlan görseli">
+                                        <img src="@(
+                                                  string.IsNullOrWhiteSpace(image.ImageUrl)
+                                                      ? Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg")
+                                                      : image.ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                                                          ? image.ImageUrl
+                                                          : $"http://localhost:5214{image.ImageUrl}"
+                                                  )"
+                                             alt="İlan görseli">
                                         <span class="property-image-order">@image.DisplayOrder</span>
 
                                         <button type="submit" asp-area="Agent" asp-controller="Property" asp-action="DeleteImage" asp-route-imageId="@image.PropertyImageId" asp-route-propertyId="@Model.Property.PropertyId" formmethod="post" formnovalidate class="property-image-delete" title="Görseli sil">
