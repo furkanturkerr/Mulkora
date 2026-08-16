@@ -50,6 +50,10 @@ public class GetByIdPropertyDto
     public DateTime UpdatedDate { get; set; }
 
     public int AgentId { get; set; }
+    
+    public double? Latitude { get; set; }
+
+    public double? Longitude { get; set; }
 
     public string AgentName { get; set; } = string.Empty;
 

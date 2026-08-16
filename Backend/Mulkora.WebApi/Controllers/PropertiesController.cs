@@ -5,6 +5,7 @@ using Mulkora.Business.Abstract;
 using Mulkora.Dto.PropertyDtos;
 using Mulkora.Entity.Enums;
 using Mulkora.WebApi.Services.OpenAIServices;
+using Mulkora.WebApi.Services.TrueWayGeocodingServices;
 
 namespace Mulkora.WebApi.Controllers
 {
@@ -14,15 +15,17 @@ namespace Mulkora.WebApi.Controllers
     {
         private readonly IPropertyService _propertyService;
         private readonly IOpenAIService _openAIService;
+        private readonly ITrueWayGeocodingService _geocodingService;
 
-        public PropertiesController(IPropertyService propertyService, IOpenAIService openAıService)
+        public PropertiesController(IPropertyService propertyService, IOpenAIService openAıService, ITrueWayGeocodingService geocodingService)
         {
             _propertyService = propertyService;
             _openAIService = openAıService;
+            _geocodingService = geocodingService;
         }
         
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin,Agent")]
         public async Task<IActionResult> Get()
         {
             var values = await _propertyService.TGetListAsync();
@@ -30,7 +33,7 @@ namespace Mulkora.WebApi.Controllers
         }
 
         [HttpGet("filter")]
-        [Authorize]
+        [Authorize(Roles = "Admin,Agent")]
         public async Task<IActionResult> GetFilter(string? text, PropertyStatus? IsStatus, string? City, string? District, ListingType? ListingType, int page = 1, int pageSize = 8)
         {
             var values = await _propertyService.GetFilterProperty(text, IsStatus, City, District, ListingType, page, pageSize);
@@ -101,13 +104,21 @@ namespace Mulkora.WebApi.Controllers
             }
 
             dto.AgentId = agentId;
+            
+            var coordinates = await _geocodingService.GetCoordinatesAsync(dto.City, dto.District, dto.Address);
+
+            if (coordinates != null)
+            {
+                dto.Latitude = coordinates.Latitude;
+                dto.Longitude = coordinates.Longitude;
+            }
 
             var propertyId = await _propertyService.TAddAsync(dto);
 
             return Ok(propertyId);
         }
         
-        [Authorize(Roles = "Agent")]
+        [Authorize(Roles = "Agent,Admin")]
         [HttpPut]
         public async Task<IActionResult> Update(UpdatePropertyDto dto)
         {
@@ -120,12 +131,26 @@ namespace Mulkora.WebApi.Controllers
 
             dto.AgentId = agentId;
             
+            
+            var coordinates =
+                await _geocodingService.GetCoordinatesAsync(
+                    dto.City,
+                    dto.District,
+                    dto.Address
+                );
+
+            if (coordinates != null)
+            {
+                dto.Latitude = coordinates.Latitude;
+                dto.Longitude = coordinates.Longitude;
+            }
+            
             await _propertyService.TUpdateAsync(dto);
             return Ok();      
         }
         
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Authorize(Roles = "Agent,Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             await _propertyService.TDeleteAsync(id);

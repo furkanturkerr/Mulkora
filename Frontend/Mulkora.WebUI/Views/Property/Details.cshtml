@@ -1,32 +1,211 @@
 @model Mulkora.WebUI.Models.PublicPropertyDetailsViewModel
+@using System.Globalization
+@using System.Text.Json
 
 @{
     Layout = "_Layout";
+    ViewData["Title"] = Model.Property.Title;
 
     var property = Model.Property;
+
     var listingTypeValue = Convert.ToInt32(property.ListingType);
     var listingTypeText = listingTypeValue == 1 ? "Satılık" : "Kiralık";
     var priceLabel = listingTypeValue == 1 ? "Satış fiyatı" : "Aylık kira";
     var priceSuffix = listingTypeValue == 2 ? " / ay" : "";
 
     var images = Model.Images.Take(5).ToList();
-    var fallbackPropertyImage = Url.Content("~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg");
 
-    var agentName = string.IsNullOrWhiteSpace(property.AgentName) ? $"Danışman #{property.AgentId}" : property.AgentName;
-    var agentTitle = string.IsNullOrWhiteSpace(property.AgentTitle) ? "Emlak danışmanı" : property.AgentTitle;
+    var fallbackPropertyImage = Url.Content(
+        "~/Mulkora_Full_Theme_With_Panels/assets/images/properties/property-01.svg"
+    );
+
+    var apiBaseUrl = Model.ApiBaseUrl?.TrimEnd('/') ?? string.Empty;
+
+    var agentName = string.IsNullOrWhiteSpace(property.AgentName)
+        ? $"Danışman #{property.AgentId}"
+        : property.AgentName;
+
+    var agentTitle = string.IsNullOrWhiteSpace(property.AgentTitle)
+        ? "Emlak danışmanı"
+        : property.AgentTitle;
+
     var agentInitial = agentName.Trim()[0].ToString().ToUpper();
 
     var agentImageUrl = string.Empty;
 
     if (!string.IsNullOrWhiteSpace(property.AgentImageUrl))
     {
-        agentImageUrl = property.AgentImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+        agentImageUrl = property.AgentImageUrl.StartsWith(
+            "http",
+            StringComparison.OrdinalIgnoreCase
+        )
             ? property.AgentImageUrl
-            : $"{Model.ApiBaseUrl}/{property.AgentImageUrl.TrimStart('/')}";
+            : $"{apiBaseUrl}/{property.AgentImageUrl.TrimStart('/')}";
     }
+
+    var hasCoordinates =
+        property.Latitude.HasValue &&
+        property.Longitude.HasValue;
+
+    var latitudeText = hasCoordinates
+        ? property.Latitude.Value.ToString(CultureInfo.InvariantCulture)
+        : string.Empty;
+
+    var longitudeText = hasCoordinates
+        ? property.Longitude.Value.ToString(CultureInfo.InvariantCulture)
+        : string.Empty;
+
+    var popupTitleJson = JsonSerializer.Serialize(
+        property.Title ?? string.Empty
+    );
+
+    var popupLocationJson = JsonSerializer.Serialize(
+        $"{property.District}, {property.City}"
+    );
 }
 
-<link rel="stylesheet" href="~/css/public-property-details.css" asp-append-version="true">
+<link rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="">
+
+<link rel="stylesheet"
+      href="~/css/public-property-details.css"
+      asp-append-version="true">
+
+<style>
+    .property-map-card {
+        overflow: hidden;
+        margin-top: 24px;
+        background: #ffffff;
+        border: 1px solid #dfe5e2;
+        border-radius: 22px;
+    }
+
+    .property-map-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding: 24px 26px;
+    }
+
+    .property-map-title span {
+        color: #c58c37;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .18em;
+    }
+
+    .property-map-title h2 {
+        margin: 6px 0 4px;
+        color: #17231f;
+        font-size: 24px;
+        line-height: 1.2;
+    }
+
+    .property-map-title p {
+        margin: 0;
+        color: #77837f;
+        font-size: 14px;
+    }
+
+    .property-map-direction {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex-shrink: 0;
+        min-height: 43px;
+        padding: 0 17px;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        background: #153f35;
+        border-radius: 11px;
+        transition: .2s ease;
+    }
+
+    .property-map-direction:hover {
+        color: #ffffff;
+        background: #205647;
+        transform: translateY(-1px);
+    }
+
+    #propertyMap {
+        z-index: 1;
+        width: 100%;
+        height: 420px;
+        background: #edf2ef;
+    }
+
+    .property-map-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 13px;
+        margin-top: 24px;
+        padding: 18px 20px;
+        color: #79551f;
+        background: #fff5df;
+        border: 1px solid #efd19a;
+        border-radius: 14px;
+    }
+
+    .property-map-warning svg {
+        flex: 0 0 20px;
+        margin-top: 1px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 1.8;
+    }
+
+    .property-map-warning strong {
+        display: block;
+        margin-bottom: 3px;
+        color: #684514;
+        font-size: 14px;
+    }
+
+    .property-map-warning span {
+        display: block;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .pd-agent-photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .pd-agent-photo .pd-agent-fallback {
+        display: grid;
+        width: 100%;
+        height: 100%;
+        place-items: center;
+    }
+
+    .pd-agent-photo img + .pd-agent-fallback {
+        display: none;
+    }
+
+    @@media (max-width: 700px) {
+        .property-map-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .property-map-direction {
+            width: 100%;
+        }
+
+        #propertyMap {
+            height: 330px;
+        }
+    }
+</style>
 
 <main class="pd-page">
     <div class="container">
@@ -36,103 +215,163 @@
             <div class="pd-hero-decoration pd-hero-decoration-two"></div>
 
             <div class="pd-hero-content">
-                <nav class="pd-breadcrumb">
-                    <a asp-controller="Home" asp-action="Index">Ana Sayfa</a>
 
-                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="m9 18 6-6-6-6"/>
+                <nav class="pd-breadcrumb">
+                    <a asp-controller="Default"
+                       asp-action="Index">
+                        Ana Sayfa
+                    </a>
+
+                    <svg width="14"
+                         height="14"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="m9 18 6-6-6-6"></path>
                     </svg>
 
-                    <a asp-controller="Property" asp-action="Index">İlanlar</a>
+                    <a asp-controller="Property"
+                       asp-action="Index">
+                        İlanlar
+                    </a>
 
-                    <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="m9 18 6-6-6-6"/>
+                    <svg width="14"
+                         height="14"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="m9 18 6-6-6-6"></path>
                     </svg>
 
                     <span>@property.Title</span>
                 </nav>
 
                 <div class="pd-hero-main">
+
                     <div class="pd-hero-information">
+
                         <div class="pd-badges">
                             @if (property.IsFeatured)
                             {
                                 <span class="pd-badge pd-badge-featured">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 16l-5.5 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>
+                                    <svg width="13"
+                                         height="13"
+                                         viewBox="0 0 24 24"
+                                         aria-hidden="true">
+                                        <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 16l-5.5 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"></path>
                                     </svg>
 
                                     Öne Çıkan
                                 </span>
                             }
 
-                            <span class="pd-badge pd-badge-type">@listingTypeText</span>
+                            <span class="pd-badge pd-badge-type">
+                                @listingTypeText
+                            </span>
                         </div>
 
                         <h1>@property.Title</h1>
 
                         <div class="pd-hero-location">
-                            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                            <svg width="18"
+                                 height="18"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
                             </svg>
 
-                            <span>@property.District, @property.City</span>
+                            <span>
+                                @property.District, @property.City
+                            </span>
                         </div>
 
                         <div class="pd-hero-facts">
+
                             <div class="pd-hero-fact">
-                                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"/>
+                                <svg width="18"
+                                     height="18"
+                                     viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <path d="M3 19v-6h18v6M5 13V7h6a3 3 0 0 1 3 3v3M5 19v2M19 19v2"></path>
                                 </svg>
 
                                 <span>Oda</span>
-                                <strong>@property.RoomCount+@property.LivingRoomCount</strong>
+                                <strong>
+                                    @property.RoomCount+@property.LivingRoomCount
+                                </strong>
                             </div>
 
                             <div class="pd-hero-fact">
-                                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"/>
+                                <svg width="18"
+                                     height="18"
+                                     viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <path d="M4 18 18 4l2 2L6 20l-2-2Zm8-8 2 2m-5 1 2 2"></path>
                                 </svg>
 
                                 <span>Brüt</span>
-                                <strong>@property.GrossSquareMeter m²</strong>
+                                <strong>
+                                    @property.GrossSquareMeter m²
+                                </strong>
                             </div>
 
                             <div class="pd-hero-fact">
-                                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"/>
+                                <svg width="18"
+                                     height="18"
+                                     viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Zm3 0V7a3 3 0 0 1 6 0"></path>
                                 </svg>
 
                                 <span>Banyo</span>
-                                <strong>@property.BathroomCount</strong>
+                                <strong>
+                                    @property.BathroomCount
+                                </strong>
                             </div>
+
                         </div>
                     </div>
 
                     <aside class="pd-price-card">
+
                         <div class="pd-price-card-top">
                             <span>@priceLabel</span>
                             <small>MLK-@property.PropertyId</small>
                         </div>
 
-                        <div class="pd-price">₺@property.Price.ToString("N0")<small>@priceSuffix</small></div>
+                        <div class="pd-price">
+                            ₺@property.Price.ToString("N0")
+                            <small>@priceSuffix</small>
+                        </div>
 
-                        <div class="pd-price-location">@property.District, @property.City</div>
+                        <div class="pd-price-location">
+                            @property.District, @property.City
+                        </div>
 
                         <div class="pd-price-actions">
-                            <button type="button" class="pd-button pd-button-light" data-share-button data-share-title="@property.Title">
-                                <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M8 12 16 7m-8 5 8 5M18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm12 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+
+                            <button type="button"
+                                    class="pd-button pd-button-light"
+                                    data-share-button
+                                    data-share-title="@property.Title">
+
+                                <svg width="17"
+                                     height="17"
+                                     viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <path d="M8 12 16 7m-8 5 8 5M18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM6 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm12 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
                                 </svg>
 
                                 Paylaş
                             </button>
 
-                            <a asp-controller="Property" asp-action="Index" class="pd-button pd-button-ghost">
+                            <a asp-controller="Property"
+                               asp-action="Index"
+                               class="pd-button pd-button-ghost">
                                 İlanlara dön
                             </a>
+
                         </div>
                     </aside>
+
                 </div>
             </div>
         </section>
@@ -140,24 +379,38 @@
         @if (images.Count > 0)
         {
             <section class="pd-gallery pd-gallery-count-@images.Count">
+
                 @for (var i = 0; i < images.Count; i++)
                 {
                     var image = images[i];
 
                     var imageUrl = string.IsNullOrWhiteSpace(image.ImageUrl)
                         ? fallbackPropertyImage
-                        : image.ImageUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+                        : image.ImageUrl.StartsWith(
+                            "http",
+                            StringComparison.OrdinalIgnoreCase
+                        )
                             ? image.ImageUrl
-                            : $"{Model.ApiBaseUrl}/{image.ImageUrl.TrimStart('/')}";
+                            : $"{apiBaseUrl}/{image.ImageUrl.TrimStart('/')}";
 
-                    <button type="button" class="pd-gallery-item" data-gallery-image="@imageUrl">
-                        <img src="@imageUrl" alt="@property.Title görseli" onerror="this.onerror=null;this.src='@fallbackPropertyImage';">
+                    <button type="button"
+                            class="pd-gallery-item"
+                            data-gallery-image="@imageUrl">
+
+                        <img src="@imageUrl"
+                             alt="@property.Title görseli"
+                             loading="@(i == 0 ? "eager" : "lazy")"
+                             decoding="async"
+                             onerror="this.onerror=null;this.src='@fallbackPropertyImage';">
 
                         @if (i == 0)
                         {
                             <span class="pd-gallery-count">
-                                <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path d="M4 7h4l2-2h4l2 2h4v12H4V7Zm8 9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                                <svg width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24"
+                                     aria-hidden="true">
+                                    <path d="M4 7h4l2-2h4l2 2h4v12H4V7Zm8 9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
                                 </svg>
 
                                 @Model.Images.Count Fotoğraf
@@ -165,38 +418,57 @@
                         }
 
                         <span class="pd-gallery-zoom">
-                            <svg width="19" height="19" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4M11 8v6M8 11h6"/>
+                            <svg width="19"
+                                 height="19"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Zm5-2 4 4M11 8v6M8 11h6"></path>
                             </svg>
                         </span>
+
                     </button>
                 }
+
             </section>
         }
         else
         {
             <section class="pd-empty-gallery">
-                <img src="@fallbackPropertyImage" alt="@property.Title">
+
+                <img src="@fallbackPropertyImage"
+                     alt="@property.Title">
 
                 <div>
-                    <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                        <path d="M4 7h4l2-2h4l2 2h4v12H4V7Zm8 9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/>
+                    <svg width="24"
+                         height="24"
+                         viewBox="0 0 24 24"
+                         aria-hidden="true">
+                        <path d="M4 7h4l2-2h4l2 2h4v12H4V7Zm8 9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
                     </svg>
 
                     <strong>İlan görseli bulunmuyor</strong>
-                    <span>Bu ilan için henüz bir görsel eklenmemiş.</span>
+                    <span>
+                        Bu ilan için henüz bir görsel eklenmemiş.
+                    </span>
                 </div>
+
             </section>
         }
 
         <div class="pd-content-layout">
+
             <div class="pd-main-column">
 
                 <section class="pd-card">
+
                     <div class="pd-card-heading">
+
                         <div class="pd-card-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4 4h16v16H4V4Zm4 4h8M8 12h8M8 16h5"/>
+                            <svg width="22"
+                                 height="22"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M4 4h16v16H4V4Zm4 4h8M8 12h8M8 16h5"></path>
                             </svg>
                         </div>
 
@@ -205,57 +477,83 @@
                             <h2>İlan özellikleri</h2>
                         </div>
 
-                        <div class="pd-property-number">MLK-@property.PropertyId</div>
+                        <div class="pd-property-number">
+                            MLK-@property.PropertyId
+                        </div>
+
                     </div>
 
                     <div class="pd-fact-grid">
+
                         <div class="pd-fact">
                             <span>Oda sayısı</span>
-                            <strong>@property.RoomCount+@property.LivingRoomCount</strong>
+                            <strong>
+                                @property.RoomCount+@property.LivingRoomCount
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Brüt alan</span>
-                            <strong>@property.GrossSquareMeter m²</strong>
+                            <strong>
+                                @property.GrossSquareMeter m²
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Net alan</span>
-                            <strong>@property.NetSquareMeter m²</strong>
+                            <strong>
+                                @property.NetSquareMeter m²
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Banyo</span>
-                            <strong>@property.BathroomCount</strong>
+                            <strong>
+                                @property.BathroomCount
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Bina yaşı</span>
-                            <strong>@property.BuildingAge</strong>
+                            <strong>
+                                @property.BuildingAge
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Bulunduğu kat</span>
-                            <strong>@property.FloorNumber</strong>
+                            <strong>
+                                @property.FloorNumber
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Toplam kat</span>
-                            <strong>@property.TotalFloor</strong>
+                            <strong>
+                                @property.TotalFloor
+                            </strong>
                         </div>
 
                         <div class="pd-fact">
                             <span>Eşya durumu</span>
-                            <strong>@(property.IsFurnished ? "Eşyalı" : "Eşyasız")</strong>
+                            <strong>
+                                @(property.IsFurnished ? "Eşyalı" : "Eşyasız")
+                            </strong>
                         </div>
+
                     </div>
                 </section>
 
                 <section class="pd-card">
+
                     <div class="pd-card-heading">
+
                         <div class="pd-card-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M4 5h16v14H4V5Zm4 4h8M8 13h8"/>
+                            <svg width="22"
+                                 height="22"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M4 5h16v14H4V5Zm4 4h8M8 13h8"></path>
                             </svg>
                         </div>
 
@@ -263,23 +561,34 @@
                             <span>İLAN HAKKINDA</span>
                             <h2>Açıklama</h2>
                         </div>
+
                     </div>
 
                     @if (string.IsNullOrWhiteSpace(property.Description))
                     {
-                        <p class="pd-description">Bu ilan için açıklama girilmemiş.</p>
+                        <p class="pd-description">
+                            Bu ilan için açıklama girilmemiş.
+                        </p>
                     }
                     else
                     {
-                        <p class="pd-description">@property.Description</p>
+                        <p class="pd-description">
+                            @property.Description
+                        </p>
                     }
+
                 </section>
 
                 <section class="pd-card">
+
                     <div class="pd-card-heading">
+
                         <div class="pd-card-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 16l-5.5 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>
+                            <svg width="22"
+                                 height="22"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 16l-5.5 2.9 1.1-6.2L3 9.6l6.2-.9L12 3Z"></path>
                             </svg>
                         </div>
 
@@ -287,36 +596,51 @@
                             <span>MÜLK DETAYLARI</span>
                             <h2>Öne çıkan özellikler</h2>
                         </div>
+
                     </div>
 
-                    @if (property.Features != null && property.Features.Count > 0)
+                    @if (property.Features != null &&
+                         property.Features.Count > 0)
                     {
                         <div class="pd-feature-grid">
+
                             @foreach (var feature in property.Features)
                             {
                                 <div class="pd-feature">
                                     <span>
-                                        <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                                            <path d="m5 12 4 4L19 6"/>
+                                        <svg width="14"
+                                             height="14"
+                                             viewBox="0 0 24 24"
+                                             aria-hidden="true">
+                                            <path d="m5 12 4 4L19 6"></path>
                                         </svg>
                                     </span>
 
                                     @feature.Name
                                 </div>
                             }
+
                         </div>
                     }
                     else
                     {
-                        <div class="pd-empty-content">Bu ilana eklenmiş özellik bulunmuyor.</div>
+                        <div class="pd-empty-content">
+                            Bu ilana eklenmiş özellik bulunmuyor.
+                        </div>
                     }
+
                 </section>
 
                 <section class="pd-card">
+
                     <div class="pd-card-heading">
+
                         <div class="pd-card-icon">
-                            <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                            <svg width="22"
+                                 height="22"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
                             </svg>
                         </div>
 
@@ -324,75 +648,203 @@
                             <span>KONUM BİLGİSİ</span>
                             <h2>Adres</h2>
                         </div>
+
                     </div>
 
                     <div class="pd-location-card">
+
                         <div class="pd-location-pin">
-                            <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
+                            <svg width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0ZM12 12a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"></path>
                             </svg>
                         </div>
 
                         <div>
-                            <strong>@property.District, @property.City</strong>
-                            <span>@property.Address</span>
+                            <strong>
+                                @property.District, @property.City
+                            </strong>
+
+                            <span>
+                                @property.Address
+                            </span>
                         </div>
+
                     </div>
                 </section>
+
+                @* Harita mutlaka pd-main-column içinde kalacak. *@
+                @if (hasCoordinates)
+                {
+                    <section class="property-map-card">
+
+                        <div class="property-map-header">
+
+                            <div class="property-map-title">
+                                <span>İLAN KONUMU</span>
+                                <h2>Haritada konum</h2>
+                                <p>
+                                    @property.Address,
+                                    @property.District,
+                                    @property.City
+                                </p>
+                            </div>
+
+                            <a href="https://www.google.com/maps/dir/?api=1&destination=@latitudeText,@longitudeText"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="property-map-direction">
+
+                                <svg width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.8">
+                                    <path d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"></path>
+                                    <circle cx="12"
+                                            cy="9"
+                                            r="2.2"></circle>
+                                </svg>
+
+                                Yol tarifi al
+                            </a>
+
+                        </div>
+
+                        <div id="propertyMap"
+                             aria-label="@property.Title harita konumu">
+                        </div>
+
+                    </section>
+                }
+                else
+                {
+                    <div class="property-map-warning">
+
+                        <svg width="20"
+                             height="20"
+                             viewBox="0 0 24 24"
+                             aria-hidden="true">
+                            <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+                            <path d="m9 9 6 6M15 9l-6 6"></path>
+                        </svg>
+
+                        <div>
+                            <strong>Harita konumu bulunamadı</strong>
+
+                            <span>
+                                Bu ilan için enlem ve boylam bilgisi
+                                henüz oluşturulmamış.
+                            </span>
+                        </div>
+
+                    </div>
+                }
+
             </div>
 
             <aside class="pd-agent-column">
+
                 <article class="pd-agent-card">
-                    <div class="pd-agent-label">İLAN DANIŞMANI</div>
+
+                    <div class="pd-agent-label">
+                        İLAN DANIŞMANI
+                    </div>
 
                     <div class="pd-agent-profile">
+
                         <div class="pd-agent-photo">
+
                             @if (!string.IsNullOrWhiteSpace(agentImageUrl))
                             {
-                                <img src="@agentImageUrl" alt="@agentName">
+                                <img src="@agentImageUrl"
+                                     alt="@agentName"
+                                     loading="lazy"
+                                     decoding="async"
+                                     referrerpolicy="no-referrer"
+                                     onerror="this.style.display='none';this.nextElementSibling.style.display='grid';">
+
+                                <span class="pd-agent-fallback">
+                                    @agentInitial
+                                </span>
                             }
                             else
                             {
-                                <span>@agentInitial</span>
+                                <span class="pd-agent-fallback">
+                                    @agentInitial
+                                </span>
                             }
+
                         </div>
 
                         <div class="pd-agent-identity">
                             <h3>@agentName</h3>
                             <p>@agentTitle</p>
-                            <small>Danışman No: #@property.AgentId</small>
+                            <small>
+                                Danışman No: #@property.AgentId
+                            </small>
                         </div>
+
                     </div>
 
                     <div class="pd-agent-divider"></div>
 
                     <div class="pd-agent-intro">
-                        <svg width="21" height="21" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M4 5h16v11H9l-5 4V5Z"/>
+
+                        <svg width="21"
+                             height="21"
+                             viewBox="0 0 24 24"
+                             aria-hidden="true">
+                            <path d="M4 5h16v11H9l-5 4V5Z"></path>
                         </svg>
 
-                        <p>Bu ilan hakkında detaylı bilgi almak veya mülkü yerinde görmek için danışmanla iletişime geçebilirsiniz.</p>
+                        <p>
+                            Bu ilan hakkında detaylı bilgi almak veya
+                            mülkü yerinde görmek için danışmanla
+                            iletişime geçebilirsiniz.
+                        </p>
+
                     </div>
 
                     <div class="pd-agent-actions">
-                        <a asp-controller="Appointment" asp-action="Index" asp-route-propertyId="@property.PropertyId" asp-route-agentId="@property.AgentId" class="pd-button pd-button-primary">
-                            <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"/>
+
+                        <a asp-controller="Appointment"
+                           asp-action="Index"
+                           asp-route-propertyId="@property.PropertyId"
+                           class="pd-button pd-button-primary">
+
+                            <svg width="17"
+                                 height="17"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z"></path>
                             </svg>
 
                             Randevu Oluştur
                         </a>
 
-                        <a asp-controller="Agent" asp-action="Details" asp-route-id="@property.AgentId" class="pd-button pd-button-outline">
-                            <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
-                                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 9a7 7 0 0 0-14 0"/>
+                        <a asp-controller="Agent"
+                           asp-action="Details"
+                           asp-route-id="@property.AgentId"
+                           class="pd-button pd-button-outline">
+
+                            <svg width="17"
+                                 height="17"
+                                 viewBox="0 0 24 24"
+                                 aria-hidden="true">
+                                <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7 9a7 7 0 0 0-14 0"></path>
                             </svg>
 
                             Danışman Profilini Gör
                         </a>
+
                     </div>
 
                     <div class="pd-agent-summary">
+
                         <div>
                             <span>İlan türü</span>
                             <strong>@listingTypeText</strong>
@@ -400,38 +852,122 @@
 
                         <div>
                             <span>İlan numarası</span>
-                            <strong>MLK-@property.PropertyId</strong>
+                            <strong>
+                                MLK-@property.PropertyId
+                            </strong>
                         </div>
 
                         <div>
                             <span>Konum</span>
-                            <strong>@property.District, @property.City</strong>
+                            <strong>
+                                @property.District, @property.City
+                            </strong>
                         </div>
+
                     </div>
 
                     <div class="pd-agent-notice">
-                        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                            <path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Zm-3 9 2 2 4-5"/>
+
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             aria-hidden="true">
+                            <path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Zm-3 9 2 2 4-5"></path>
                         </svg>
 
-                        <span>İlan işlemleri yetkili danışman üzerinden gerçekleştirilir.</span>
+                        <span>
+                            İlan işlemleri yetkili danışman
+                            üzerinden gerçekleştirilir.
+                        </span>
+
                     </div>
+
                 </article>
+
             </aside>
+
         </div>
     </div>
 </main>
 
-<div class="pd-lightbox" data-lightbox hidden>
-    <button type="button" class="pd-lightbox-close" data-lightbox-close aria-label="Görseli kapat">
-        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18"/>
+<div class="pd-lightbox"
+     data-lightbox
+     hidden>
+
+    <button type="button"
+            class="pd-lightbox-close"
+            data-lightbox-close
+            aria-label="Görseli kapat">
+
+        <svg width="22"
+             height="22"
+             viewBox="0 0 24 24"
+             aria-hidden="true">
+            <path d="M6 6l12 12M18 6 6 18"></path>
         </svg>
+
     </button>
 
-    <img src="" alt="@property.Title büyük görseli" data-lightbox-image>
+    <img src=""
+         alt="@property.Title büyük görseli"
+         data-lightbox-image>
+
 </div>
 
-<div class="pd-toast" data-share-toast hidden>İlan bağlantısı kopyalandı.</div>
+<div class="pd-toast"
+     data-share-toast
+     hidden>
+    İlan bağlantısı kopyalandı.
+</div>
 
-<script src="~/js/public-property-details.js" asp-append-version="true"></script>
+@if (hasCoordinates)
+{
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+    </script>
+
+    <script>
+        (() => {
+            const mapElement = document.getElementById("propertyMap");
+
+            if (!mapElement || typeof L === "undefined") {
+                return;
+            }
+
+            const latitude = Number("@latitudeText");
+            const longitude = Number("@longitudeText");
+
+            const popupTitle = @Html.Raw(popupTitleJson);
+            const popupLocation = @Html.Raw(popupLocationJson);
+
+            const map = L.map(mapElement, {
+                scrollWheelZoom: false
+            }).setView([latitude, longitude], 16);
+
+            L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+                    maxZoom: 19,
+                    attribution:
+                        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                }
+            ).addTo(map);
+
+            L.marker([latitude, longitude])
+                .addTo(map)
+                .bindPopup(
+                    `<strong>${popupTitle}</strong><br>${popupLocation}`
+                )
+                .openPopup();
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 150);
+        })();
+    </script>
+}
+
+<script src="~/js/public-property-details.js"
+        asp-append-version="true">
+</script>

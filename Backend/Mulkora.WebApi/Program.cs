@@ -16,6 +16,7 @@ using Mulkora.WebApi.Identity;
 using Mulkora.WebApi.Middlewares;
 using Mulkora.WebApi.Services;
 using Mulkora.WebApi.Services.OpenAIServices;
+using Mulkora.WebApi.Services.TrueWayGeocodingServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,6 +70,13 @@ builder.Services.AddCors(options =>
     {
         options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
     });
+});
+
+builder.Services.AddHttpClient<ITrueWayGeocodingService, TrueWayGeocodingService>(client =>
+{
+    client.BaseAddress = new Uri(
+        "https://trueway-geocoding.p.rapidapi.com/"
+    );
 });
 
 builder.Services.AddScoped<IPasswordResetService, PasswordResetService>();

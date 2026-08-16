@@ -53,6 +53,10 @@ public class Property
     public int CategoryId { get; set; }
     
     public Category Category { get; set; } = null!;
+    
+    public double? Latitude { get; set; }
+
+    public double? Longitude { get; set; }
 
     public List<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
     
